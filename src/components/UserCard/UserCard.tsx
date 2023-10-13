@@ -34,7 +34,7 @@ export default function UserCard({ user }: { user: User }) {
         <View className='at-row grid'>
           <View className='at-col grid-text'>
             <View className='count'>10</View>
-            <View>获赞数量</View>
+            <View>获赞</View>
           </View>
           <View className='at-col grid-text'>
             <View className='count'>5</View>

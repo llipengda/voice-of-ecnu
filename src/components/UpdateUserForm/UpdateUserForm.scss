@@ -1,0 +1,127 @@
+@import '../../common/constants.scss';
+
+$size: 250px;
+$icon-size: 85px;
+
+.update-user-form {
+  margin: 30px;
+
+  .avatar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .avatar {
+      width: $size;
+      height: $size;
+      border-radius: 50%;
+      background-color: #eee;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      border: 2px solid #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+      margin-right: -$icon-size;
+    }
+
+    .camera-icon {
+      position: relative;
+      top: 85px;
+      left: 15px;
+      width: $icon-size;
+      height: $icon-size;
+      border-radius: 50%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.1);
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 50%;
+        height: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.8),
+          transparent
+        );
+        border-radius: 50%;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+
+  .form-container {
+    margin-left: 30px;
+    margin-right: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
+    margin-top: 60px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+
+    .form-item {
+      display: flex;
+      flex-direction: row;
+      min-height: 80px;
+      align-items: center;
+
+      .form-label {
+        min-width: 220px;
+        font-size: 36px;
+        font-weight: 400;
+        color: $primary-color;
+      }
+
+      .form-input {
+        font-size: 36px;
+        font-weight: 400;
+        border: none;
+        outline: none;
+        padding: 5px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        color: #000;
+        white-space: pre-wrap;
+
+        &:hover {
+          border-bottom: 2px solid $primary-color;
+        }
+      }
+
+      .form-constant {
+        font-size: 36px;
+        font-weight: 400;
+        color: #7f7f7f;
+        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .action-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 60px;
+    margin-left: 30px;
+    margin-right: 30px;
+
+    .button {
+      width: 45%;
+      border-radius: 15px;
+
+      &:first-child {
+        margin-right: 10%;
+      }
+    }
+  }
+}

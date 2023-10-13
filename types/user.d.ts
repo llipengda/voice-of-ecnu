@@ -10,6 +10,6 @@ export interface User {
   bannedBefore?: Date
   gender?: 0 | 1 | 2 | 3
   // 0: 未知, 1: 男, 2: 女, 3: 其他
-  grade?: number
+  grade?: string
   major?: string
 }
