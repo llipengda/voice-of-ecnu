@@ -1,15 +1,34 @@
 {
-  "miniprogramRoot": "./dist",
-  "projectname": "voice-of-ecnu",
+  "miniprogramRoot": "dist/",
   "description": "",
-  "appid": "wxa6835a1006c78ca6",
   "setting": {
     "urlCheck": false,
     "es6": false,
     "enhance": false,
     "compileHotReLoad": true,
     "postcss": false,
-    "minified": false
+    "minified": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "coverView": false,
+    "showShadowRootInWxmlPanel": false,
+    "packNpmRelationList": [],
+    "ignoreUploadUnusedFiles": true
   },
-  "compileType": "miniprogram"
+  "compileType": "miniprogram",
+  "srcMiniprogramRoot": "dist/",
+  "condition": {},
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  },
+  "appid": "wxa6835a1006c78ca6",
+  "libVersion": "3.1.2",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  }
 }

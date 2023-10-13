@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import Taro, { useLaunch } from '@tarojs/taro'
-import './app.css'
+import './custom-theme.scss'
 
 function App({ children }: PropsWithChildren<any>) {
   useLaunch(() => {
