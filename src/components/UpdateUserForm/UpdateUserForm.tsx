@@ -51,8 +51,9 @@ export default function UpdateUserForm({ user }: { user: User }) {
       const majorIndex = Object.keys(majorRange).indexOf(major)
       const detailMajorIndex =
         Object.keys(majorRange)[majorIndex].indexOf(detailMajor)
-      setSelectedMajor([majorIndex, detailMajorIndex])
       setDetailMajorRange(majorRange[major])
+      setSelectedMajor([majorIndex, detailMajorIndex])
+      console.log('init')
     }
   }
 
@@ -61,10 +62,12 @@ export default function UpdateUserForm({ user }: { user: User }) {
   }, [])
 
   const handleSubmit = () => {
+    // TODO
     console.log(userState)
   }
 
   const handleReset = () => {
+    // TODO
     setUserState(user)
     initMajor()
   }
@@ -165,6 +168,7 @@ export default function UpdateUserForm({ user }: { user: User }) {
                 setDetailMajorRange(
                   majorRange[Object.keys(majorRange)[e.detail.value]]
                 )
+                setSelectedMajor([e.detail.value, 0])
               }
             }}
           >

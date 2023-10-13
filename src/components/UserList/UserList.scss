@@ -10,5 +10,10 @@
     padding: 30px;
     padding-left: 50px;
     padding-right: 40px;
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
 }
