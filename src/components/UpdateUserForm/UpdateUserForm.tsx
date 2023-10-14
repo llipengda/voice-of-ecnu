@@ -15,6 +15,8 @@ import './UpdateUserForm.scss'
 export default function UpdateUserForm({ user }: { user: User }) {
   const [userState, setUserState] = useState(user)
 
+  const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
+
   const handleChangeAvatar = () => {
     Taro.chooseImage({
       count: 1,
@@ -63,6 +65,18 @@ export default function UpdateUserForm({ user }: { user: User }) {
 
   const handleSubmit = () => {
     // TODO
+    setSubmitButtonLoading(true)
+    setTimeout(() => {
+      setSubmitButtonLoading(false)
+      Taro.showToast({
+        title: '提交成功',
+        icon: 'success',
+        duration: 1000,
+      })
+      setTimeout(() => {
+        Taro.navigateBack()
+      }, 1000)
+    }, 1000)
     console.log(userState)
   }
 
@@ -180,7 +194,12 @@ export default function UpdateUserForm({ user }: { user: User }) {
         <AtButton type='secondary' className='button' onClick={handleReset}>
           重置
         </AtButton>
-        <AtButton type='primary' className='button' onClick={handleSubmit}>
+        <AtButton
+          type='primary'
+          className='button'
+          onClick={handleSubmit}
+          loading={submitButtonLoading}
+        >
           提交
         </AtButton>
       </View>

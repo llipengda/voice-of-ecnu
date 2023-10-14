@@ -8,7 +8,7 @@ export default function update() {
         role: 2,
         email: '',
         name: '张三',
-        avatar: 'https://taro-ui.jd.com/img/logo-taro.png',
+        avatar: 'https://www.xiaowu.fun/static/1.jpg',
         status: '凡事都有偶然的凑巧，结果却又如宿命的必然。',
         createdAt: new Date(),
         major: '软件工程学院-软件工程'
