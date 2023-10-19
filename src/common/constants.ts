@@ -84,6 +84,7 @@ export const majorRange: Record<string, string[]> = {
 }
 
 export const serverUrl = 'https://www.xiaowu.fun'
+// for local test
+// export const serverUrl = 'http://localhost:8080'
 
-export const defaultAvatar =
-  'https://www.xiaowu.fun/static/3aa28cdb32634b1d9ec9e941b136aedd-IG1Rt5eXcjeDf25c9f3d5c62fea292ddcf876b3744d1.png'
+export const defaultAvatar = 'https://www.xiaowu.fun/static/voecnu.png'
