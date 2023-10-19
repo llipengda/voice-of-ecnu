@@ -1,18 +1,26 @@
 import { useEffect, useState } from 'react'
 import { View, Image, Input, Textarea, Picker } from '@tarojs/components'
 import { AtButton, AtIcon } from 'taro-ui'
-import { User } from 'types/user'
+import Taro from '@tarojs/taro'
+import { uploadImage } from '@/api/Image'
+import { useAppSelector } from '@/redux/hooks'
+import { updateUser } from '@/api/User'
+import { useDispatch } from 'react-redux'
 import {
   genderRange,
   gradeRange,
   majorRange,
   primaryColor,
 } from '@/common/constants'
-import Taro from '@tarojs/taro'
 import '../../custom-theme.scss'
 import './UpdateUserForm.scss'
+import { setUser } from '@/redux/slice/userSlice'
 
-export default function UpdateUserForm({ user }: { user: User }) {
+export default function UpdateUserForm() {
+  const user = useAppSelector(state => state.user)
+
+  const dispatch = useDispatch()
+
   const [userState, setUserState] = useState(user)
 
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
@@ -26,18 +34,9 @@ export default function UpdateUserForm({ user }: { user: User }) {
         Taro.cropImage({
           src: res.tempFilePaths[0],
           cropScale: '1:1',
-          success: res => {
-            Taro.uploadFile({
-              // TODO
-              url: 'https://example.com/upload',
-              filePath: res.tempFilePath,
-              name: 'file',
-              success: res => {
-                const data = JSON.parse(res.data)
-                setUserState({ ...userState, avatar: data.data })
-              },
-            })
-            setUserState({ ...userState, avatar: res.tempFilePath })
+          success: async res => {
+            const newPath = await uploadImage(res.tempFilePath)
+            setUserState({ ...userState, avatar: newPath as string })
           },
         })
       },
@@ -63,9 +62,11 @@ export default function UpdateUserForm({ user }: { user: User }) {
     initMajor()
   }, [])
 
-  const handleSubmit = () => {
-    // TODO
+  const handleSubmit = async () => {
     setSubmitButtonLoading(true)
+    const data = await updateUser(userState)
+    setUserState(data!)
+    dispatch(setUser(data!))
     setTimeout(() => {
       setSubmitButtonLoading(false)
       Taro.showToast({
@@ -81,7 +82,6 @@ export default function UpdateUserForm({ user }: { user: User }) {
   }
 
   const handleReset = () => {
-    // TODO
     setUserState(user)
     initMajor()
   }
@@ -134,6 +134,7 @@ export default function UpdateUserForm({ user }: { user: User }) {
             className='form-constant'
             mode='selector'
             range={genderRange}
+            value={userState.gender || 0}
             onChange={e =>
               setUserState({
                 ...userState,
@@ -153,6 +154,7 @@ export default function UpdateUserForm({ user }: { user: User }) {
             onChange={e =>
               setUserState({ ...userState, grade: gradeRange[e.detail.value] })
             }
+            value={userState.grade ? gradeRange.indexOf(userState.grade) : 0}
           >
             <View>{userState.grade || '不显示'}</View>
           </Picker>

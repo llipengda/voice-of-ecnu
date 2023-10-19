@@ -82,3 +82,5 @@ export const majorRange: Record<string, string[]> = {
   生态与环境科学学院: ['环境生态工程', '环境科学', '生态学'],
   地理科学学院: ['地理科学（公费师范）', '地理信息科学', '地理科学'],
 }
+
+export const serverUrl = 'https://www.xiaowu.fun'

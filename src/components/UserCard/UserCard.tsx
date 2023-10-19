@@ -1,9 +1,11 @@
 import { Image, View, Text } from '@tarojs/components'
+import { useAppSelector } from '@/redux/hooks'
 import '../../custom-theme.scss'
 import './UserCard.scss'
-import { User } from 'types/user'
 
-export default function UserCard({ user }: { user: User }) {
+export default function UserCard() {
+  const user = useAppSelector(state => state.user)
+  
   return (
     <View>
       <View className='user-card'>
@@ -21,11 +23,11 @@ export default function UserCard({ user }: { user: User }) {
               )}
             </View>
             <View className='at-row'>
-              <Text className='user-major'>{user.major || '未知专业'}</Text>
+              <Text className='user-major'>{user.major}</Text>
             </View>
             <View className='at-row'>
               <View style={{ whiteSpace: 'pre-wrap' }}>
-                {user.status?.substring(0, 30) || '这个人很懒，什么也没有留下'}
+                {user.status?.substring(0, 30) || '这个人很懒，什么也没有留下。'}
                 {(user.status?.length || 0) >= 30 && '...'}
               </View>
             </View>
