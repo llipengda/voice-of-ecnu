@@ -7,6 +7,7 @@ export default defineAppConfig({
     'pages/user/user',
     'pages/message/message',
     'pages/user/update/update',
+    'pages/user/verify/verify',
   ],
   window: {
     backgroundTextStyle: 'light',

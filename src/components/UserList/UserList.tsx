@@ -18,7 +18,6 @@ export default function UserList() {
         hasBorder={false}
         iconInfo={{ value: 'edit', color: primaryColor }}
         onClick={() => {
-          console.log('click')
           navigateTo('update')
         }}
       />
@@ -28,6 +27,9 @@ export default function UserList() {
         arrow='right'
         hasBorder={false}
         iconInfo={{ value: 'user', color: primaryColor }}
+        onClick={() => {
+          navigateTo('verify')
+        }}
       />
       <AtListItem
         className='item'

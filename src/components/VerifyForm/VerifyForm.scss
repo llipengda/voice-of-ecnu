@@ -1,0 +1,23 @@
+@import '../../custom-theme.scss';
+
+.verify-form {
+  margin-top: 20px;
+
+  .image-warp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .status-image {
+      width: 50%;
+      font-size: $icon-size-sm;
+    }
+  }
+
+  .title {
+    text-align: center;
+    font-size: 60px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+}
