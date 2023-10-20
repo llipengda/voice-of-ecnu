@@ -81,7 +81,7 @@ $icon-size: 85px;
       }
 
       .form-label {
-        min-width: 220px;
+        min-width: 190px;
         font-size: 36px;
         font-weight: 400;
         color: $primary-color;
@@ -109,6 +109,16 @@ $icon-size: 85px;
         color: #7f7f7f;
         margin-bottom: 10px;
         margin-top: 10px;
+      }
+
+      .email {
+        font-size: 33px;
+        font-weight: 400;
+        color: #7f7f7f;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        white-space: normal;
+        word-break: break-word;
       }
     }
   }

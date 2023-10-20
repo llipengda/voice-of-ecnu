@@ -67,18 +67,15 @@ export default function UpdateUserForm() {
     const data = await updateUser(userState)
     setUserState(data!)
     dispatch(setUser(data!))
+    setSubmitButtonLoading(false)
+    Taro.showToast({
+      title: '提交成功',
+      icon: 'success',
+      duration: 1000,
+    })
     setTimeout(() => {
-      setSubmitButtonLoading(false)
-      Taro.showToast({
-        title: '提交成功',
-        icon: 'success',
-        duration: 1000,
-      })
-      setTimeout(() => {
-        Taro.navigateBack()
-      }, 1000)
+      Taro.navigateBack()
     }, 1000)
-    console.log(userState)
   }
 
   const handleReset = () => {
@@ -109,7 +106,7 @@ export default function UpdateUserForm() {
         </View>
         <View className='form-item'>
           <View className='form-label'>邮箱</View>
-          <View className='form-constant'>
+          <View className='email'>
             {userState.email || '未认证邮箱'}
           </View>
         </View>

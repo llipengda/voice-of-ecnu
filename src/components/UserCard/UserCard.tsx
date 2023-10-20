@@ -27,7 +27,7 @@ export default function UserCard() {
             )}
           </View>
           <View className='at-row'>
-            <Text className='user-major'>{user.major}</Text>
+            <Text className='user-major' style={{whiteSpace: 'pre-wrap'}}>{user.major}</Text>
           </View>
           <View className='at-row'>
             <View style={{ whiteSpace: 'pre-wrap' }}>
