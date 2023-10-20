@@ -10,7 +10,7 @@ $icon-size: 85px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 
     .avatar {
       width: $size;
@@ -57,12 +57,21 @@ $icon-size: 85px;
     }
   }
 
+  .label {
+    font-size: 42px;
+    font-weight: 700;
+    color: #3f3f3f;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-left: 40px;
+  }
+
   .form-container {
     margin-left: 30px;
     margin-right: 30px;
     padding-left: 40px;
     padding-right: 40px;
-    margin-top: 60px;
+    margin-bottom: 40px;
     padding-top: 15px;
     padding-bottom: 15px;
     border-radius: 25px;
@@ -81,7 +90,7 @@ $icon-size: 85px;
       }
 
       .form-label {
-        min-width: 190px;
+        min-width: 200px;
         font-size: 36px;
         font-weight: 400;
         color: $primary-color;
@@ -106,7 +115,7 @@ $icon-size: 85px;
       .form-constant {
         font-size: 36px;
         font-weight: 400;
-        color: #7f7f7f;
+        color: $disabled-color;
         margin-bottom: 10px;
         margin-top: 10px;
       }
@@ -114,11 +123,23 @@ $icon-size: 85px;
       .email {
         font-size: 33px;
         font-weight: 400;
-        color: #7f7f7f;
+        color: $disabled-color;
         margin-bottom: 10px;
         margin-top: 10px;
         white-space: normal;
         word-break: break-word;
+      }
+
+      .goto-verify {
+        margin-left: 70px;
+        font-size: 30px;
+        font-weight: 400;
+        color: $primary-color;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        white-space: normal;
+        word-break: break-word;
+        cursor: pointer;
       }
     }
   }

@@ -20,7 +20,7 @@ export default function VerifyForm() {
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true)
 
-  const [email, setEmail] = useState(user.email || '')
+  const [email, setEmail] = useState('')
   const [emailErr, setEmailErr] = useState('')
 
   const [code, setCode] = useState('')
@@ -41,7 +41,7 @@ export default function VerifyForm() {
     } else if (!email) {
       setEmailErr('请输入邮箱')
     } else {
-      setEmailErr('邮箱地址不合法')
+      setEmailErr('邮箱地址不满足要求')
     }
     setCanSendCode(false)
     return false
@@ -50,6 +50,10 @@ export default function VerifyForm() {
   const checkCode = async (code: string) => {
     if (!code) {
       setCodeErr('请输入验证码')
+      return false
+    }
+    if (code.length !== 6) {
+      setCodeErr('验证码错误')
       return false
     }
     const ok = await USERAPI.verifyCode(email, code)
@@ -69,9 +73,9 @@ export default function VerifyForm() {
     setSendCodeDisabled(true)
     setSendCodeLoading(false)
     let timeLeft = 60
+    setSendCodeText(`${timeLeft--}秒后重试`)
     const timer = setInterval(() => {
       setSendCodeText(`${timeLeft--}秒后重试`)
-      console.log(sendCodeDisabled || !canSendCode)
     }, 1000)
     setInterval(() => {
       setSendCodeDisabled(false)
@@ -81,13 +85,16 @@ export default function VerifyForm() {
   }
 
   const handleReset = () => {
-    setEmail(user.email || '')
+    setEmail('')
     setCode('')
     setEmailErr('')
     setCodeErr('')
   }
 
   const handleSubmit = async () => {
+    if (((await checkCode(code)) && checkEmail(email)) === false) {
+      return
+    }
     setSubmitButtonLoading(true)
     await USERAPI.verifyUser(user.id)
     const data = await USERAPI.updateUser({ email })
@@ -118,6 +125,10 @@ export default function VerifyForm() {
       >
         {verified ? '已认证' : '未认证'}
       </View>
+      <View className='label'>
+        {verified ? '修改认证邮箱' : '本校成员认证'}
+      </View>
+      <View className='discription'>请使用 `.ecnu.edu.cn` 校园邮箱认证</View>
       <View className='form-container'>
         <View className='form-item'>
           <View className='form-label'>邮箱</View>
@@ -131,7 +142,7 @@ export default function VerifyForm() {
             placeholder='请使用华东师范大学邮箱认证'
           />
         </View>
-        <View className='error'>{emailErr}</View>
+        <View className='error'>{emailErr ? '⚠️' + emailErr : ''}</View>
         <View className='form-item'>
           <View className='form-label'>验证码</View>
           <Input
@@ -155,7 +166,7 @@ export default function VerifyForm() {
             {sendCodeText}
           </AtButton>
         </View>
-        <View className='error'>{codeErr}</View>
+        <View className='error'>{codeErr ? '⚠️' + codeErr : ''}</View>
       </View>
       <View className='action-container'>
         <AtButton type='secondary' className='button' onClick={handleReset}>

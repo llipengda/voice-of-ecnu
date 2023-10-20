@@ -22,12 +22,29 @@
     margin-bottom: 10px;
   }
 
+  .label {
+    font-size: 42px;
+    font-weight: 700;
+    color: #3f3f3f;
+    margin-top: 80px;
+    margin-left: 40px;
+  }
+
+  .discription {
+    font-size: 34px;
+    font-weight: 400;
+    color: $disabled-color;
+    margin-top: 5px;
+    margin-bottom: 30px;
+    margin-left: 40px;
+  }
+
   .form-container {
     margin-left: 30px;
     margin-right: 30px;
     padding-left: 40px;
     padding-right: 40px;
-    margin-top: 60px;
+    margin-bottom: 60px;
     padding-top: 15px;
     padding-bottom: 15px;
     border-radius: 25px;
@@ -80,7 +97,7 @@
 
     .error {
       border-bottom: 1px solid #eee;
-      color: red;
+      color: $primary-color;
       text-align: right;
       padding-top: 12px;
       padding-bottom: 13px;

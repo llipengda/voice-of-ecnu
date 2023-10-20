@@ -12,7 +12,6 @@ export const login = async (code: string) => {
     if (data.data.code !== 0) {
       throw new Error(data.data.msg)
     }
-    console.log(data.data.data)
     await Taro.setStorage({ key: 'token', data: data.data.data.token })
     return data.data.data
   } catch (error) {

@@ -37,6 +37,7 @@ export default function UpdateUserForm() {
           success: async res => {
             const newPath = await uploadImage(res.tempFilePath)
             setUserState({ ...userState, avatar: newPath as string })
+            await updateUser({ avatar: newPath })
           },
         })
       },
@@ -54,7 +55,6 @@ export default function UpdateUserForm() {
         Object.keys(majorRange)[majorIndex].indexOf(detailMajor)
       setDetailMajorRange(majorRange[major])
       setSelectedMajor([majorIndex, detailMajorIndex])
-      console.log('init')
     }
   }
 
@@ -83,6 +83,10 @@ export default function UpdateUserForm() {
     initMajor()
   }
 
+  const navigateToVerify = () => {
+    Taro.navigateTo({ url: '/pages/user/verify/verify' })
+  }
+
   return (
     <View className='update-user-form'>
       <View className='avatar-container'>
@@ -95,6 +99,7 @@ export default function UpdateUserForm() {
           onClick={handleChangeAvatar}
         />
       </View>
+      <View className='label'>基本信息</View>
       <View className='form-container'>
         <View className='form-item'>
           <View className='form-label'>用户名</View>
@@ -106,9 +111,14 @@ export default function UpdateUserForm() {
         </View>
         <View className='form-item'>
           <View className='form-label'>邮箱</View>
-          <View className='email'>
+          <View className='email' onClick={navigateToVerify}>
             {userState.email || '未认证邮箱'}
           </View>
+          {!userState.email && (
+            <View className='goto-verify' onClick={navigateToVerify}>
+              去认证
+            </View>
+          )}
         </View>
         <View className='form-item'>
           <View className='form-label'>个性签名</View>
@@ -124,6 +134,7 @@ export default function UpdateUserForm() {
           />
         </View>
       </View>
+      <View className='label'>可选信息</View>
       <View className='form-container'>
         <View className='form-item'>
           <View className='form-label'>性别</View>
