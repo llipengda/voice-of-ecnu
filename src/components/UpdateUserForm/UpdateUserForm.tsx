@@ -87,10 +87,17 @@ export default function UpdateUserForm() {
     Taro.navigateTo({ url: '/pages/user/verify/verify' })
   }
 
+  const handleShowAvatar = () => {
+    Taro.previewImage({
+      urls: [userState.avatar],
+      current: userState.avatar,
+    })
+  }
+
   return (
     <View className='update-user-form'>
       <View className='avatar-container'>
-        <Image className='avatar' src={userState.avatar} />
+        <Image className='avatar' src={userState.avatar} onClick={handleShowAvatar}/>
         <AtIcon
           value='camera'
           size='30'
