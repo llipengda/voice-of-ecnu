@@ -1,5 +1,5 @@
-import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
+import { serverUrl } from '@/common/constants'
 import { Result } from 'types/result'
 
 export const uploadImage = async (filePath: string) => {
@@ -13,6 +13,9 @@ export const uploadImage = async (filePath: string) => {
       name: 'file',
       header: {
         'content-type': 'multipart/form-data',
+        header: {
+          session: (await Taro.getStorage<string>({ key: 'token' })).data,
+        },
       },
     })
     const newData: Result<string> = JSON.parse(data.data)
