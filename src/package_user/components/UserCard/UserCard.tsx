@@ -1,6 +1,6 @@
 import { Image, View, Text } from '@tarojs/components'
 import { useAppSelector } from '@/redux/hooks'
-import '../../custom-theme.scss'
+import '@/custom-theme.scss'
 import './UserCard.scss'
 import Taro from '@tarojs/taro'
 import { defaultAvatar } from '@/common/constants'
@@ -12,7 +12,9 @@ export default function UserCard() {
     <View className='user-card'>
       <View
         className='at-row'
-        onClick={() => Taro.navigateTo({ url: 'update/update' })}
+        onClick={() =>
+          Taro.navigateTo({ url: '/package_user/pages/user/update/update' })
+        }
       >
         <View className='at-col at-col-5'>
           <Image src={user.avatar || defaultAvatar} className='avatar' />
@@ -27,7 +29,9 @@ export default function UserCard() {
             )}
           </View>
           <View className='at-row'>
-            <Text className='user-major' style={{whiteSpace: 'pre-wrap'}}>{user.major}</Text>
+            <Text className='user-major' style={{ whiteSpace: 'pre-wrap' }}>
+              {user.major && user.major !== '不显示'}
+            </Text>
           </View>
           <View className='at-row'>
             <View style={{ whiteSpace: 'pre-wrap' }}>

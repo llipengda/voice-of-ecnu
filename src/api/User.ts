@@ -27,6 +27,9 @@ export const getUserById = async (id: string) => {
     const data = await Taro.request<Result<User>>({
       url: `${serverUrl}/user/getUserById?userId=${id}`,
       method: 'GET',
+      header: {
+        session: (await Taro.getStorage<string>({ key: 'token' })).data,
+      },
     })
     if (data.data.code !== 0) {
       throw new Error(data.data.msg)

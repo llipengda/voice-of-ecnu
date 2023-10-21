@@ -12,7 +12,7 @@ import {
   majorRange,
   primaryColor,
 } from '@/common/constants'
-import '../../custom-theme.scss'
+import '@/custom-theme.scss'
 import './UpdateUserForm.scss'
 import { setUser } from '@/redux/slice/userSlice'
 

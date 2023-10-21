@@ -4,10 +4,8 @@ export default defineAppConfig({
   style: 'v2',
   pages: [
     'pages/home/home',
-    'pages/user/user',
     'pages/message/message',
-    'pages/user/update/update',
-    'pages/user/verify/verify',
+    'pages/user/user',
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -24,21 +22,30 @@ export default defineAppConfig({
       {
         pagePath: 'pages/home/home',
         text: '首页',
-        iconPath: 'assets/home.png',
-        selectedIconPath: 'assets/home_active.png',
+        iconPath: 'assets/home.drawio.png',
+        selectedIconPath: 'assets/home_active.drawio.png',
       },
       {
         pagePath: 'pages/message/message',
         text: '消息',
-        iconPath: 'assets/message.png',
-        selectedIconPath: 'assets/message_active.png',
+        iconPath: 'assets/message.drawio.png',
+        selectedIconPath: 'assets/message_active.drawio.png',
       },
       {
         pagePath: 'pages/user/user',
         text: '我的',
-        iconPath: 'assets/user.png',
-        selectedIconPath: 'assets/user_active.png',
+        iconPath: 'assets/user.drawio.png',
+        selectedIconPath: 'assets/user_active.drawio.png',
       },
     ],
   },
+  subpackages: [
+    {
+      root: 'package_user',
+      pages: [
+        'pages/user/update/update',
+        'pages/user/verify/verify',
+      ],
+    },
+  ],
 })
