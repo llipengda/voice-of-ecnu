@@ -100,7 +100,6 @@ export const sendCode = async (email: string) => {
     }
     return data.data.data
   } catch (error) {
-    console.log(error)
     Taro.showToast({
       title: error.message,
       icon: 'error',
@@ -122,7 +121,6 @@ export const verifyCode = async (email: string, code: string) => {
     }
     return data.data.data
   } catch (error) {
-    console.log(error)
     Taro.showToast({
       title: error.message,
       icon: 'error',
@@ -144,7 +142,6 @@ export const verifyUser = async (userId: string) => {
     }
     return data.data.data
   } catch (error) {
-    console.log(error)
     Taro.showToast({
       title: error.message,
       icon: 'error',
