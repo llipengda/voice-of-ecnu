@@ -160,7 +160,7 @@ export default function VerifyForm() {
             type='secondary'
             size='small'
             className='send-code-button'
-            disabled={sendCodeDisabled || !canSendCode}
+            disabled={(sendCodeDisabled || (!canSendCode))}
             loading={sendCodeLoading}
             onClick={sendCode}
           >
