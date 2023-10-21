@@ -84,7 +84,7 @@ export default function UpdateUserForm() {
   }
 
   const navigateToVerify = () => {
-    Taro.navigateTo({ url: '/pages/user/verify/verify' })
+    Taro.navigateTo({ url: '/package_user/pages/user/verify/verify' })
   }
 
   const handleShowAvatar = () => {
