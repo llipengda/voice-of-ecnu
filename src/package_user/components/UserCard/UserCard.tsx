@@ -1,12 +1,26 @@
 import { Image, View, Text } from '@tarojs/components'
 import { useAppSelector } from '@/redux/hooks'
-import '@/custom-theme.scss'
-import './UserCard.scss'
 import Taro from '@tarojs/taro'
 import { defaultAvatar } from '@/common/constants'
+import male from '@/assets/male.drawio.svg'
+import famale from '@/assets/famale.drawio.svg'
+import '@/custom-theme.scss'
+import './UserCard.scss'
 
 export default function UserCard() {
   const user = useAppSelector(state => state.user)
+
+  const displayGender = () => {
+    switch (user.gender) {
+      case 1:
+      case 2:
+        return (
+          <Image src={user.gender == 1 ? male : famale} className='gender' />
+        )
+      default:
+        return <></>
+    }
+  }
 
   return (
     <View className='user-card'>
@@ -22,6 +36,7 @@ export default function UserCard() {
         <View className='at-col at-col-7 at-col__align--center'>
           <View className='at-row'>
             <Text className='user-name'>{user.name}</Text>
+            {displayGender()}
             {user.role <= 2 ? (
               <Text className='verify-ok'>已认证</Text>
             ) : (
@@ -30,7 +45,7 @@ export default function UserCard() {
           </View>
           <View className='at-row'>
             <Text className='user-major' style={{ whiteSpace: 'pre-wrap' }}>
-              {user.major && user.major !== '不显示'}
+              {user.major ? (user.major == '不显示' ? '' : user.major) : ''}
             </Text>
           </View>
           <View className='at-row'>

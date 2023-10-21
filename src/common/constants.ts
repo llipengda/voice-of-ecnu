@@ -4,6 +4,7 @@ export const backgroundColor = '#f6f6f6'
 const gradeRange = Array.from({ length: 6 }, (_, i) => i + 1).map(
   i => `${i + (new Date().getFullYear() % 100) - 6}级`
 )
+gradeRange.push('其他')
 gradeRange.unshift('不显示')
 export { gradeRange }
 

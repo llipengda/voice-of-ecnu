@@ -33,12 +33,22 @@ $size: 200px;
 
   .verify-fault {
     font-size: 24px;
+    font-weight: 700;
     color: red;
   }
 
   .verify-ok {
     font-size: 24px;
+    font-weight: 700;
     color: green;
+  }
+
+  .gender {
+    width: 30px;
+    height: 30px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
   .user-major {
