@@ -27,7 +27,7 @@ export default function UserCard() {
       <View
         className='at-row'
         onClick={() =>
-          Taro.navigateTo({ url: '/package_user/pages/user/update/update' })
+          Taro.navigateTo({ url: '/packages/user/pages/user/update/update' })
         }
       >
         <View className='at-col at-col-5'>

@@ -1,7 +1,7 @@
 import { View, Image, Input } from '@tarojs/components'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import verifyOk from '@/package_user/assets/verify_ok.drawio.svg'
-import verifyFailed from '@/package_user/assets/verify_failed.drawio.svg'
+import verifyOk from '@/packages/user/assets/verify_ok.drawio.svg'
+import verifyFailed from '@/packages/user/assets/verify_failed.drawio.svg'
 import { AtButton } from 'taro-ui'
 import { useState } from 'react'
 import * as USERAPI from '@/api/User'
@@ -134,7 +134,9 @@ export default function VerifyForm() {
         {verified ? '修改认证邮箱' : '本校成员认证'}
       </View>
       <View className='discription'>请使用 `.ecnu.edu.cn` 校园邮箱认证</View>
-      <View className='discription c2'>您的邮箱将<strong>不会</strong>被对外展示</View>
+      <View className='discription c2'>
+        您的邮箱将<strong>不会</strong>被对外展示
+      </View>
       <View className='form-container'>
         <View className='form-item'>
           <View className='form-label'>邮箱</View>
@@ -165,7 +167,7 @@ export default function VerifyForm() {
             type='secondary'
             size='small'
             className='send-code-button'
-            disabled={(sendCodeDisabled || (!canSendCode))}
+            disabled={sendCodeDisabled || !canSendCode}
             loading={sendCodeLoading}
             onClick={sendCode}
           >

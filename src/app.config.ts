@@ -2,11 +2,7 @@ import { backgroundColor, primaryColor } from './common/constants'
 
 export default defineAppConfig({
   style: 'v2',
-  pages: [
-    'pages/home/home',
-    'pages/message/message',
-    'pages/user/user',
-  ],
+  pages: ['pages/home/home', 'pages/message/message', 'pages/user/user'],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: backgroundColor,
@@ -41,11 +37,8 @@ export default defineAppConfig({
   },
   subpackages: [
     {
-      root: 'package_user',
-      pages: [
-        'pages/user/update/update',
-        'pages/user/verify/verify',
-      ],
+      root: 'packages/user',
+      pages: ['pages/user/update/update', 'pages/user/verify/verify'],
     },
   ],
 })
