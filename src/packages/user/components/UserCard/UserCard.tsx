@@ -39,7 +39,8 @@ export default function UserCard() {
               {user.name.length <= 5 ||
               !user.name.includes('用户') ||
               !/^[A-Za-z0-9]+$/.test(user.name)
-                ? user.name.substring(0, 8) + '...'
+                ? user.name.substring(0, 8) +
+                  (user.name.length <= 8 ? '' : '...')
                 : user.name.substring(0, 5) + '...'}
             </Text>
             {displayGender()}
