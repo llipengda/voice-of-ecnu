@@ -41,9 +41,6 @@ export const sendCode = async (email: string) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/user/sendCode?email=${email}`,
     method: 'POST',
-    header: {
-      session: (await Taro.getStorage<string>({ key: 'token' })).data,
-    },
   })
   return data.data.data
 }
@@ -59,6 +56,14 @@ export const verifyCode = async (email: string, code: string) => {
 export const verifyUser = async (userId: string) => {
   const data = await Taro.request<Result<User>>({
     url: `${serverUrl}/user/verifyUser?userId=${userId}`,
+    method: 'POST',
+  })
+  return data.data.data
+}
+
+export const confirmPrivacyPolicy = async (userId: string) => {
+  const data = await Taro.request<Result<User>>({
+    url: `${serverUrl}/user/confirmPrivacyPolicy?userId=${userId}`,
     method: 'POST',
   })
   return data.data.data

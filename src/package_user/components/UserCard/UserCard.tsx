@@ -35,7 +35,13 @@ export default function UserCard() {
         </View>
         <View className='at-col at-col-7 at-col__align--center'>
           <View className='at-row'>
-            <Text className='user-name'>{user.name}</Text>
+            <Text className='user-name'>
+              {user.name.length <= 5 ||
+              !user.name.includes('用户') ||
+              !/^[A-Za-z0-9]+$/.test(user.name)
+                ? user.name.substring(0, 8) + '...'
+                : user.name.substring(0, 5) + '...'}
+            </Text>
             {displayGender()}
             {user.role <= 2 ? (
               <Text className='verify-ok'>已认证</Text>

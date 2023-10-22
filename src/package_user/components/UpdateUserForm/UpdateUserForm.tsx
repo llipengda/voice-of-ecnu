@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Image, Input, Textarea, Picker } from '@tarojs/components'
 import { AtButton, AtIcon } from 'taro-ui'
-import Taro from '@tarojs/taro'
+import Taro, { useLoad } from '@tarojs/taro'
 import { uploadImage } from '@/api/Image'
 import { useAppSelector } from '@/redux/hooks'
 import { updateUser } from '@/api/User'
@@ -15,9 +15,14 @@ import {
 import '@/custom-theme.scss'
 import './UpdateUserForm.scss'
 import { setUser } from '@/redux/slice/userSlice'
+import showPrivacyPolicy from '@/utils/privacy'
 
 export default function UpdateUserForm() {
   const user = useAppSelector(state => state.user)
+
+  useLoad(() => {
+    showPrivacyPolicy(user)
+  })
 
   const dispatch = useDispatch()
 
@@ -97,7 +102,11 @@ export default function UpdateUserForm() {
   return (
     <View className='update-user-form'>
       <View className='avatar-container'>
-        <Image className='avatar' src={userState.avatar} onClick={handleShowAvatar}/>
+        <Image
+          className='avatar'
+          src={userState.avatar}
+          onClick={handleShowAvatar}
+        />
         <AtIcon
           value='camera'
           size='30'
@@ -109,7 +118,7 @@ export default function UpdateUserForm() {
       <View className='label'>基本信息</View>
       <View className='form-container'>
         <View className='form-item'>
-          <View className='form-label'>用户名</View>
+          <View className='form-label'>昵称</View>
           <Input
             className='form-input'
             value={userState.name}

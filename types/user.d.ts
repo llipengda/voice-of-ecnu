@@ -1,9 +1,9 @@
 export type User = {
   id: string
   /**
-   * @enum 0: 超级管理员, 1: 管理员, 2: 认证用户, 3: 未认证用户
+   * @enum 0: 超级管理员, 1: 管理员, 2: 认证用户, 3: 未认证用户, 4: 未同意隐私政策用户
    */
-  role: 0 | 1 | 2 | 3
+  role: 0 | 1 | 2 | 3 | 4
   name: string
   email?: string
   avatar: string

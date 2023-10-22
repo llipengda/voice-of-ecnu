@@ -8,10 +8,15 @@ import * as USERAPI from '@/api/User'
 import './VerifyForm.scss'
 import '@/custom-theme.scss'
 import { setUser } from '@/redux/slice/userSlice'
-import Taro from '@tarojs/taro'
+import Taro, { useLoad } from '@tarojs/taro'
+import showPrivacyPolicy from '@/utils/privacy'
 
 export default function VerifyForm() {
   const user = useAppSelector(state => state.user)
+
+  useLoad(() => {
+    showPrivacyPolicy(user)
+  })
 
   const dispatch = useAppDispatch()
 

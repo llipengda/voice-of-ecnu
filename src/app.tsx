@@ -7,7 +7,7 @@ import { setLoginInfo } from './redux/slice/loginSlice'
 import { setUser } from './redux/slice/userSlice'
 import { useAppDispatch } from './redux/hooks'
 import './custom-theme.scss'
-import interceptor from './api/interceptor'
+import interceptor from './utils/interceptor'
 
 function MyApp({ children }: PropsWithChildren<any>) {
   const dispatch = useAppDispatch()
