@@ -1,0 +1,9 @@
+@import '@/common/constants.scss';
+
+.at-search-bar {
+  background-color: $disabled-color;
+
+  &__input {
+    background: #3f3f3f11;
+  }
+}

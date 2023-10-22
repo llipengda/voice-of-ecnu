@@ -1,0 +1,85 @@
+@import '@/common/constants.scss';
+
+$size: 80px;
+
+.post {
+  margin: 0 auto;
+  padding: 25px;
+  margin: 20px;
+  border-radius: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+
+  &__header {
+    &__avatar {
+      width: $size;
+      height: $size;
+      border-radius: 50%;
+      background-color: #eee;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      border: 2px solid #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+      margin: 10px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+
+    &__username {
+      margin-top: 10px;
+      font-size: 38px;
+      color: $primary-color;
+    }
+
+    &__create-at {
+      font-size: 24px;
+      color: $disabled-color;
+    }
+  }
+
+  &__body {
+    margin-top: 20px;
+    margin-left: 20px;
+    padding-bottom: 30px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eeeeee;
+
+    &__title {
+      font-size: 44px;
+      font-weight: 700;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    &__content {
+      margin-bottom: 10px;
+    }
+    &__image {
+      width: 200px;
+      height: 200px;
+      padding: 10px;
+      padding-left: 0;
+      padding-bottom: 0;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      border: 2px solid #fff;
+    }
+  }
+
+  &__footer {
+    margin-left: 45px;
+    margin-bottom: 10px;
+
+    &__number {
+      margin-left: 5px;
+      font-size: 24px;
+    }
+  }
+
+  .at-icon-star {
+    margin-bottom: 5px;
+  }
+}
