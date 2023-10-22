@@ -7,11 +7,15 @@ import { setLoginInfo } from './redux/slice/loginSlice'
 import { setUser } from './redux/slice/userSlice'
 import { useAppDispatch } from './redux/hooks'
 import './custom-theme.scss'
+import interceptor from './api/interceptor'
 
 function MyApp({ children }: PropsWithChildren<any>) {
   const dispatch = useAppDispatch()
 
   useLaunch(async () => {
+    Taro.addInterceptor(Taro.interceptors.logInterceptor)
+    Taro.addInterceptor(Taro.interceptors.timeoutInterceptor)
+    Taro.addInterceptor(interceptor)
     try {
       Taro.showLoading({ title: '登录中' })
       const { code } = await Taro.login()
