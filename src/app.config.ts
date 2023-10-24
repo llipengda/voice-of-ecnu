@@ -40,5 +40,9 @@ export default defineAppConfig({
       root: 'packages/user',
       pages: ['pages/user/update/update', 'pages/user/verify/verify'],
     },
+    {
+      root: 'packages/home',
+      pages: ['pages/home/search/search'],
+    },
   ],
 })

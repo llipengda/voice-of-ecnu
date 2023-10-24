@@ -2,8 +2,8 @@ import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Post as TPost } from 'types/post'
-import './Post.scss'
 import { AtIcon } from 'taro-ui'
+import './Post.scss'
 
 export default function Post({ post }: { post: TPost }) {
   const [avatar, setAvatar] = useState('')
@@ -17,9 +17,9 @@ export default function Post({ post }: { post: TPost }) {
   }, [])
 
   return (
-    <View className='post'>
+    <View className='post skeleton-bg'>
       <View className='post__header at-row'>
-        <Image className='post__header__avatar' src={avatar}></Image>
+        <Image className='post__header__avatar skeleton-redius' src={avatar}></Image>
         <View className='at-col'>
           <View className='at-row'>
             <Text className='post__header__username'>{username}</Text>
@@ -29,7 +29,7 @@ export default function Post({ post }: { post: TPost }) {
           </View>
         </View>
       </View>
-      <View className='post__body'>
+      <View className='post__body skeleton-rect'>
         <View className='post__body__title'>{post.title}</View>
         <View className='post__body__content'>
           {post.content.length <= 50

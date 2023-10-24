@@ -12,3 +12,9 @@ export type Post = {
   userId: string
   views: number
 }
+
+export type CreatePostParams = {
+  content: string
+  images: string[]
+  title: string
+}
