@@ -47,3 +47,11 @@ export const searchByPostOrCommentOrReply = async (
   })
   return data.data.data
 }
+
+export const deletePost = async (postId: number) => {
+  const data = await Taro.request<Result<boolean>>({
+    url: `${serverUrl}/post/deletePost?postId=${postId}`,
+    method: 'POST',
+  })
+  return data.data.data
+}

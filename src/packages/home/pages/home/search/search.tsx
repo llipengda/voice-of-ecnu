@@ -28,14 +28,14 @@ export default function search() {
 
   const handlePullDownRefresh = async () => {
     index.current = 1
-    const data = await searchByPostOrCommentOrReply(
-      0,
-      5,
-      params?.key || ''
-    )
+    const data = await searchByPostOrCommentOrReply(0, 5, params?.key || '')
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length > 0)
+  }
+
+  const handleRemovePost = (id: number) => {
+    setPosts(posts.filter(p => p.id !== id))
   }
 
   return (
@@ -51,11 +51,13 @@ export default function search() {
           needInit
         >
           {posts.map(p => (
-            <CPost post={p} key={p.id} />
+            <CPost
+              post={p}
+              key={p.id}
+              onRemove={() => handleRemovePost(p.id)}
+            />
           ))}
-          {posts.length === 0 && (
-            <View className='tip'>没有更多内容</View>
-          )}
+          {posts.length === 0 && <View className='tip'>没有更多内容</View>}
         </ListView>
       </View>
     </View>

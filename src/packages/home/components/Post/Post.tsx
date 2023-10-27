@@ -3,11 +3,20 @@ import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Post as TPost } from 'types/post'
 import { AtIcon } from 'taro-ui'
-import './Post.scss'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
 import { checkLike, likePost, unlikePost } from '@/api/Like'
+import Taro from '@tarojs/taro'
+import { deletePost } from '@/api/Post'
+import './Post.scss'
+import { useAppSelector } from '@/redux/hooks'
 
-export default function Post({ post }: { post: TPost }) {
+export default function Post({
+  post,
+  onRemove,
+}: {
+  post: TPost
+  onRemove: () => void
+}) {
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
 
@@ -16,6 +25,8 @@ export default function Post({ post }: { post: TPost }) {
 
   const [likes, setLikes] = useState(post.likes)
   const [stars, setStars] = useState(post.stars)
+
+  const user = useAppSelector(state => state.user)
 
   useEffect(() => {
     getUserById(post.userId).then(data => {
@@ -48,19 +59,41 @@ export default function Post({ post }: { post: TPost }) {
     setStared(!stared)
   }
 
+  const handleDeletePost = async () => {
+    Taro.showModal({
+      title: '提示',
+      content: '确定将帖子删除？',
+      success: async res => {
+        if (res.confirm) {
+          await deletePost(post.id)
+          onRemove()
+          Taro.showToast({
+            title: '删除成功',
+            icon: 'success',
+            duration: 1000,
+          })
+        }
+      },
+    })
+  }
+
   return (
     <View className='post skeleton-bg'>
       <View className='post__header at-row'>
-        <Image
-          className='post__header__avatar skeleton-redius'
-          src={avatar}
-        ></Image>
+        <Image className='post__header__avatar skeleton-redius' src={avatar} />
         <View className='at-col'>
           <View className='at-row'>
             <Text className='post__header__username'>{username}</Text>
           </View>
           <View className='at-row'>
             <Text className='post__header__create-at'>{post.createAt}</Text>
+          </View>
+          <View>
+            {(user.id === post.userId || user.role <= 1) && (
+              <Text className='post__header__delete' onClick={handleDeletePost}>
+                删除
+              </Text>
+            )}
           </View>
         </View>
       </View>

@@ -16,6 +16,7 @@ export default function Home() {
 
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [isEmpty, setIsEmpty] = useState(false)
   const [posts, setPosts] = useState<Post[]>([])
 
   const handleSearchClick = () => {
@@ -30,6 +31,7 @@ export default function Home() {
     const data = await getPostList(++index.current, 5, selected === 1)
     setPosts([...posts, ...data])
     setHasMore(data.length > 0)
+    setIsEmpty(data.length === 0)
   }
 
   const handlePullDownRefresh = async () => {
@@ -38,14 +40,21 @@ export default function Home() {
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length > 0)
+    setIsEmpty(data.length === 0)
   }
 
   const handleOnclickPullDownRefresh = async () => {
+    setPosts([])
+    setIsEmpty(false)
     index.current = 1
     const data = await getPostList(index.current, 5, selected === 0)
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length > 0)
+  }
+
+  const handleRemovePost = (id: number) => {
+    setPosts(posts.filter(p => p.id !== id))
   }
 
   return (
@@ -73,21 +82,26 @@ export default function Home() {
           onPullDownRefresh={handlePullDownRefresh}
           onScrollToLower={handleScrollToLower}
           needInit
-          onScroll={e => console.log(e)}
         >
           {posts.map(p => (
-            <CPost post={p} key={p.id} />
+            <CPost
+              post={p}
+              key={p.id}
+              onRemove={() => handleRemovePost(p.id)}
+            />
           ))}
-          {posts.length === 0 && <View className='tip'>没有更多内容</View>}
+          {isEmpty && <View className='tip2'>没有更多内容</View>}
         </ListView>
       </View>
       <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
         <AtFab
           onClick={() => {
-            Taro.pageScrollTo({ scrollTop: 0 })
+            Taro.navigateTo({
+              url: '/packages/home/pages/home/add/add',
+            })
           }}
         >
-          <View className='at-fab__icon at-icon at-icon-chevron-up'/>
+          <View className='at-fab__icon at-icon at-icon-add' />
         </AtFab>
       </View>
     </View>
