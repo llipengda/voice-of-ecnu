@@ -14,19 +14,25 @@ export default function search() {
   const [hasMore, setHasMore] = useState(true)
   const [posts, setPosts] = useState<Post[]>([])
 
-  const [scrollTop, setScrollTop] = useState(0)
-
   const index = useRef(1)
 
   const handleScrollToLower = async () => {
-    const data = await searchByPostOrCommentOrReply(++index.current, 5, params?.key || '')
+    const data = await searchByPostOrCommentOrReply(
+      ++index.current,
+      5,
+      params?.key || ''
+    )
     setPosts([...posts, ...data])
     setHasMore(data.length > 0)
   }
 
   const handlePullDownRefresh = async () => {
     index.current = 1
-    const data = await searchByPostOrCommentOrReply(++index.current, 5, params?.key || '')
+    const data = await searchByPostOrCommentOrReply(
+      0,
+      5,
+      params?.key || ''
+    )
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length > 0)
@@ -42,13 +48,14 @@ export default function search() {
           style={{ height: '100vh', width: '100%', overflowX: 'hidden' }}
           onPullDownRefresh={handlePullDownRefresh}
           onScrollToLower={handleScrollToLower}
-          onScroll={e => setScrollTop(e.detail.scrollTop)}
-          scrollTop={scrollTop}
           needInit
         >
           {posts.map(p => (
             <CPost post={p} key={p.id} />
           ))}
+          {posts.length === 0 && (
+            <View className='tip'>没有更多内容</View>
+          )}
         </ListView>
       </View>
     </View>

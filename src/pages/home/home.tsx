@@ -1,7 +1,7 @@
 import { backgroundColor } from '@/common/constants'
 import { View } from '@tarojs/components'
 import { useRef, useState } from 'react'
-import { AtSearchBar, AtSegmentedControl } from 'taro-ui'
+import { AtFab, AtSearchBar, AtSegmentedControl } from 'taro-ui'
 import CPost from '@/packages/home/components/Post/Post'
 import ListView from 'taro-listview'
 import { getPostList } from '@/api/Post'
@@ -18,11 +18,9 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true)
   const [posts, setPosts] = useState<Post[]>([])
 
-  const [scrollTop, setScrollTop] = useState(0)
-
   const handleSearchClick = () => {
     Taro.navigateTo({
-      url: `/packages/home/pages/home/search/search?key=${searchText}`
+      url: `/packages/home/pages/home/search/search?key=${searchText}`,
     })
   }
 
@@ -42,6 +40,14 @@ export default function Home() {
     setHasMore(data.length > 0)
   }
 
+  const handleOnclickPullDownRefresh = async () => {
+    index.current = 1
+    const data = await getPostList(index.current, 5, selected === 0)
+    setPosts(data)
+    setIsLoaded(true)
+    setHasMore(data.length > 0)
+  }
+
   return (
     <View style={{ width: '100%' }}>
       <AtSearchBar
@@ -55,8 +61,7 @@ export default function Home() {
         current={selected}
         onClick={i => {
           setSelected(i)
-          handlePullDownRefresh()
-          setScrollTop(0)
+          handleOnclickPullDownRefresh()
         }}
       />
       <View className='skeleton'>
@@ -67,14 +72,23 @@ export default function Home() {
           style={{ height: '88vh', width: '100%', overflowX: 'hidden' }}
           onPullDownRefresh={handlePullDownRefresh}
           onScrollToLower={handleScrollToLower}
-          onScroll={e => setScrollTop(e.detail.scrollTop)}
-          scrollTop={scrollTop}
           needInit
+          onScroll={e => console.log(e)}
         >
           {posts.map(p => (
             <CPost post={p} key={p.id} />
           ))}
+          {posts.length === 0 && <View className='tip'>没有更多内容</View>}
         </ListView>
+      </View>
+      <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
+        <AtFab
+          onClick={() => {
+            Taro.pageScrollTo({ scrollTop: 0 })
+          }}
+        >
+          <View className='at-fab__icon at-icon at-icon-chevron-up'/>
+        </AtFab>
       </View>
     </View>
   )

@@ -32,7 +32,8 @@ export const createPost = async (post: CreatePostParams) => {
 export const searchByPostOrCommentOrReply = async (
   page: number,
   pageSize: number,
-  postOrCommentOrReply: string
+  postOrCommentOrReply: string,
+  orderByPopularity: boolean = false
 ) => {
   const data = await Taro.request<Result<Post[]>>({
     url: `${serverUrl}/post/searchByPostOrCommentOrReply`,
@@ -41,6 +42,7 @@ export const searchByPostOrCommentOrReply = async (
       postOrCommentOrReply,
       page,
       pageSize,
+      orderByPopularity
     },
   })
   return data.data.data
