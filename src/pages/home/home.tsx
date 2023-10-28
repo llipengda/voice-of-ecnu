@@ -2,7 +2,7 @@ import { backgroundColor } from '@/common/constants'
 import { View } from '@tarojs/components'
 import { useRef, useState } from 'react'
 import { AtFab, AtSearchBar, AtSegmentedControl } from 'taro-ui'
-import CPost from '@/packages/home/components/Post/Post'
+import CPost from '@/packages/post/components/Post/Post'
 import ListView from 'taro-listview'
 import { getPostList } from '@/api/Post'
 import { Post } from 'types/post'
@@ -21,7 +21,7 @@ export default function Home() {
 
   const handleSearchClick = () => {
     Taro.navigateTo({
-      url: `/packages/home/pages/home/search/search?key=${searchText}`,
+      url: `/packages/post/pages/home/search/search?key=${searchText}`,
     })
   }
 
@@ -37,7 +37,7 @@ export default function Home() {
   const handlePullDownRefresh = async () => {
     index.current = 1
     const data = await getPostList(index.current, 5, selected === 1)
-    setPosts(data)
+    setPosts(data || [])
     setIsLoaded(true)
     setHasMore(data.length > 0)
     setIsEmpty(data.length === 0)
@@ -97,7 +97,7 @@ export default function Home() {
         <AtFab
           onClick={() => {
             Taro.navigateTo({
-              url: '/packages/home/pages/home/add/add',
+              url: '/packages/post/pages/home/add/add',
             })
           }}
         >

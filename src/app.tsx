@@ -2,7 +2,7 @@ import { Fragment, PropsWithChildren, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import Taro from '@tarojs/taro'
-import { login, getUserById } from './api/User'
+import { login, getUserById, checkLogin } from './api/User'
 import { setLoginInfo } from './redux/slice/loginSlice'
 import { setUser } from './redux/slice/userSlice'
 import { useAppDispatch } from './redux/hooks'
@@ -20,12 +20,24 @@ function MyApp({ children }: PropsWithChildren<any>) {
 
   useEffect(() => {
     ;(async () => {
+      const needLogin = !(
+        (await checkLogin()) &&
+        Taro.getStorageSync('userId') &&
+        Taro.getStorageSync('token')
+      )
+      console.log(needLogin)
       try {
         Taro.showLoading({ title: '登录中' })
-        const { code } = await Taro.login()
-        const info = await login(code)
-        dispatch(setLoginInfo(info!))
-        const user = await getUserById(info!.userId)
+        if (needLogin) {
+          const { code } = await Taro.login()
+          const info = await login(code)
+          dispatch(setLoginInfo(info!))
+        }
+        const user = await getUserById(
+          (
+            await Taro.getStorage({ key: 'userId' })
+          ).data
+        )
         dispatch(setUser(user!))
         Taro.showToast({
           title: '登录成功',

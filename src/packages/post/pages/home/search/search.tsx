@@ -3,7 +3,7 @@ import { View } from '@tarojs/components'
 import { useState, useRef } from 'react'
 import ListView from 'taro-listview'
 import { Post } from 'types/post'
-import CPost from '@/packages/home/components/Post/Post'
+import CPost from '@/packages/post/components/Post/Post'
 import Taro from '@tarojs/taro'
 import './search.scss'
 

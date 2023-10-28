@@ -9,6 +9,15 @@ export const login = async (code: string) => {
     method: 'POST',
   })
   await Taro.setStorage({ key: 'token', data: data.data.data.token })
+  await Taro.setStorage({ key: 'userId', data: data.data.data.userId })
+  return data.data.data
+}
+
+export const checkLogin = async () => {
+  const data = await Taro.request<Result<boolean>>({
+    url: `${serverUrl}/user/check`,
+    method: 'GET',
+  })
   return data.data.data
 }
 
