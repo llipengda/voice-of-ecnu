@@ -1,10 +1,12 @@
+import Taro from '@tarojs/taro'
 import { searchByPostOrCommentOrReply } from '@/api/Post'
 import { View } from '@tarojs/components'
 import { useState, useRef } from 'react'
 import ListView from 'taro-listview'
 import { Post } from 'types/post'
 import CPost from '@/packages/post/components/Post/Post'
-import Taro from '@tarojs/taro'
+import { useAppSelector, useAppDispatch } from '@/redux/hooks'
+import { setPosts as RSetPosts } from '@/redux/slice/postSlice'
 import './search.scss'
 
 export default function search() {
@@ -12,7 +14,10 @@ export default function search() {
 
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [posts, setPosts] = useState<Post[]>([])
+
+  const posts = useAppSelector(state => state.post.posts)
+  const dispatch = useAppDispatch()
+  const setPosts = (posts: Post[]) => dispatch(RSetPosts(posts))
 
   const index = useRef(1)
 
@@ -34,10 +39,6 @@ export default function search() {
     setHasMore(data.length > 0)
   }
 
-  const handleRemovePost = (id: number) => {
-    setPosts(posts.filter(p => p.id !== id))
-  }
-
   return (
     <View>
       <View className='skeleton'>
@@ -51,11 +52,7 @@ export default function search() {
           needInit
         >
           {posts.map(p => (
-            <CPost
-              post={p}
-              key={p.id}
-              onRemove={() => handleRemovePost(p.id)}
-            />
+            <CPost post={p} key={p.id} />
           ))}
           {posts.length === 0 && <View className='tip'>没有更多内容</View>}
         </ListView>

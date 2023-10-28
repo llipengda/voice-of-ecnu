@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
@@ -5,18 +6,12 @@ import { Post as TPost } from 'types/post'
 import { AtIcon } from 'taro-ui'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
 import { checkLike, likePost, unlikePost } from '@/api/Like'
-import Taro from '@tarojs/taro'
 import { deletePost } from '@/api/Post'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { removePost } from '@/redux/slice/postSlice'
 import './Post.scss'
-import { useAppSelector } from '@/redux/hooks'
 
-export default function Post({
-  post,
-  onRemove,
-}: {
-  post: TPost
-  onRemove: () => void
-}) {
+export default function Post({ post }: { post: TPost }) {
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
 
@@ -27,6 +22,8 @@ export default function Post({
   const [stars, setStars] = useState(post.stars)
 
   const user = useAppSelector(state => state.user)
+
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     getUserById(post.userId).then(data => {
@@ -50,10 +47,10 @@ export default function Post({
 
   const handleStarPost = async () => {
     if (stared) {
-      unstarPost(post.id)
+      await unstarPost(post.id)
       setStars(stars - 1)
     } else {
-      starPost(post.id)
+      await starPost(post.id)
       setStars(stars + 1)
     }
     setStared(!stared)
@@ -66,7 +63,7 @@ export default function Post({
       success: async res => {
         if (res.confirm) {
           await deletePost(post.id)
-          onRemove()
+          dispatch(removePost(post.id))
           Taro.showToast({
             title: '删除成功',
             icon: 'success',
@@ -88,13 +85,11 @@ export default function Post({
           <View className='at-row'>
             <Text className='post__header__create-at'>{post.createAt}</Text>
           </View>
-          <View>
-            {(user.id === post.userId || user.role <= 1) && (
-              <Text className='post__header__delete' onClick={handleDeletePost}>
-                删除
-              </Text>
-            )}
-          </View>
+        </View>
+        <View className='at-col post__header__delete'>
+          {(user.id === post.userId || user.role <= 1) && (
+            <Text onClick={handleDeletePost}>删除</Text>
+          )}
         </View>
       </View>
       <View className='post__body skeleton-rect'>

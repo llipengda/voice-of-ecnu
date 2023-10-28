@@ -3,11 +3,11 @@ import { Provider } from 'react-redux'
 import store from './redux/store'
 import Taro from '@tarojs/taro'
 import { login, getUserById, checkLogin } from './api/User'
-import { setLoginInfo } from './redux/slice/loginSlice'
+import { setLoginInfo, setToken, setUserId } from './redux/slice/loginSlice'
 import { setUser } from './redux/slice/userSlice'
 import { useAppDispatch } from './redux/hooks'
-import './custom-theme.scss'
 import interceptor from './utils/interceptor'
+import './custom-theme.scss'
 
 function MyApp({ children }: PropsWithChildren<any>) {
   const dispatch = useAppDispatch()
@@ -20,30 +20,29 @@ function MyApp({ children }: PropsWithChildren<any>) {
 
   useEffect(() => {
     ;(async () => {
-      const needLogin = !(
-        (await checkLogin()) &&
-        Taro.getStorageSync('userId') &&
-        Taro.getStorageSync('token')
-      )
-      console.log(needLogin)
+      Taro.showLoading({ title: '登录中' })
+      const token = Taro.getStorageSync('token')
+      let userId = Taro.getStorageSync('userId')
+      const needLogin = !((await checkLogin()) && token && userId)
+      console.log('needLogin', needLogin)
       try {
-        Taro.showLoading({ title: '登录中' })
         if (needLogin) {
           const { code } = await Taro.login()
           const info = await login(code)
           dispatch(setLoginInfo(info!))
+          userId = info!.userId
+        } else {
+          dispatch(setToken(token))
+          dispatch(setUserId(userId))
         }
-        const user = await getUserById(
-          (
-            await Taro.getStorage({ key: 'userId' })
-          ).data
-        )
+        const user = await getUserById(userId)
         dispatch(setUser(user!))
         Taro.showToast({
           title: '登录成功',
           icon: 'success',
         })
       } catch (err) {
+        console.error(err)
         Taro.showToast({
           title: '登录失败',
           icon: 'error',

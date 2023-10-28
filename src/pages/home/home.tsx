@@ -6,8 +6,10 @@ import CPost from '@/packages/post/components/Post/Post'
 import ListView from 'taro-listview'
 import { getPostList } from '@/api/Post'
 import { Post } from 'types/post'
-import './home.scss'
 import Taro from '@tarojs/taro'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { setPosts as RSetPosts } from '@/redux/slice/postSlice'
+import './home.scss'
 
 export default function Home() {
   const [searchText, setSearchText] = useState('')
@@ -17,7 +19,11 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [isEmpty, setIsEmpty] = useState(false)
-  const [posts, setPosts] = useState<Post[]>([])
+
+  const posts = useAppSelector(state => state.post.posts)
+  const loginInfo = useAppSelector(state => state.login)
+  const dispatch = useAppDispatch()
+  const setPosts = (posts: Post[]) => dispatch(RSetPosts(posts))
 
   const handleSearchClick = () => {
     Taro.navigateTo({
@@ -34,13 +40,17 @@ export default function Home() {
     setIsEmpty(data.length === 0)
   }
 
-  const handlePullDownRefresh = async () => {
+  const getData = async () => {
     index.current = 1
     const data = await getPostList(index.current, 5, selected === 1)
     setPosts(data || [])
     setIsLoaded(true)
     setHasMore(data.length > 0)
     setIsEmpty(data.length === 0)
+  }
+
+  const handlePullDownRefresh = async () => {
+    await getData()
   }
 
   const handleOnclickPullDownRefresh = async () => {
@@ -51,10 +61,6 @@ export default function Home() {
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length > 0)
-  }
-
-  const handleRemovePost = (id: number) => {
-    setPosts(posts.filter(p => p.id !== id))
   }
 
   return (
@@ -73,26 +79,24 @@ export default function Home() {
           handleOnclickPullDownRefresh()
         }}
       />
-      <View className='skeleton'>
-        {/* @ts-ignore */}
-        <ListView
-          isLoaded={isLoaded}
-          hasMore={hasMore}
-          style={{ height: '88vh', width: '100%', overflowX: 'hidden' }}
-          onPullDownRefresh={handlePullDownRefresh}
-          onScrollToLower={handleScrollToLower}
-          needInit
-        >
-          {posts.map(p => (
-            <CPost
-              post={p}
-              key={p.id}
-              onRemove={() => handleRemovePost(p.id)}
-            />
-          ))}
-          {isEmpty && <View className='tip2'>没有更多内容</View>}
-        </ListView>
-      </View>
+      {loginInfo.token && (
+        <View className='skeleton'>
+          {/* @ts-ignore */}
+          <ListView
+            isLoaded={isLoaded}
+            hasMore={hasMore}
+            style={{ height: '88vh', width: '100%', overflowX: 'hidden' }}
+            onPullDownRefresh={handlePullDownRefresh}
+            onScrollToLower={handleScrollToLower}
+            needInit
+          >
+            {posts.map(p => (
+              <CPost post={p} key={p.id} />
+            ))}
+            {isEmpty && <View className='tip2'>没有更多内容</View>}
+          </ListView>
+        </View>
+      )}
       <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
         <AtFab
           onClick={() => {
