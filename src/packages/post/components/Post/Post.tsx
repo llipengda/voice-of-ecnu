@@ -80,7 +80,7 @@ export default function Post({ post }: { post: TPost }) {
         <Image className='post__header__avatar skeleton-redius' src={avatar} />
         <View className='at-col'>
           <View className='at-row'>
-            <Text className='post__header__username'>{username}</Text>
+            <Text className='post__header__username'>{username || '加载中...'}</Text>
           </View>
           <View className='at-row'>
             <Text className='post__header__create-at'>{post.createAt}</Text>

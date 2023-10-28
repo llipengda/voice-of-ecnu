@@ -6,6 +6,8 @@ import { uploadImages } from '@/api/Image'
 import '@/custom-theme.scss'
 import './add.scss'
 import { createPost } from '@/api/Post'
+import { useAppDispatch } from '@/redux/hooks'
+import { addPost } from '@/redux/slice/postSlice'
 
 interface FileItem {
   path: string
@@ -23,6 +25,8 @@ export default function add() {
   const [images, setImages] = useState<File[]>([])
 
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
+
+  const dispatch = useAppDispatch()
 
   const handleCancel = () => {
     Taro.navigateBack()
@@ -44,11 +48,12 @@ export default function add() {
       })
     } else {
       const imgs = await uploadImages(images.map(image => image.url))
-      await createPost({
+      const data = await createPost({
         title,
         content,
         images: imgs || [],
       })
+      dispatch(addPost(data))
       setSubmitButtonLoading(false)
       Taro.showToast({
         title: '发帖成功',

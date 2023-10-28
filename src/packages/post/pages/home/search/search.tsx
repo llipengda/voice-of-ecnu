@@ -5,8 +5,6 @@ import { useState, useRef } from 'react'
 import ListView from 'taro-listview'
 import { Post } from 'types/post'
 import CPost from '@/packages/post/components/Post/Post'
-import { useAppSelector, useAppDispatch } from '@/redux/hooks'
-import { setPosts as RSetPosts } from '@/redux/slice/postSlice'
 import './search.scss'
 
 export default function search() {
@@ -15,9 +13,7 @@ export default function search() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
-  const posts = useAppSelector(state => state.post.posts)
-  const dispatch = useAppDispatch()
-  const setPosts = (posts: Post[]) => dispatch(RSetPosts(posts))
+  const [posts, setPosts] = useState<Post[]>([])
 
   const index = useRef(1)
 
@@ -33,7 +29,7 @@ export default function search() {
 
   const handlePullDownRefresh = async () => {
     index.current = 1
-    const data = await searchByPostOrCommentOrReply(0, 5, params?.key || '')
+    const data = await searchByPostOrCommentOrReply(1, 5, params?.key || '')
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length > 0)
