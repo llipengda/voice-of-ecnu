@@ -57,21 +57,19 @@ export default function Post({ post }: { post: TPost }) {
   }
 
   const handleDeletePost = async () => {
-    Taro.showModal({
+    const res = await Taro.showModal({
       title: '提示',
       content: '确定将帖子删除？',
-      success: async res => {
-        if (res.confirm) {
-          await deletePost(post.id)
-          dispatch(removePost(post.id))
-          Taro.showToast({
-            title: '删除成功',
-            icon: 'success',
-            duration: 1000,
-          })
-        }
-      },
     })
+    if (res.confirm) {
+      await deletePost(post.id)
+      dispatch(removePost(post.id))
+      Taro.showToast({
+        title: '删除成功',
+        icon: 'success',
+        duration: 1000,
+      })
+    }
   }
 
   const navigateToDetail = () => {

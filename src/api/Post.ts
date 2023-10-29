@@ -56,7 +56,7 @@ export const deletePost = async (postId: number) => {
   return data.data.data
 }
 
-export const getPostById = async (postId: string) => {
+export const getPostById = async (postId: number) => {
   const data = await Taro.request<Result<Post>>({
     url: `${serverUrl}/post/getPostById`,
     method: 'GET',

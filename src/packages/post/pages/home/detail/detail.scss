@@ -40,4 +40,12 @@
     width: 100%;
     height: none;
   }
+
+  &__delete {
+    margin-right: 20px;
+    margin-top: 30px;
+    text-align: right;
+    font-size: 24px;
+    color: red;
+  }
 }
