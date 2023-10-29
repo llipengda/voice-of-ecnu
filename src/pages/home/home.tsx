@@ -37,7 +37,7 @@ export default function Home() {
   const handleScrollToLower = async () => {
     const data = await getPostList(++index.current, 5, selected === 1)
     setPosts([...posts, ...data])
-    setHasMore(data.length > 0)
+    setHasMore(data.length === 5)
     setIsEmpty(data.length === 0)
   }
 
@@ -78,7 +78,11 @@ export default function Home() {
         value={searchText}
         onChange={e => setSearchText(e)}
         onActionClick={handleSearchClick}
-        customStyle={{ background: backgroundColor, color: '#fff', border: 'none' }}
+        customStyle={{
+          background: backgroundColor,
+          color: '#fff',
+          border: 'none',
+        }}
       />
       {!isLoaded && <View className='tip'>努力加载中...</View>}
       {loginInfo.token && (

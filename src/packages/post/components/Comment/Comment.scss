@@ -1,0 +1,77 @@
+@import '@/common/constants.scss';
+
+$size: 60px;
+
+.comment {
+  &__header {
+    &__avatar {
+      width: $size;
+      height: $size;
+      border-radius: 50%;
+      background-color: #eee;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      border: 2px solid #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+      margin: 10px;
+      margin-left: 0;
+      margin-right: 20px;
+    }
+
+    &__username {
+      margin-top: 10px;
+      font-size: 30px;
+      color: #333333;
+    }
+
+    &__create-at {
+      font-size: 20px;
+      color: $disabled-color;
+    }
+
+    &__delete {
+      margin-right: 20px;
+      margin-top: 30px;
+      text-align: right;
+      font-size: 24px;
+      color: $disabled-color;
+    }
+  }
+
+  &__body {
+    margin-top: 10px;
+    margin-left: $size + 20px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+
+    &__content {
+      padding-bottom: 20px;
+    }
+
+    &__images {
+      &__image {
+        margin-bottom: 20px;
+        width: 100%;
+        height: none;
+      }
+    }
+  }
+}
+
+.loading {
+  color: $disabled-color;
+  margin-top: 5px;
+  text-align: center;
+  margin-bottom: 5px;
+  padding-bottom: 10px;
+  overflow-x: hidden;
+}
+
+.tip {
+  color: $disabled-color;
+  padding-top: 120px;
+  text-align: center;
+  margin-bottom: 5px;
+}
