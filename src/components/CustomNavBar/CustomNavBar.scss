@@ -1,0 +1,39 @@
+@import '@/common/constants.scss';
+
+.custom-nav-bar {
+  background-color: $background-color;
+  position: relative;
+
+  &__header {
+    position: absolute;
+    width: 100%;
+    
+    &__title {
+      position: absolute;
+      left: 30px;
+      font-size: 32px;
+      bottom: 10Px;
+    }
+
+    &__tabs {
+      width: 30%;
+      margin-left: 35%;
+    }
+  }
+
+  .at-tabs__header {
+    background-color: $background-color;
+    margin-bottom: 0px;
+  }
+
+  .at-tabs__item {
+    font-size: 36px;
+    padding: 12px;
+    color: $disabled-color;
+    
+    &--active {
+      font-weight: 700;
+      color: $primary-color;
+    }
+  }
+}

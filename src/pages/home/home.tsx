@@ -1,7 +1,7 @@
 import { backgroundColor } from '@/common/constants'
 import { View } from '@tarojs/components'
 import { useRef, useState } from 'react'
-import { AtFab, AtSearchBar, AtSegmentedControl } from 'taro-ui'
+import { AtFab, AtSearchBar } from 'taro-ui'
 import CPost from '@/packages/post/components/Post/Post'
 import ListView from 'taro-listview'
 import { getPostList } from '@/api/Post'
@@ -10,6 +10,7 @@ import Taro from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setPosts as RSetPosts } from '@/redux/slice/postSlice'
 import './home.scss'
+import CustomNavBar from '@/components/CustomNavBar/CustomNavBar'
 
 export default function Home() {
   const [searchText, setSearchText] = useState('')
@@ -45,7 +46,7 @@ export default function Home() {
     const data = await getPostList(index.current, 5, selected === 1)
     setPosts(data || [])
     setIsLoaded(true)
-    setHasMore(data.length > 0)
+    setHasMore(data.length === 5)
     setIsEmpty(data.length === 0)
   }
 
@@ -53,39 +54,40 @@ export default function Home() {
     await getData()
   }
 
-  const handleOnclickPullDownRefresh = async () => {
+  const handleSwitchTab = async (i: number) => {
+    setSelected(i)
     setPosts([])
     setIsEmpty(false)
     index.current = 1
     const data = await getPostList(index.current, 5, selected === 0)
     setPosts(data)
     setIsLoaded(true)
-    setHasMore(data.length > 0)
+    setHasMore(data.length === 5)
   }
 
   return (
     <View style={{ width: '100%' }}>
+      <CustomNavBar
+        title='首页'
+        showTabs
+        tabList={[{ title: '最新' }, { title: '热门' }]}
+        tabIndex={selected}
+        onSwitchTab={i => handleSwitchTab(i)}
+      />
       <AtSearchBar
         value={searchText}
         onChange={e => setSearchText(e)}
         onActionClick={handleSearchClick}
-        customStyle={{ background: backgroundColor, color: '#fff' }}
+        customStyle={{ background: backgroundColor, color: '#fff', border: 'none' }}
       />
-      <AtSegmentedControl
-        values={['最新', '热门']}
-        current={selected}
-        onClick={i => {
-          setSelected(i)
-          handleOnclickPullDownRefresh()
-        }}
-      />
+      {!isLoaded && <View className='tip'>努力加载中...</View>}
       {loginInfo.token && (
         <View className='skeleton'>
           {/* @ts-ignore */}
           <ListView
             isLoaded={isLoaded}
             hasMore={hasMore}
-            style={{ height: '88vh', width: '100%', overflowX: 'hidden' }}
+            style={{ height: '84vh', width: '100%', overflowX: 'hidden' }}
             onPullDownRefresh={handlePullDownRefresh}
             onScrollToLower={handleScrollToLower}
             needInit

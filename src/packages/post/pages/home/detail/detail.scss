@@ -33,6 +33,7 @@
     margin-bottom: 35px;
     font-size: 32px;
     line-height: 1.5;
+    min-height: 20px;
   }
 
   &__image {
@@ -47,5 +48,31 @@
     text-align: right;
     font-size: 24px;
     color: red;
+  }
+
+  &__actions {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e1e1;
+
+    &__action {
+      padding-left: 23px;
+      color: $disabled-color;
+
+      &__number {
+        margin-left: -8px;
+        font-size: 20px;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  &__divider {
+    margin-left: -50px;
+    margin-right: -50px;
+    margin-top: 50px;
+    width: 100vw;
+    height: 20px;
+    background-color: #eee;
   }
 }

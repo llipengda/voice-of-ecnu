@@ -24,7 +24,7 @@ export default function search() {
       params?.key || ''
     )
     setPosts([...posts, ...data])
-    setHasMore(data.length > 0)
+    setHasMore(data.length === 5)
   }
 
   const handlePullDownRefresh = async () => {
@@ -32,12 +32,13 @@ export default function search() {
     const data = await searchByPostOrCommentOrReply(1, 5, params?.key || '')
     setPosts(data)
     setIsLoaded(true)
-    setHasMore(data.length > 0)
+    setHasMore(data.length === 5)
   }
 
   return (
     <View>
       <View className='skeleton'>
+        {!isLoaded && <View className='tip'>努力加载中...</View>}
         {/* @ts-ignore */}
         <ListView
           isLoaded={isLoaded}

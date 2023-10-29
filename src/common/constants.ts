@@ -1,5 +1,6 @@
 export const primaryColor = '#b70031'
 export const backgroundColor = '#f6f6f6'
+export const disabledColor = '#7f7f7f'
 
 const gradeRange = Array.from({ length: 6 }, (_, i) => i + 1).map(
   i => `${i + (new Date().getFullYear() % 100) - 6}级`

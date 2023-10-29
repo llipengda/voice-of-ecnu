@@ -21,6 +21,9 @@ export default function Post({ post }: { post: TPost }) {
   const [likes, setLikes] = useState(post.likes)
   const [stars, setStars] = useState(post.stars)
 
+  const [likeDisabled, setLikeDisabled] = useState(false)
+  const [starDisabled, setStarDisabled] = useState(false)
+
   const user = useAppSelector(state => state.user)
 
   const dispatch = useAppDispatch()
@@ -35,25 +38,35 @@ export default function Post({ post }: { post: TPost }) {
   }, [])
 
   const handleLikePost = async () => {
-    if (liked) {
-      await unlikePost(post.id)
-      setLikes(likes - 1)
-    } else {
-      await likePost(post.id)
-      setLikes(likes + 1)
+    if (likeDisabled) {
+      return 
     }
     setLiked(!liked)
+    setLikeDisabled(true)
+    if (liked) {
+      setLikes(likes - 1)
+      await unlikePost(post.id)
+    } else {
+      setLikes(likes + 1)
+      await likePost(post.id)
+    }
+    setLikeDisabled(false)
   }
 
   const handleStarPost = async () => {
-    if (stared) {
-      await unstarPost(post.id)
-      setStars(stars - 1)
-    } else {
-      await starPost(post.id)
-      setStars(stars + 1)
+    if (starDisabled) {
+      return 
     }
     setStared(!stared)
+    setStarDisabled(true)
+    if (stared) {
+      setStars(stars - 1)
+      await unstarPost(post.id)
+    } else {
+      setStars(stars + 1)
+      await starPost(post.id)
+    }
+    setStarDisabled(false)
   }
 
   const handleDeletePost = async () => {

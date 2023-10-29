@@ -8,6 +8,7 @@ import './detail.scss'
 import { removePost } from '@/redux/slice/postSlice'
 import { checkLike, likePost, unlikePost } from '@/api/Like'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
+import { disabledColor } from '@/common/constants'
 
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -28,6 +29,9 @@ export default function detail() {
 
   const [liked, setLiked] = useState(false)
   const [stared, setStared] = useState(false)
+
+  const [likeDisabled, setLikeDisabled] = useState(false)
+  const [starDisabled, setStarDisabled] = useState(false)
 
   const user = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
@@ -69,25 +73,35 @@ export default function detail() {
   })
 
   const handleLikePost = async () => {
-    if (liked) {
-      await unlikePost(postId)
-      setLikes(likes - 1)
-    } else {
-      await likePost(postId)
-      setLikes(likes + 1)
+    if (likeDisabled) {
+      return
     }
     setLiked(!liked)
+    setLikeDisabled(true)
+    if (liked) {
+      setLikes(likes - 1)
+      await unlikePost(postId)
+    } else {
+      setLikes(likes + 1)
+      await likePost(postId)
+    }
+    setLikeDisabled(false)
   }
 
   const handleStarPost = async () => {
-    if (stared) {
-      await unstarPost(postId)
-      setStars(stars - 1)
-    } else {
-      await starPost(postId)
-      setStars(stars + 1)
+    if (starDisabled) {
+      return
     }
     setStared(!stared)
+    setStarDisabled(true)
+    if (stared) {
+      setStars(stars - 1)
+      await unstarPost(postId)
+    } else {
+      setStars(stars + 1)
+      await starPost(postId)
+    }
+    setStarDisabled(false)
   }
 
   return (
@@ -110,7 +124,7 @@ export default function detail() {
           )}
         </View>
       </View>
-      <View className='post-detail__content'>{content}</View>
+      <View className='post-detail__content'>{content || '努力加载中...'}</View>
       <View className='post-detail__images'>
         {images.map(image => (
           <Image
@@ -122,23 +136,43 @@ export default function detail() {
         ))}
       </View>
       <View className='post-detail__actions at-row'>
-        <View className='at-col-3'>
-          <AtIcon value='eye' size='20' color='#000' className='at-row'/>
-          <Text className='post__footer__number at-row'>{views}</Text>
+        <View className='at-col-3 post-detail__actions__action'>
+          <AtIcon
+            value='eye'
+            size='20'
+            color={disabledColor}
+            className='at-row'
+          />
+          <Text className='post-detail__actions__action__number at-row'>{`浏览 ${views}`}</Text>
         </View>
-        <View className='at-col-3'>
-          <AtIcon value='message' size='20' color='#000' />
-          <Text className='post__footer__number at-row'>{comments}</Text>
+        <View className='at-col-3 post-detail__actions__action'>
+          <AtIcon value='message' size='20' color={disabledColor} />
+          <Text className='post-detail__actions__action__number at-row'>{`评论 ${comments}`}</Text>
         </View>
-        <View className='at-col-3' onClick={handleLikePost}>
-          <AtIcon value={liked ? 'heart-2' : 'heart'} size='20' color='#000' />
-          <Text className='post__footer__number at-row'>{likes}</Text>
+        <View
+          className='at-col-3 post-detail__actions__action'
+          onClick={handleLikePost}
+        >
+          <AtIcon
+            value={liked ? 'heart-2' : 'heart'}
+            size='20'
+            color={disabledColor}
+          />
+          <Text className='post-detail__actions__action__number at-row'>{`点赞 ${likes}`}</Text>
         </View>
-        <View className='at-col-3' onClick={handleStarPost}>
-          <AtIcon value={stared ? 'star-2' : 'star'} size='20' color='#000' />
-          <Text className='post__footer__number at-row'>{stars}</Text>
+        <View
+          className='at-col-3 post-detail__actions__action'
+          onClick={handleStarPost}
+        >
+          <AtIcon
+            value={stared ? 'star-2' : 'star'}
+            size='20'
+            color={disabledColor}
+          />
+          <Text className='post-detail__actions__action__number at-row'>{`收藏 ${stars}`}</Text>
         </View>
       </View>
+      <View className='post-detail__divider' />
     </View>
   )
 }
