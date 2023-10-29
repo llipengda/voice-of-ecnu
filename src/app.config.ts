@@ -42,7 +42,11 @@ export default defineAppConfig({
     },
     {
       root: 'packages/post',
-      pages: ['pages/home/search/search', 'pages/home/add/add'],
+      pages: [
+        'pages/home/search/search',
+        'pages/home/add/add',
+        'pages/home/detail/detail',
+      ],
     },
   ],
 })

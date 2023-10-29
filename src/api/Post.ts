@@ -42,7 +42,7 @@ export const searchByPostOrCommentOrReply = async (
       postOrCommentOrReply,
       page,
       pageSize,
-      orderByPopularity
+      orderByPopularity,
     },
   })
   return data.data.data
@@ -52,6 +52,15 @@ export const deletePost = async (postId: number) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/post/deletePost?postId=${postId}`,
     method: 'POST',
+  })
+  return data.data.data
+}
+
+export const getPostById = async (postId: string) => {
+  const data = await Taro.request<Result<Post>>({
+    url: `${serverUrl}/post/getPostById`,
+    method: 'GET',
+    data: { postId },
   })
   return data.data.data
 }

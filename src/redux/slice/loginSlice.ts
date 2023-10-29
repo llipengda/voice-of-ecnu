@@ -1,10 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import Taro from '@tarojs/taro'
 import { LoginInfo } from 'types/user'
 
 const initialState: LoginInfo = {
-  userId: Taro.getStorageSync('userId') || '',
-  token: Taro.getStorageSync('token') || '',
+  userId: '',
+  token: '',
   role: 4,
 }
 
@@ -33,7 +32,7 @@ const loginSlice = createSlice({
     setUserId(state, action: PayloadAction<string>) {
       return {
         ...state,
-        token: action.payload,
+        userId: action.payload,
       }
     },
   },

@@ -74,13 +74,21 @@ export default function Post({ post }: { post: TPost }) {
     })
   }
 
+  const navigateToDetail = () => {
+    Taro.navigateTo({
+      url: `/packages/post/pages/home/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}`,
+    })
+  }
+
   return (
     <View className='post skeleton-bg'>
       <View className='post__header at-row'>
         <Image className='post__header__avatar skeleton-redius' src={avatar} />
         <View className='at-col'>
           <View className='at-row'>
-            <Text className='post__header__username'>{username || '加载中...'}</Text>
+            <Text className='post__header__username'>
+              {username || '加载中...'}
+            </Text>
           </View>
           <View className='at-row'>
             <Text className='post__header__create-at'>{post.createAt}</Text>
@@ -92,7 +100,7 @@ export default function Post({ post }: { post: TPost }) {
           )}
         </View>
       </View>
-      <View className='post__body skeleton-rect'>
+      <View className='post__body skeleton-rect' onClick={navigateToDetail}>
         <View className='post__body__title'>{post.title}</View>
         <View className='post__body__content'>
           {post.content.length <= 50
