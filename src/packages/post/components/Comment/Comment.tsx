@@ -7,6 +7,8 @@ import { checkLike, likePost, unlikePost } from '@/api/Like'
 import { useAppSelector } from '@/redux/hooks'
 import { deleteComment } from '@/api/Comments'
 import './Comment.scss'
+import { AtIcon } from 'taro-ui'
+import { disabledColor } from '@/common/constants'
 
 export default function Comment({
   comment,
@@ -77,25 +79,40 @@ export default function Comment({
     <View className='comment skeleton-bg'>
       <View className='comment__header at-row'>
         <Image
-          className='comment__header__avatar skeleton-redius'
+          className='comment__header__avatar skeleton-redius at-col at-col-1 at-col--auto'
           src={avatar}
         />
         <View className='at-col'>
           <View className='at-row'>
-            <Text className='comment__header__username'>
-              {username || '加载中...'}
-            </Text>
+            <View className='at-col at-col-9'>
+              <View className='at-row'>
+                <Text className='comment__header__username'>
+                  {username || '加载中...'}
+                </Text>
+              </View>
+              <View className='at-row'>
+                <Text className='comment__header__create-at'>
+                  {comment.createAt}
+                </Text>
+              </View>
+            </View>
+            <View
+              className='at-col at-col-1 comment__header__like'
+              onClick={handleLikeComment}
+            >
+              <AtIcon
+                value={liked ? 'heart-2' : 'heart'}
+                size={15}
+                color={disabledColor}
+              />
+              <Text className='comment__header__like__number'>{likes}</Text>
+            </View>
+            <View className='at-col at-col-1 comment__header__delete'>
+              {(user.id === comment.userId || user.role <= 1) && (
+                <Text onClick={handleDeleteComment}>删除</Text>
+              )}
+            </View>
           </View>
-          <View className='at-row'>
-            <Text className='comment__header__create-at'>
-              {comment.createAt}
-            </Text>
-          </View>
-        </View>
-        <View className='at-col comment__header__delete'>
-          {(user.id === comment.userId || user.role <= 1) && (
-            <Text onClick={handleDeleteComment}>删除</Text>
-          )}
         </View>
       </View>
       <View className='comment__body skeleton-rect'>

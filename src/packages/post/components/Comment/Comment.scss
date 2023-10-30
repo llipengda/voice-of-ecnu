@@ -5,6 +5,8 @@ $size: 60px;
 .comment {
   &__header {
     &__avatar {
+      min-width: $size !important;
+      max-width: $size !important;
       width: $size;
       height: $size;
       border-radius: 50%;
@@ -31,9 +33,20 @@ $size: 60px;
       color: $disabled-color;
     }
 
+    &__like {
+      margin-top: 27px;
+      margin-right: 30px;
+      font-size: 20px;
+      color: $disabled-color;
+
+      &__number {
+        margin-left: 5px;
+      }
+    }
+
     &__delete {
       margin-right: 20px;
-      margin-top: 30px;
+      margin-top: 25px;
       text-align: right;
       font-size: 24px;
       color: $disabled-color;
