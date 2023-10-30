@@ -79,7 +79,7 @@
     margin-bottom: 40px;
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 2000;
 
     .at-tabs__header {
       background-color: $background-color;
@@ -94,7 +94,7 @@
     background-color: #eee;
     padding: 20px;
     padding-bottom: 40px;
-    z-index: 3;
+    z-index: 3000;
 
     &__input {
       margin-left: 20px;
@@ -110,6 +110,7 @@
     &__icon {
       margin-left: 10px;
       margin-top: 5px;
+      z-index: 1;
     }
 
     &__image-wrap {

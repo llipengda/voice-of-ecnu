@@ -20,7 +20,7 @@ function MyApp({ children }: PropsWithChildren<any>) {
 
   useEffect(() => {
     ;(async () => {
-      Taro.showLoading({ title: '登录中' })
+      await Taro.showLoading({ title: '登录中' })
       const token = Taro.getStorageSync('token')
       let userId = Taro.getStorageSync('userId')
       const needLogin = !((await checkLogin()) && token && userId)
@@ -37,18 +37,17 @@ function MyApp({ children }: PropsWithChildren<any>) {
         }
         const user = await getUserById(userId)
         dispatch(setUser(user!))
-        Taro.showToast({
+        Taro.hideLoading()
+        await Taro.showToast({
           title: '登录成功',
           icon: 'success',
         })
       } catch (err) {
         console.error(err)
-        Taro.showToast({
+        await Taro.showToast({
           title: '登录失败',
           icon: 'error',
         })
-      } finally {
-        Taro.hideLoading()
       }
     })()
   }, [])

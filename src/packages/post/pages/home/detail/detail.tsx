@@ -1,4 +1,4 @@
-import Taro, { useLoad } from '@tarojs/taro'
+import Taro, { useLoad, useReachBottom } from '@tarojs/taro'
 import { deletePost, getPostById } from '@/api/Post'
 import { View, Image, Text, Textarea } from '@tarojs/components'
 import { useRef, useState } from 'react'
@@ -18,9 +18,9 @@ import { uploadImages } from '@/api/Image'
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
 
-  const postId = Number(params?.postId!)
-  const authorName = params?.authorName!
-  const authorAvatar = params?.authorAvatar!
+  const [postId] = useState(Number(params?.postId))
+  const [authorName] = useState(params?.authorName!)
+  const [authorAvatar] = useState(params?.authorAvatar!)
 
   const [authorId, setAuthorId] = useState('')
   const [title, setTitle] = useState('')
@@ -57,6 +57,8 @@ export default function detail() {
 
   const [sendCommentDisabled, setSendCommentDisabled] = useState(false)
 
+  const [reachBottomLoadingDisabled, setReachBottomLoadingDisabled] = useState(false)
+
   const user = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
 
@@ -65,30 +67,34 @@ export default function detail() {
       return
     }
     if (commentContent.trim() === '' && selectedImages.length === 0) {
-      Taro.showToast({
+      await Taro.showToast({
         title: '评论不能为空',
         icon: 'error',
       })
       return
     }
     setSendCommentDisabled(true)
-    Taro.showLoading({
+    await Taro.showLoading({
       title: '上传图片中...',
     })
     const imgs = await uploadImages(selectedImages)
-    Taro.hideLoading()
-    Taro.showLoading({
+    await Taro.showLoading({
       title: '发送中...',
     })
     const data = await createComment({
       content: commentContent,
       image: imgs || [],
-      postId: postId,
+      postId,
     })
     setSendCommentDisabled(false)
     setSelectedImages([])
     setCommentContent('')
     Taro.hideLoading()
+    await Taro.showToast({
+      title: '发送成功',
+      icon: 'success',
+      duration: 1000,
+    })
     setCommentsCnt(commentsCnt + 1)
     if (tabIndex === 1) {
       setComments([data, ...comments])
@@ -185,7 +191,6 @@ export default function detail() {
     )
     setComments([...comments, ...data])
     setHasMore(data.length === 10)
-    setIsEmpty(data.length === 0)
   }
 
   const getData = async () => {
@@ -223,12 +228,14 @@ export default function detail() {
     }
   }
 
-  const showSelectedImages = (url: string) => {
-    Taro.previewImage({
-      current: url,
-      urls: selectedImages,
-    })
-  }
+  useReachBottom(async () => {
+    if (!hasMore || reachBottomLoadingDisabled) {
+      return
+    }
+    setReachBottomLoadingDisabled(true)
+    await handleScrollToLower()
+    setReachBottomLoadingDisabled(false)
+  })
 
   return (
     <View className='post-detail'>
@@ -312,10 +319,15 @@ export default function detail() {
         <ListView
           isLoaded={isLoaded}
           hasMore={hasMore}
-          style={{ height: '100vh', width: '100%', overflowX: 'hidden' }}
+          style={{
+            width: '100%',
+            overflowX: 'hidden',
+            marginBottom: '55px',
+          }}
           onPullDownRefresh={handlePullDownRefresh}
           onScrollToLower={handleScrollToLower}
           needInit
+          autoHeight
         >
           {comments.map(c => (
             <CComment
@@ -325,6 +337,7 @@ export default function detail() {
             />
           ))}
           {isEmpty && <View className='tip2'>留下第一条评论吧~</View>}
+          {!isEmpty && !hasMore && <View className='tip2'>没有更多内容</View>}
         </ListView>
       </View>
       <View
@@ -340,7 +353,6 @@ export default function detail() {
                   key={i}
                   className='post-detail__send__image'
                   mode='aspectFill'
-                  onClick={() => showSelectedImages(i)}
                 >
                   <AtIcon
                     value='close'

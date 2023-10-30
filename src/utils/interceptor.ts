@@ -9,18 +9,20 @@ const interceptor: Taro.interceptor = chain => {
       session: token,
     }
   }
-  return chain.proceed(requestParams).then(res => {
+  return chain.proceed(requestParams).then(async res => {
     if (res.statusCode !== 200) {
       console.error(res)
-      Taro.showToast({
+      await Taro.showToast({
         title: '发生了未知错误',
         icon: 'error',
+        duration: 1000,
       })
     } else if (res.data.code !== 0) {
       console.error(res)
-      Taro.showToast({
+      await Taro.showToast({
         title: res.data.msg,
         icon: 'error',
+        duration: 1000,
       })
     }
     return res

@@ -10,6 +10,7 @@ import { deletePost } from '@/api/Post'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
 import './Post.scss'
+import { disabledColor } from '@/common/constants'
 
 export default function Post({ post }: { post: TPost }) {
   const [avatar, setAvatar] = useState('')
@@ -131,19 +132,19 @@ export default function Post({ post }: { post: TPost }) {
       </View>
       <View className='post__footer at-row'>
         <View className='at-col-3'>
-          <AtIcon value='eye' size='20' color='#000' />
+          <AtIcon value='eye' size='20' color={disabledColor} />
           <Text className='post__footer__number'>{post.views}</Text>
         </View>
         <View className='at-col-3'>
-          <AtIcon value='message' size='20' color='#000' />
+          <AtIcon value='message' size='20' color={disabledColor} />
           <Text className='post__footer__number'>{post.comments}</Text>
         </View>
         <View className='at-col-3' onClick={handleLikePost}>
-          <AtIcon value={liked ? 'heart-2' : 'heart'} size='20' color='#000' />
+          <AtIcon value={liked ? 'heart-2' : 'heart'} size='20' color={disabledColor} />
           <Text className='post__footer__number'>{likes}</Text>
         </View>
         <View className='at-col-3' onClick={handleStarPost}>
-          <AtIcon value={stared ? 'star-2' : 'star'} size='20' color='#000' />
+          <AtIcon value={stared ? 'star-2' : 'star'} size='20' color={disabledColor} />
           <Text className='post__footer__number'>{stars}</Text>
         </View>
       </View>
