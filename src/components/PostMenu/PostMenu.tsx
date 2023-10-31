@@ -16,7 +16,7 @@ interface IProps {
   onStarPost: () => void
   onRemovePost: () => void
   onClose: () => void
-  onNavigateToPost: () => void
+  onNavigateToPost: (focus: boolean) => void
 }
 
 export default function CommentMenu({
@@ -50,7 +50,7 @@ export default function CommentMenu({
 
   const handleClickComment = () => {
     onClose()
-    onNavigateToPost()
+    onNavigateToPost(true)
   }
 
   return (

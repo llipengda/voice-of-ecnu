@@ -1,0 +1,29 @@
+@import '@/common/constants.scss';
+
+.reply-block {
+  border-radius: 20px;
+  padding: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: #eee;
+
+  &__item {
+    line-height: 1.5;
+    font-size: 26px;
+    color: #5f5f5f;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    word-break: break-all;
+
+    &__username {
+      font-weight: bold;
+      color: $disabled-color;
+    }
+  }
+
+  &__more {
+    margin-top: 15px;
+    font-size: 28px;
+    color: #a85656;
+  }
+}

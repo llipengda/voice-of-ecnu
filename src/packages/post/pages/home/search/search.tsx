@@ -29,7 +29,7 @@ export default function search() {
     onLikePost: () => {},
     onStarPost: () => {},
     onRemovePost: () => {},
-    onNavigateToPost: () => {},
+    onNavigateToPost: (_: boolean) => {},
   })
 
   const handleScrollToLower = async () => {
@@ -58,7 +58,7 @@ export default function search() {
     onLikePost: () => void,
     onStarPost: () => void,
     onRemovePost: () => void,
-    onNavigateToPost: () => void
+    onNavigateToPost: (focus: boolean) => void
   ) => {
     setShowMenu(true)
     setPostMenuPorps({

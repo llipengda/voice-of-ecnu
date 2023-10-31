@@ -119,6 +119,8 @@ export default function VerifyForm() {
     <View className='verify-form'>
       <View className='image-warp'>
         <Image
+          fadeIn
+          lazyLoad
           src={verified ? verifyOk : verifyFailed}
           className='status-image'
           style={{ marginLeft: verified ? '30px' : '0' }}

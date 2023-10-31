@@ -38,7 +38,7 @@ export default function Home() {
     onLikePost: () => {},
     onStarPost: () => {},
     onRemovePost: () => {},
-    onNavigateToPost: () => {},
+    onNavigateToPost: (_: boolean) => {},
   })
 
   const handleSearchClick = () => {
@@ -88,7 +88,7 @@ export default function Home() {
     onLikePost: () => void,
     onStarPost: () => void,
     onRemovePost: () => void,
-    onNavigateToPost: () => void
+    onNavigateToPost: (focus: boolean) => void
   ) => {
     setShowMenu(true)
     setPostMenuPorps({

@@ -15,7 +15,7 @@ export default function UserCard() {
       case 1:
       case 2:
         return (
-          <Image src={user.gender == 1 ? male : famale} className='gender' />
+          <Image fadeIn lazyLoad src={user.gender == 1 ? male : famale} className='gender' />
         )
       default:
         return <></>
@@ -31,7 +31,7 @@ export default function UserCard() {
         }
       >
         <View className='at-col at-col-5'>
-          <Image src={user.avatar || defaultAvatar} className='avatar' />
+          <Image fadeIn lazyLoad src={user.avatar || defaultAvatar} className='avatar' />
         </View>
         <View className='at-col at-col-7 at-col__align--center'>
           <View className='at-row'>

@@ -103,6 +103,8 @@ export default function UpdateUserForm() {
     <View className='update-user-form'>
       <View className='avatar-container'>
         <Image
+          fadeIn
+          lazyLoad
           className='avatar'
           src={userState.avatar}
           onClick={handleShowAvatar}

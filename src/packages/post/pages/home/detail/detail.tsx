@@ -23,6 +23,7 @@ export default function detail() {
   const [postId] = useState(Number(params?.postId))
   const [authorName] = useState(params?.authorName!)
   const [authorAvatar] = useState(params?.authorAvatar!)
+  const [sendCommentFocus] = useState(params?.sendCommentFocus === 'true' || false)
 
   const [authorId, setAuthorId] = useState('')
   const [title, setTitle] = useState('')
@@ -300,6 +301,8 @@ export default function detail() {
           <Image
             src={image}
             key={image}
+            fadeIn
+            lazyLoad
             mode='widthFix'
             className='post-detail__image'
             onClick={() => showImages(image)}
@@ -384,6 +387,8 @@ export default function detail() {
                 <Image
                   src={i}
                   key={i}
+                  fadeIn
+                  lazyLoad
                   className='post-detail__send__image'
                   mode='aspectFill'
                 >
@@ -411,6 +416,7 @@ export default function detail() {
             showConfirmBar={false}
             value={commentContent}
             onInput={e => setCommentContent(e.detail.value)}
+            focus={sendCommentFocus}
           />
           <AtIcon
             value='image'

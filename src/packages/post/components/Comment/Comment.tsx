@@ -7,6 +7,7 @@ import { checkLike, likePost, unlikePost } from '@/api/Like'
 import './Comment.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
+import ReplyBlock from '../ReplyBlock/ReplyBlock'
 
 interface IProps {
   comment: TComment
@@ -14,14 +15,11 @@ interface IProps {
     commentId: number,
     commentUserId: string,
     likedComment: boolean,
-    onLikeComment: () => void,
+    onLikeComment: () => void
   ) => void
 }
 
-export default function Comment({
-  comment,
-  onShowMenu,
-}: IProps) {
+export default function Comment({ comment, onShowMenu }: IProps) {
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
 
@@ -68,6 +66,8 @@ export default function Comment({
         <Image
           className='comment__header__avatar skeleton-redius at-col at-col-1 at-col--auto'
           src={avatar}
+          fadeIn
+          lazyLoad
         />
         <View className='at-col'>
           <View className='at-row'>
@@ -99,7 +99,14 @@ export default function Comment({
                 value='menu'
                 size={15}
                 color={disabledColor}
-                onClick={() => onShowMenu(comment.id, comment.userId, liked, handleLikeComment)}
+                onClick={() =>
+                  onShowMenu(
+                    comment.id,
+                    comment.userId,
+                    liked,
+                    handleLikeComment
+                  )
+                }
               />
             </View>
           </View>
@@ -112,12 +119,19 @@ export default function Comment({
             <Image
               src={image}
               key={image}
+              fadeIn
+              lazyLoad
               mode='widthFix'
               className='comment__body__images__image'
               onClick={() => showImages(image)}
             />
           ))}
         </View>
+        {comment.replies > 0 && (
+          <View className='comment__body__reply'>
+            <ReplyBlock commentId={comment.id} replyCount={comment.replies} />
+          </View>
+        )}
       </View>
     </View>
   )

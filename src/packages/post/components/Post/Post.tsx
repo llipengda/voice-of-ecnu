@@ -25,7 +25,7 @@ export default function Post({
     onLikePost: () => void,
     onStarPost: () => void,
     onRemovePost: () => void,
-    onNavigateToPost: () => void
+    onNavigateToPost: (focus: boolean) => void
   ) => void
 }) {
   const [avatar, setAvatar] = useState('')
@@ -99,16 +99,21 @@ export default function Post({
     }
   }
 
-  const navigateToDetail = () => {
+  const navigateToDetail = (focus: boolean = false) => {
     Taro.navigateTo({
-      url: `/packages/post/pages/home/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}`,
+      url: `/packages/post/pages/home/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`,
     })
   }
 
   return (
     <View className='post skeleton-bg'>
       <View className='post__header at-row'>
-        <Image className='post__header__avatar skeleton-redius' src={avatar} />
+        <Image
+          fadeIn
+          lazyLoad
+          className='post__header__avatar skeleton-redius'
+          src={avatar}
+        />
         <View className='at-col'>
           <View className='at-row'>
             <Text className='post__header__username'>
@@ -139,7 +144,10 @@ export default function Post({
           />
         </View>
       </View>
-      <View className='post__body skeleton-rect' onClick={navigateToDetail}>
+      <View
+        className='post__body skeleton-rect'
+        onClick={() => navigateToDetail()}
+      >
         <View className='post__body__title'>{post.title}</View>
         <View className='post__body__content'>
           {post.content.length <= 50
@@ -147,9 +155,11 @@ export default function Post({
             : post.content.substring(0, 50) + '...'}
         </View>
         <View className='at-row at-row--wrap'>
-          {post.images.map((image, i) => (
+          {post.images.map(image => (
             <Image
-              key={i}
+              key={image}
+              fadeIn
+              lazyLoad
               className='post__body__image at-col at-col-4 at-col--auto'
               src={image}
               mode='aspectFill'
