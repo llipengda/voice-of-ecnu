@@ -8,7 +8,10 @@ import { getPostList } from '@/api/Post'
 import { Post } from 'types/post'
 import Taro from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { setPosts as RSetPosts } from '@/redux/slice/postSlice'
+import {
+  setPosts as RSetPosts,
+  changeSelectedIndex,
+} from '@/redux/slice/postSlice'
 import './home.scss'
 import CustomNavBar from '@/components/CustomNavBar/CustomNavBar'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
@@ -17,19 +20,19 @@ import PostMenu from '@/components/PostMenu/PostMenu'
 export default function Home() {
   const [searchText, setSearchText] = useState('')
 
-  const [selected, setSelected] = useState(0)
-
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [isEmpty, setIsEmpty] = useState(false)
 
   const posts = useAppSelector(state => state.post.posts)
+  const selected = useAppSelector(state => state.post.selectedIndex)
   const loginInfo = useAppSelector(state => state.login)
+
   const dispatch = useAppDispatch()
   const setPosts = (posts: Post[]) => dispatch(RSetPosts(posts))
+  const setSelected = (index: number) => dispatch(changeSelectedIndex(index))
 
   const [showMenu, setShowMenu] = useState(false)
-
   const [postMenuProps, setPostMenuPorps] = useState({
     postId: 0,
     postUserId: '',

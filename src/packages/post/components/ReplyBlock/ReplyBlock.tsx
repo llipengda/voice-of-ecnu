@@ -15,7 +15,7 @@ export default function ReplyBlock({
 
   useEffect(() => {
     getReplyList(commentId, 1, 5).then(data => setReplies(data))
-  }, [])
+  }, [replyCount])
 
   return (
     <View className='reply-block'>
@@ -32,7 +32,7 @@ export default function ReplyBlock({
         </View>
       ))}
       {replyCount > 5 && (
-        <View className='reply-block__more'>查看更多{`${replyCount}条`}回复</View>
+        <View className='reply-block__more'>查看更多{`${replyCount - 5}条`}回复</View>
       )}
     </View>
   )

@@ -1,0 +1,20 @@
+@import '@/common/constants.scss';
+
+.reply-detail {
+  margin-bottom: 10vh;
+
+  &__comment {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+  &__divider {
+    margin-top: -20px;
+    margin-bottom: 30px;
+
+    .at-divider__content {
+      color: $disabled-color;
+      font-weight: 700;
+    }
+  }
+}

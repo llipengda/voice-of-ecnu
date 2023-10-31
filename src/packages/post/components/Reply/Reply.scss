@@ -2,7 +2,10 @@
 
 $size: 60px;
 
-.comment {
+.reply {
+  margin-left: 70px;
+  margin-right: 70px;
+
   &__header {
     &__avatar {
       min-width: $size !important;
@@ -56,18 +59,15 @@ $size: 60px;
     margin-top: 10px;
     margin-left: $size + 20px;
     border-bottom: 1px solid #ddd;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
+    margin-bottom: 30px;
 
     &__content {
       padding-bottom: 20px;
-    }
+      word-break: break-all;
 
-    &__images {
-      &__image {
-        margin-bottom: 20px;
-        width: 100%;
-        height: none;
+      &__reply {
+        color: $disabled-color;
+        font-weight: 700;
       }
     }
   }

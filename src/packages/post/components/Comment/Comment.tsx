@@ -3,7 +3,7 @@ import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Comment as TComment } from 'types/comment'
-import { checkLike, likePost, unlikePost } from '@/api/Like'
+import { checkLike, like, unlike } from '@/api/Like'
 import './Comment.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
@@ -17,9 +17,24 @@ interface IProps {
     likedComment: boolean,
     onLikeComment: () => void
   ) => void
+  showMenuBtn?: boolean
+  showReply?: boolean
+  showBorder?: boolean
+  showDetail?: boolean
+  onshowReplyDetail: (comment: TComment) => void
+  onCustomClickBody?: () => void
 }
 
-export default function Comment({ comment, onShowMenu }: IProps) {
+export default function Comment({
+  comment,
+  onShowMenu,
+  showMenuBtn = true,
+  showReply = true,
+  showBorder = true,
+  showDetail = true,
+  onshowReplyDetail,
+  onCustomClickBody,
+}: IProps) {
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
 
@@ -45,10 +60,10 @@ export default function Comment({ comment, onShowMenu }: IProps) {
     setLikeDisabled(true)
     if (liked) {
       setLikes(likes - 1)
-      await unlikePost(comment.id, 1)
+      await unlike(comment.id, 1)
     } else {
       setLikes(likes + 1)
-      await likePost(comment.id, 1)
+      await like(comment.id, 1)
     }
     setLikeDisabled(false)
   }
@@ -71,7 +86,7 @@ export default function Comment({ comment, onShowMenu }: IProps) {
         />
         <View className='at-col'>
           <View className='at-row'>
-            <View className='at-col at-col-10'>
+            <View className={`at-col at-col-${showMenuBtn ? 10 : 11}`}>
               <View className='at-row'>
                 <Text className='comment__header__username'>
                   {username || '加载中...'}
@@ -94,25 +109,37 @@ export default function Comment({ comment, onShowMenu }: IProps) {
               />
               <Text className='comment__header__like__number'>{likes}</Text>
             </View>
-            <View className='at-col at-col-1 comment__header__menu'>
-              <AtIcon
-                value='menu'
-                size={15}
-                color={disabledColor}
-                onClick={() =>
-                  onShowMenu(
-                    comment.id,
-                    comment.userId,
-                    liked,
-                    handleLikeComment
-                  )
-                }
-              />
-            </View>
+            {showMenuBtn && (
+              <View className='at-col at-col-1 comment__header__menu'>
+                <AtIcon
+                  value='menu'
+                  size={15}
+                  color={disabledColor}
+                  onClick={() =>
+                    onShowMenu(
+                      comment.id,
+                      comment.userId,
+                      liked,
+                      handleLikeComment
+                    )
+                  }
+                />
+              </View>
+            )}
           </View>
         </View>
       </View>
-      <View className='comment__body skeleton-rect'>
+      <View
+        className='comment__body skeleton-rect'
+        style={{ borderBottom: showBorder ? '1px solid #ddd' : 'none' }}
+        onClick={
+          onCustomClickBody
+            ? onCustomClickBody
+            : showDetail
+            ? () => onshowReplyDetail(comment)
+            : () => {}
+        }
+      >
         <View className='comment__body__content'>{comment.content}</View>
         <View className='comment__body__images'>
           {comment.images.map(image => (
@@ -123,12 +150,15 @@ export default function Comment({ comment, onShowMenu }: IProps) {
               lazyLoad
               mode='widthFix'
               className='comment__body__images__image'
-              onClick={() => showImages(image)}
+              onClick={showDetail ? () => {} : () => showImages(image)}
             />
           ))}
         </View>
-        {comment.replies > 0 && (
-          <View className='comment__body__reply'>
+        {comment.replies > 0 && showReply && (
+          <View
+            className='comment__body__reply'
+            onClick={() => onshowReplyDetail(comment)}
+          >
             <ReplyBlock commentId={comment.id} replyCount={comment.replies} />
           </View>
         )}

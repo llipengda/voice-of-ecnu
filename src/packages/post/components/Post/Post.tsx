@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Post as TPost } from 'types/post'
 import { AtIcon } from 'taro-ui'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
-import { checkLike, likePost, unlikePost } from '@/api/Like'
+import { checkLike, like, unlike } from '@/api/Like'
 import { deletePost } from '@/api/Post'
 import { useAppDispatch } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
@@ -59,10 +59,10 @@ export default function Post({
     setLikeDisabled(true)
     if (liked) {
       setLikes(likes - 1)
-      await unlikePost(post.id)
+      await unlike(post.id)
     } else {
       setLikes(likes + 1)
-      await likePost(post.id)
+      await like(post.id)
     }
     setLikeDisabled(false)
   }

@@ -7,7 +7,7 @@ export const getReplyList = async (
   commentId: number,
   page: number,
   pageSize: number,
-  orderByDesc: boolean = true,
+  orderByDesc: boolean = false,
 ) => {
   const data = await Taro.request<Result<Reply[]>>({
     url: `${serverUrl}/reply/getReplyList`,

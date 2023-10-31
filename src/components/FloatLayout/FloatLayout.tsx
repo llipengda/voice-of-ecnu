@@ -5,7 +5,7 @@ interface IProps {
   isOpened: boolean
   onClose: () => void
   title: string
-  children?: JSX.Element
+  children?: JSX.Element | JSX.Element[] | never[]
 }
 
 export default function FloatLayout({
@@ -15,7 +15,11 @@ export default function FloatLayout({
   children,
 }: IProps) {
   return (
-    <View className={isOpened ? 'float-layout active' : 'float-layout'}>
+    <View
+      className={isOpened ? 'float-layout active' : 'float-layout'}
+      catchMove
+      onTouchMove={e => e.stopPropagation()}
+    >
       <View className='float-layout__overlay' onClick={onClose} />
       <View className='float-layout__container layout'>
         <View className='layout-header  xmg-border-b'>

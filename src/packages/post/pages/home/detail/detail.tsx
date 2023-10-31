@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 import { AtAvatar, AtIcon, AtTabs } from 'taro-ui'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
-import { checkLike, likePost, unlikePost } from '@/api/Like'
+import { checkLike, like, unlike } from '@/api/Like'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
 import { disabledColor, primaryColor } from '@/common/constants'
 import ListView from 'taro-listview'
@@ -16,6 +16,9 @@ import './detail.scss'
 import { uploadImages } from '@/api/Image'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import CommentMenu from '@/packages/post/components/CommentMenu/CommentMenu'
+import ReplyDetail from '@/packages/post/components/ReplyDetail/ReplyDetail'
+import { createReply } from '@/api/Reply'
+import { Reply } from 'types/reply'
 
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -23,7 +26,9 @@ export default function detail() {
   const [postId] = useState(Number(params?.postId))
   const [authorName] = useState(params?.authorName!)
   const [authorAvatar] = useState(params?.authorAvatar!)
-  const [sendCommentFocus] = useState(params?.sendCommentFocus === 'true' || false)
+  const [sendCommentFocus] = useState(
+    params?.sendCommentFocus === 'true' || false
+  )
 
   const [authorId, setAuthorId] = useState('')
   const [title, setTitle] = useState('')
@@ -53,23 +58,36 @@ export default function detail() {
   const tabList = [{ title: '正序' }, { title: '倒序' }]
 
   const [selectedImages, setSelectedImages] = useState<string[]>([])
-
   const [keyboardHeight, setKeyboardHeight] = useState(0)
-
   const [commentContent, setCommentContent] = useState('')
-
   const [sendCommentDisabled, setSendCommentDisabled] = useState(false)
+
+  const [sendReplyMode, setSendReplyMode] = useState(false)
+  const [sendReplyFocus, setSendReplyFocus] = useState(false)
+  const [sendReplyContent, setSendReplyContent] = useState('')
+  const [sendReplyDisabled, setSendReplyDisabled] = useState(false)
+
+  const [replyCommentId, setReplyCommentId] = useState(-1)
+  const [replyUserName, setReplyUserName] = useState('')
+  const [replyContent, setReplyContent] = useState('')
+  const [replyReplyId, setReplyReplyId] = useState(-1)
 
   const [reachBottomLoadingDisabled, setReachBottomLoadingDisabled] =
     useState(false)
 
-  const [showMenu, setShowMenu] = useState(false)
+  const [showCommentMenu, setShowCommentMenu] = useState(false)
   const [commentMenuProps, setCommentMenuProps] = useState({
     commentId: -1,
     commentUserId: '',
     likedComment: false,
     onLikeComment: () => {},
   })
+
+  const [showReplyDetail, setShowReplyDetail] = useState(false)
+  const [showDetailComment, setShowDetailComment] = useState<Comment>(
+    {} as Comment
+  )
+  const [newReply, setNewReply] = useState<Reply | null>(null)
 
   const user = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
@@ -110,7 +128,7 @@ export default function detail() {
     setCommentsCnt(commentsCnt + 1)
     if (tabIndex === 1) {
       setComments([data, ...comments])
-    } else {
+    } else if (!hasMore) {
       setComments([...comments, data])
     }
   }
@@ -159,10 +177,10 @@ export default function detail() {
     setLikeDisabled(true)
     if (liked) {
       setLikes(likes - 1)
-      await unlikePost(postId)
+      await unlike(postId)
     } else {
       setLikes(likes + 1)
-      await likePost(postId)
+      await like(postId)
     }
     setLikeDisabled(false)
   }
@@ -249,13 +267,13 @@ export default function detail() {
     setReachBottomLoadingDisabled(false)
   })
 
-  const handleShowMenu = (
+  const handleShowCommentMenu = (
     commentId: number,
     commentUserId: string,
     likedComment: boolean,
     onLikeComment: () => void
   ) => {
-    setShowMenu(true)
+    setShowCommentMenu(true)
     setCommentMenuProps({
       commentId,
       commentUserId,
@@ -264,17 +282,100 @@ export default function detail() {
     })
   }
 
+  const handleShowReplyDetail = (comment: Comment) => {
+    setShowDetailComment(comment)
+    setReplyCommentId(comment.id)
+    setSendReplyMode(true)
+    setShowReplyDetail(true)
+  }
+
+  const handleCloseReplyDetail = () => {
+    setShowReplyDetail(false)
+    setSendReplyMode(false)
+    setReplyReplyId(-1)
+    setReplyCommentId(-1)
+    setReplyUserName('')
+  }
+
+  const handleClickReply = (
+    replyId: number,
+    replyUserName: string,
+    replyContent: string
+  ) => {
+    setReplyReplyId(replyId)
+    setReplyUserName(replyUserName)
+    setReplyContent(replyContent)
+    setSendReplyFocus(true)
+  }
+  
+  const handleAddReply = (reply: Reply) => {
+    const newComments = comments.map(c => {
+      if (c.id === reply.commentId) {
+        c.replies++
+      }
+      return c
+    })
+    setComments(newComments)
+    setNewReply(reply)
+  }
+
+  const handleSendReply = async () => {
+    if (sendReplyDisabled) {
+      return
+    }
+    if (sendReplyContent.trim() === '') {
+      await Taro.showToast({
+        title: '回复不能为空',
+        icon: 'error',
+      })
+      return
+    }
+    setSendReplyDisabled(true)
+    await Taro.showLoading({
+      title: '发送中...',
+    })
+    const data = await createReply({
+      content: sendReplyContent,
+      replyId: replyReplyId === -1 ? undefined : replyReplyId,
+      commentId: replyCommentId,
+    })
+    handleAddReply(data)
+    setSendReplyDisabled(false)
+    setSendReplyContent('')
+    Taro.hideLoading()
+    await Taro.showToast({
+      title: '发送成功',
+      icon: 'success',
+      duration: 1000,
+    })
+    setReplyReplyId(-1)
+    setReplyUserName('')
+  }
+
   return (
     <View className='post-detail'>
       <FloatLayout
-        isOpened={showMenu}
-        onClose={() => setShowMenu(false)}
+        isOpened={showCommentMenu}
+        onClose={() => setShowCommentMenu(false)}
         title='操作'
       >
         <CommentMenu
           onRemoveComment={handleRemoveComment}
-          onClose={() => setShowMenu(false)}
+          onClickReply={() => setShowReplyDetail(true)}
+          onClose={() => setShowCommentMenu(false)}
           {...commentMenuProps}
+        />
+      </FloatLayout>
+      <FloatLayout
+        isOpened={showReplyDetail}
+        onClose={handleCloseReplyDetail}
+        title='评论详情'
+      >
+        <ReplyDetail
+          comment={showDetailComment}
+          isShow={showReplyDetail}
+          onClickReply={handleClickReply}
+          newReply={newReply}
         />
       </FloatLayout>
       <View className='post-detail__title'>{title || '加载中...'}</View>
@@ -286,7 +387,9 @@ export default function detail() {
           size='small'
         />
         <View className='at-col'>
-          <View className='post-detail__author at-row'>{authorName}</View>
+          <View className='post-detail__author at-row'>
+            {authorName || '加载中...'}
+          </View>
           <View className='post-detail__create-at at-row'>{createAt}</View>
         </View>
         <View className='at-col post-detail__delete'>
@@ -370,7 +473,12 @@ export default function detail() {
           autoHeight
         >
           {comments.map(c => (
-            <CComment comment={c} key={c.id} onShowMenu={handleShowMenu} />
+            <CComment
+              comment={c}
+              key={c.id}
+              onShowMenu={handleShowCommentMenu}
+              onshowReplyDetail={c => handleShowReplyDetail(c)}
+            />
           ))}
           {isEmpty && <View className='tip2'>留下第一条评论吧~</View>}
           {!isEmpty && !hasMore && <View className='tip2'>没有更多内容</View>}
@@ -378,9 +486,17 @@ export default function detail() {
       </View>
       <View
         className='post-detail__send'
-        style={{ bottom: `${keyboardHeight}Px` }}
+        style={{
+          bottom: `${keyboardHeight}Px`,
+          zIndex: sendReplyMode ? 8080 : 3000,
+        }}
       >
-        {selectedImages.length > 0 && (
+        {sendReplyMode && replyReplyId !== -1 && replyUserName.length > 0 && (
+          <View className='post-detail__send__reply'>
+            <Text>{`回复 ${replyUserName}：${replyContent}：`}</Text>
+          </View>
+        )}
+        {!sendReplyMode && selectedImages.length > 0 && (
           <View className='post-detail__send__image-wrap'>
             {selectedImages.map(i => (
               <>
@@ -409,28 +525,39 @@ export default function detail() {
         <View className='at-row'>
           <Textarea
             placeholder='说点什么吧...'
-            className='post-detail__send__input at-col at-col-8'
+            className={`post-detail__send__input at-col at-col-${
+              sendReplyMode ? 9 : 8
+            }`}
             onKeyboardHeightChange={e => setKeyboardHeight(e.detail.height)}
             adjustPosition={false}
             autoHeight
             showConfirmBar={false}
-            value={commentContent}
-            onInput={e => setCommentContent(e.detail.value)}
-            focus={sendCommentFocus}
+            value={sendReplyMode ? sendReplyContent : commentContent}
+            onInput={e =>
+              sendReplyMode
+                ? setSendReplyContent(e.detail.value)
+                : setCommentContent(e.detail.value)
+            }
+            focus={sendReplyMode ? sendReplyFocus : sendCommentFocus}
+            onBlur={sendReplyMode ? () => setSendReplyFocus(false) : () => {}}
           />
-          <AtIcon
-            value='image'
-            size='25'
-            color={primaryColor}
-            className='post-detail__send__icon at-col-1'
-            onClick={handleSelectImage}
-          />
+          {!sendReplyMode && (
+            <AtIcon
+              value='image'
+              size='25'
+              color={primaryColor}
+              className='post-detail__send__icon at-col-1'
+              onClick={handleSelectImage}
+            />
+          )}
           <View
             className='post-detail__send__button at-col at-col-1'
             style={{
-              color: sendCommentDisabled ? disabledColor : primaryColor,
+              color: (sendReplyMode ? sendReplyDisabled : sendCommentDisabled)
+                ? disabledColor
+                : primaryColor,
             }}
-            onClick={handleSendComment}
+            onClick={sendReplyMode ? handleSendReply : handleSendComment}
           >
             发送
           </View>

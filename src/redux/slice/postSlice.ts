@@ -1,8 +1,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { Post } from 'types/post'
 
-const initialState: { posts: Post[] } = {
+const initialState: {
+  posts: Post[]
+  selectedIndex: number
+} = {
   posts: [],
+  selectedIndex: 0,
 }
 
 const postSlice = createSlice({
@@ -16,6 +20,9 @@ const postSlice = createSlice({
       }
     },
     addPost(state, action: PayloadAction<Post>) {
+      if (state.selectedIndex === 1) {
+        return state
+      }
       return {
         ...state,
         posts: [action.payload, ...state.posts],
@@ -27,8 +34,15 @@ const postSlice = createSlice({
         posts: state.posts.filter(post => post.id !== action.payload),
       }
     },
+    changeSelectedIndex(state, action: PayloadAction<number>) {
+      return {
+        ...state,
+        selectedIndex: action.payload,
+      }
+    },
   },
 })
 
 export default postSlice.reducer
-export const { setPosts, addPost, removePost } = postSlice.actions
+export const { setPosts, addPost, removePost, changeSelectedIndex } =
+  postSlice.actions

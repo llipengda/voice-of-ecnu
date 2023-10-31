@@ -15,6 +15,7 @@ interface IProps {
   onLikeComment: () => void
   onRemoveComment: (commentId: number) => void
   onClose: () => void
+  onClickReply: () => void
 }
 
 export default function CommentMenu({
@@ -24,6 +25,7 @@ export default function CommentMenu({
   onLikeComment,
   onRemoveComment,
   onClose,
+  onClickReply
 }: IProps) {
   const user = useAppSelector(state => state.user)
 
@@ -60,6 +62,11 @@ export default function CommentMenu({
     }
   }
 
+  const handleClickReply = () => {
+    onClose()
+    onClickReply()
+  }
+
   return (
     <View className='comment-menu'>
       <View
@@ -79,8 +86,8 @@ export default function CommentMenu({
         </View>
       </View>
       <View className='comment-menu__item'>
-        <AtIcon value='message' size='35' color={disabledColor} />
-        <View className='comment-menu__item__text'>评论</View>
+        <AtIcon value='message' size='35' color={disabledColor} onClick={handleClickReply}/>
+        <View className='comment-menu__item__text'>回复</View>
       </View>
       {(user.id === commentUserId || user.role <= 1) && (
         <View className='comment-menu__item' onClick={handleDeleteComment}>
