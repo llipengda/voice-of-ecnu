@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setPosts as RSetPosts } from '@/redux/slice/postSlice'
 import './home.scss'
 import CustomNavBar from '@/components/CustomNavBar/CustomNavBar'
+import FloatLayout from '@/components/FloatLayout/FloatLayout'
+import PostMenu from '@/components/PostMenu/PostMenu'
 
 export default function Home() {
   const [searchText, setSearchText] = useState('')
@@ -25,6 +27,19 @@ export default function Home() {
   const loginInfo = useAppSelector(state => state.login)
   const dispatch = useAppDispatch()
   const setPosts = (posts: Post[]) => dispatch(RSetPosts(posts))
+
+  const [showMenu, setShowMenu] = useState(false)
+
+  const [postMenuProps, setPostMenuPorps] = useState({
+    postId: 0,
+    postUserId: '',
+    likedPost: false,
+    staredPost: false,
+    onLikePost: () => {},
+    onStarPost: () => {},
+    onRemovePost: () => {},
+    onNavigateToPost: () => {},
+  })
 
   const handleSearchClick = () => {
     Taro.navigateTo({
@@ -65,6 +80,29 @@ export default function Home() {
     setHasMore(data.length === 5)
   }
 
+  const handelShowMenu = (
+    postId: number,
+    postUserId: string,
+    likedPost: boolean,
+    staredPost: boolean,
+    onLikePost: () => void,
+    onStarPost: () => void,
+    onRemovePost: () => void,
+    onNavigateToPost: () => void
+  ) => {
+    setShowMenu(true)
+    setPostMenuPorps({
+      postId,
+      postUserId,
+      likedPost,
+      staredPost,
+      onLikePost,
+      onStarPost,
+      onRemovePost,
+      onNavigateToPost,
+    })
+  }
+
   return (
     <View style={{ width: '100%' }}>
       <CustomNavBar
@@ -73,6 +111,13 @@ export default function Home() {
         tabIndex={selected}
         onSwitchTab={i => handleSwitchTab(i)}
       />
+      <FloatLayout
+        title='操作'
+        isOpened={showMenu}
+        onClose={() => setShowMenu(false)}
+      >
+        <PostMenu onClose={() => setShowMenu(false)} {...postMenuProps} />
+      </FloatLayout>
       <AtSearchBar
         value={searchText}
         onChange={e => setSearchText(e)}
@@ -96,7 +141,7 @@ export default function Home() {
             needInit
           >
             {posts.map(p => (
-              <CPost post={p} key={p.id} />
+              <CPost post={p} key={p.id} onShowMenu={handelShowMenu} />
             ))}
             {isEmpty && <View className='tip2'>没有更多内容</View>}
           </ListView>

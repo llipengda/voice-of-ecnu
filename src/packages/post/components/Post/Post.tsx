@@ -7,12 +7,27 @@ import { AtIcon } from 'taro-ui'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
 import { checkLike, likePost, unlikePost } from '@/api/Like'
 import { deletePost } from '@/api/Post'
-import { useAppDispatch, useAppSelector } from '@/redux/hooks'
+import { useAppDispatch } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
-import './Post.scss'
 import { disabledColor } from '@/common/constants'
+import './Post.scss'
 
-export default function Post({ post }: { post: TPost }) {
+export default function Post({
+  post,
+  onShowMenu,
+}: {
+  post: TPost
+  onShowMenu: (
+    postId: number,
+    postUserId: string,
+    likedPost: boolean,
+    staredPost: boolean,
+    onLikePost: () => void,
+    onStarPost: () => void,
+    onRemovePost: () => void,
+    onNavigateToPost: () => void
+  ) => void
+}) {
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
 
@@ -24,8 +39,6 @@ export default function Post({ post }: { post: TPost }) {
 
   const [likeDisabled, setLikeDisabled] = useState(false)
   const [starDisabled, setStarDisabled] = useState(false)
-
-  const user = useAppSelector(state => state.user)
 
   const dispatch = useAppDispatch()
 
@@ -40,7 +53,7 @@ export default function Post({ post }: { post: TPost }) {
 
   const handleLikePost = async () => {
     if (likeDisabled) {
-      return 
+      return
     }
     setLiked(!liked)
     setLikeDisabled(true)
@@ -56,7 +69,7 @@ export default function Post({ post }: { post: TPost }) {
 
   const handleStarPost = async () => {
     if (starDisabled) {
-      return 
+      return
     }
     setStared(!stared)
     setStarDisabled(true)
@@ -107,9 +120,23 @@ export default function Post({ post }: { post: TPost }) {
           </View>
         </View>
         <View className='at-col post__header__delete'>
-          {(user.id === post.userId || user.role <= 1) && (
-            <Text onClick={handleDeletePost}>删除</Text>
-          )}
+          <AtIcon
+            value='menu'
+            size={15}
+            color={disabledColor}
+            onClick={() =>
+              onShowMenu(
+                post.id,
+                post.userId,
+                liked,
+                stared,
+                handleLikePost,
+                handleStarPost,
+                handleDeletePost,
+                navigateToDetail
+              )
+            }
+          />
         </View>
       </View>
       <View className='post__body skeleton-rect' onClick={navigateToDetail}>
@@ -140,11 +167,19 @@ export default function Post({ post }: { post: TPost }) {
           <Text className='post__footer__number'>{post.comments}</Text>
         </View>
         <View className='at-col-3' onClick={handleLikePost}>
-          <AtIcon value={liked ? 'heart-2' : 'heart'} size='20' color={disabledColor} />
+          <AtIcon
+            value={liked ? 'heart-2' : 'heart'}
+            size='20'
+            color={disabledColor}
+          />
           <Text className='post__footer__number'>{likes}</Text>
         </View>
         <View className='at-col-3' onClick={handleStarPost}>
-          <AtIcon value={stared ? 'star-2' : 'star'} size='20' color={disabledColor} />
+          <AtIcon
+            value={stared ? 'star-2' : 'star'}
+            size='20'
+            color={disabledColor}
+          />
           <Text className='post__footer__number'>{stars}</Text>
         </View>
       </View>
