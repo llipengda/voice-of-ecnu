@@ -509,8 +509,8 @@ export default function detail() {
                   mode='aspectFill'
                 >
                   <AtIcon
-                    value='close'
-                    size='15'
+                    value='close-circle'
+                    size='20'
                     color={primaryColor}
                     className='post-detail__send__image__close'
                     onClick={() =>
