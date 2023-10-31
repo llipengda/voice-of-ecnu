@@ -14,6 +14,8 @@ import CComment from '@/packages/post/components/Comment/Comment'
 import { createComment, getCommentList } from '@/api/Comments'
 import './detail.scss'
 import { uploadImages } from '@/api/Image'
+import FloatLayout from '@/components/FloatLayout/FloatLayout'
+import CommentMenu from '@/packages/post/components/CommentMenu/CommentMenu'
 
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -57,7 +59,16 @@ export default function detail() {
 
   const [sendCommentDisabled, setSendCommentDisabled] = useState(false)
 
-  const [reachBottomLoadingDisabled, setReachBottomLoadingDisabled] = useState(false)
+  const [reachBottomLoadingDisabled, setReachBottomLoadingDisabled] =
+    useState(false)
+
+  const [showMenu, setShowMenu] = useState(false)
+  const [commentMenuProps, setCommentMenuProps] = useState({
+    commentId: -1,
+    commentUserId: '',
+    likedComment: false,
+    onLikeComment: () => {},
+  })
 
   const user = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
@@ -237,8 +248,34 @@ export default function detail() {
     setReachBottomLoadingDisabled(false)
   })
 
+  const handleShowMenu = (
+    commentId: number,
+    commentUserId: string,
+    likedComment: boolean,
+    onLikeComment: () => void
+  ) => {
+    setShowMenu(true)
+    setCommentMenuProps({
+      commentId,
+      commentUserId,
+      likedComment,
+      onLikeComment,
+    })
+  }
+
   return (
     <View className='post-detail'>
+      <FloatLayout
+        isOpened={showMenu}
+        onClose={() => setShowMenu(false)}
+        title='操作'
+      >
+        <CommentMenu
+          onRemoveComment={handleRemoveComment}
+          onClose={() => setShowMenu(false)}
+          {...commentMenuProps}
+        />
+      </FloatLayout>
       <View className='post-detail__title'>{title || '加载中...'}</View>
       <View className='at-row'>
         <AtAvatar
@@ -330,11 +367,7 @@ export default function detail() {
           autoHeight
         >
           {comments.map(c => (
-            <CComment
-              comment={c}
-              key={c.id}
-              onRemoveComment={handleRemoveComment}
-            />
+            <CComment comment={c} key={c.id} onShowMenu={handleShowMenu} />
           ))}
           {isEmpty && <View className='tip2'>留下第一条评论吧~</View>}
           {!isEmpty && !hasMore && <View className='tip2'>没有更多内容</View>}

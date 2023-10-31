@@ -4,7 +4,7 @@ import { AtTabs } from 'taro-ui'
 import './CustomNavBar.scss'
 
 interface CustomNavBarProps {
-  title: string
+  title?: string
   showTabs?: boolean
   tabList?: { title: string }[]
   tabIndex?: number

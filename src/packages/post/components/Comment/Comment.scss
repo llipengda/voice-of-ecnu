@@ -35,8 +35,7 @@ $size: 60px;
 
     &__like {
       margin-top: 27px;
-      margin-right: 30px;
-      font-size: 20px;
+      font-size: 18px;
       color: $disabled-color;
 
       &__number {
@@ -44,9 +43,9 @@ $size: 60px;
       }
     }
 
-    &__delete {
+    &__menu {
       margin-right: 20px;
-      margin-top: 25px;
+      margin-top: 20px;
       text-align: right;
       font-size: 24px;
       color: $disabled-color;

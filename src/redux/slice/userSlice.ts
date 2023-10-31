@@ -3,7 +3,7 @@ import { User } from 'types/user'
 
 const initialState: User = {
   id: '',
-  role: 3,
+  role: 4,
   name: '未登录',
   avatar: '',
   createTime: '',

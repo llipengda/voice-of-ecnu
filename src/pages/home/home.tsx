@@ -68,7 +68,6 @@ export default function Home() {
   return (
     <View style={{ width: '100%' }}>
       <CustomNavBar
-        title='首页'
         showTabs
         tabList={[{ title: '最新' }, { title: '热门' }]}
         tabIndex={selected}

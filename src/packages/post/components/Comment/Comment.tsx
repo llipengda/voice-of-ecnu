@@ -4,19 +4,24 @@ import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Comment as TComment } from 'types/comment'
 import { checkLike, likePost, unlikePost } from '@/api/Like'
-import { useAppSelector } from '@/redux/hooks'
-import { deleteComment } from '@/api/Comments'
 import './Comment.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
 
+interface IProps {
+  comment: TComment
+  onShowMenu: (
+    commentId: number,
+    commentUserId: string,
+    likedComment: boolean,
+    onLikeComment: () => void,
+  ) => void
+}
+
 export default function Comment({
   comment,
-  onRemoveComment,
-}: {
-  comment: TComment
-  onRemoveComment: (commentId: number) => void
-}) {
+  onShowMenu,
+}: IProps) {
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
 
@@ -25,8 +30,6 @@ export default function Comment({
   const [likes, setLikes] = useState(comment.likes)
 
   const [likeDisabled, setLikeDisabled] = useState(false)
-
-  const user = useAppSelector(state => state.user)
 
   useEffect(() => {
     getUserById(comment.userId).then(data => {
@@ -52,22 +55,6 @@ export default function Comment({
     setLikeDisabled(false)
   }
 
-  const handleDeleteComment = async () => {
-    const res = await Taro.showModal({
-      title: '提示',
-      content: '确定将评论删除？',
-    })
-    if (res.confirm) {
-      await deleteComment(comment.id)
-      onRemoveComment(comment.id)
-      Taro.showToast({
-        title: '删除成功',
-        icon: 'success',
-        duration: 1000,
-      })
-    }
-  }
-
   const showImages = (url: string) => {
     Taro.previewImage({
       current: url,
@@ -84,7 +71,7 @@ export default function Comment({
         />
         <View className='at-col'>
           <View className='at-row'>
-            <View className='at-col at-col-9'>
+            <View className='at-col at-col-10'>
               <View className='at-row'>
                 <Text className='comment__header__username'>
                   {username || '加载中...'}
@@ -107,10 +94,13 @@ export default function Comment({
               />
               <Text className='comment__header__like__number'>{likes}</Text>
             </View>
-            <View className='at-col at-col-1 comment__header__delete'>
-              {(user.id === comment.userId || user.role <= 1) && (
-                <Text onClick={handleDeleteComment}>删除</Text>
-              )}
+            <View className='at-col at-col-1 comment__header__menu'>
+              <AtIcon
+                value='menu'
+                size={15}
+                color={disabledColor}
+                onClick={() => onShowMenu(comment.id, comment.userId, liked, handleLikeComment)}
+              />
             </View>
           </View>
         </View>
