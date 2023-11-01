@@ -132,10 +132,10 @@ export default function detail() {
     setSendCommentDisabled(false)
     setSelectedImages([])
     setCommentContent('')
-    Taro.hideLoading()
     if (!data) {
       return
     }
+    Taro.hideLoading()
     await Taro.showToast({
       title: '发送成功',
       icon: 'success',
@@ -360,8 +360,8 @@ export default function detail() {
     }
     setSendReplyDisabled(false)
     setSendReplyContent('')
-    Taro.hideLoading()
     if (data) {
+    Taro.hideLoading()
       await Taro.showToast({
         title: '发送成功',
         icon: 'success',
