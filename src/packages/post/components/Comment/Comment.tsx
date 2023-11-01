@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
-import { Comment as TComment } from 'types/comment'
+import { Comment as TComment } from '@/types/comment'
 import { checkLike, like, unlike } from '@/api/Like'
 import './Comment.scss'
 import { AtIcon } from 'taro-ui'
@@ -142,17 +142,18 @@ export default function Comment({
       >
         <View className='comment__body__content'>{comment.content}</View>
         <View className='comment__body__images'>
-          {comment.images && comment.images.map(image => (
-            <Image
-              src={image}
-              key={image}
-              fadeIn
-              lazyLoad
-              mode='widthFix'
-              className='comment__body__images__image'
-              onClick={showDetail ? () => {} : () => showImages(image)}
-            />
-          ))}
+          {comment.images &&
+            comment.images.map(image => (
+              <Image
+                src={image}
+                key={image}
+                fadeIn
+                lazyLoad
+                mode='widthFix'
+                className='comment__body__images__image'
+                onClick={showDetail ? () => {} : () => showImages(image)}
+              />
+            ))}
         </View>
         {comment.replies > 0 && showReply && (
           <View

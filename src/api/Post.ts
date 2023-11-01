@@ -1,7 +1,7 @@
 import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
-import { CreatePostParams, Post } from 'types/post'
-import { Result } from 'types/result'
+import { CreatePostParams, Post } from '@/types/post'
+import { Result } from '@/types/result'
 
 export const getPostList = async (
   page: number,

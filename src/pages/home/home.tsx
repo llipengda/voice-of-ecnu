@@ -5,7 +5,7 @@ import { AtFab, AtSearchBar } from 'taro-ui'
 import CPost from '@/packages/post/components/Post/Post'
 import ListView from 'taro-listview'
 import { getPostList } from '@/api/Post'
-import { Post } from 'types/post'
+import { Post } from '@/types/post'
 import Taro from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import {

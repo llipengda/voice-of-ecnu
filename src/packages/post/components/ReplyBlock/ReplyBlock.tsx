@@ -1,7 +1,7 @@
 import { getReplyList } from '@/api/Reply'
 import { View, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
-import { Reply } from 'types/reply'
+import { Reply } from '@/types/reply'
 import './ReplyBlock.scss'
 
 export default function ReplyBlock({

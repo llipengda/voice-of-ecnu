@@ -1,13 +1,13 @@
 import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
-import { CreateReplyParams, Reply } from 'types/reply'
-import { Result } from 'types/result'
+import { CreateReplyParams, Reply } from '@/types/reply'
+import { Result } from '@/types/result'
 
 export const getReplyList = async (
   commentId: number,
   page: number,
   pageSize: number,
-  orderByDesc: boolean = false,
+  orderByDesc: boolean = false
 ) => {
   const data = await Taro.request<Result<Reply[]>>({
     url: `${serverUrl}/reply/getReplyList`,

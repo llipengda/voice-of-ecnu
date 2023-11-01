@@ -1,7 +1,7 @@
 import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
-import { Reply as TReply } from 'types/reply'
+import { Reply as TReply } from '@/types/reply'
 import { checkLike, like, unlike } from '@/api/Like'
 import './Reply.scss'
 import { AtIcon } from 'taro-ui'

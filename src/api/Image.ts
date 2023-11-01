@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { serverUrl } from '@/common/constants'
-import { Result } from 'types/result'
+import { Result } from '@/types/result'
 
 export const uploadImage = async (filePath: string) => {
   try {

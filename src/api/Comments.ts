@@ -1,7 +1,7 @@
 import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
-import { Result } from 'types/result'
-import { Comment, CreateCommentParams } from 'types/comment'
+import { Result } from '@/types/result'
+import { Comment, CreateCommentParams } from '@/types/comment'
 
 export const getCommentList = async (
   postId: number,

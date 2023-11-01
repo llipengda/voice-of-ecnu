@@ -1,7 +1,7 @@
 import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
-import { Result } from 'types/result'
-import { LoginInfo, UpdateUserParams, User } from 'types/user'
+import { Result } from '@/types/result'
+import { LoginInfo, UpdateUserParams, User } from '@/types/user'
 
 export const login = async (code: string) => {
   const data = await Taro.request<Result<LoginInfo>>({

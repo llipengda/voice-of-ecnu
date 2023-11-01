@@ -1,8 +1,8 @@
 import { View } from '@tarojs/components'
 import { useEffect, useRef, useState } from 'react'
 import ListView from 'taro-listview'
-import { Comment } from 'types/comment'
-import { Reply } from 'types/reply'
+import { Comment } from '@/types/comment'
+import { Reply } from '@/types/reply'
 import CComment from '../Comment/Comment'
 import CReply from '../Reply/Reply'
 import { getReplyList } from '@/api/Reply'
@@ -36,7 +36,7 @@ export default function ReplyDetail({
   onClickReply,
   newReply,
   onShowMenu,
-  onRemoveReply
+  onRemoveReply,
 }: IProps) {
   const [replies, setReplies] = useState<Reply[]>([])
   const [hasMore, setHasMore] = useState(true)

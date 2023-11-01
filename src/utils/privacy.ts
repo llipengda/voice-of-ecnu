@@ -2,7 +2,7 @@ import { confirmPrivacyPolicy } from '@/api/User'
 import { setUser } from '@/redux/slice/userSlice'
 import store from '@/redux/store'
 import Taro from '@tarojs/taro'
-import { User } from 'types/user'
+import { User } from '@/types/user'
 
 const showPrivacyPolicy = (user: User) => {
   if (user.role !== 4) {
