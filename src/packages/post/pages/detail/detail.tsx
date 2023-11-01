@@ -281,15 +281,15 @@ export default function detail() {
   })
 
   const handleShowCommentMenu = (
-    commentId: number,
-    commentUserId: string,
+    comment: Comment,
     likedComment: boolean,
     onLikeComment: () => void
   ) => {
     setShowCommentMenu(true)
+    setShowDetailComment(comment)
     setCommentMenuProps({
-      commentId,
-      commentUserId,
+      commentId: comment.id,
+      commentUserId: comment.userId,
       likedComment,
       onLikeComment,
     })
@@ -411,6 +411,11 @@ export default function detail() {
     }
   }
 
+  const handelClickCommentReply = () => {
+    handleShowReplyDetail(showDetailComment)
+    handleClickReply(-1, '', '')
+  }
+
   return (
     <View className='post-detail'>
       <FloatLayout
@@ -420,7 +425,7 @@ export default function detail() {
       >
         <CommentMenu
           onRemoveComment={handleRemoveComment}
-          onClickReply={() => setShowReplyDetail(true)}
+          onClickReply={handelClickCommentReply}
           onClose={() => setShowCommentMenu(false)}
           {...commentMenuProps}
         />

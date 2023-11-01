@@ -12,8 +12,7 @@ import ReplyBlock from '../ReplyBlock/ReplyBlock'
 interface IProps {
   comment: TComment
   onShowMenu: (
-    commentId: number,
-    commentUserId: string,
+    comment: TComment,
     likedComment: boolean,
     onLikeComment: () => void
   ) => void
@@ -117,8 +116,7 @@ export default function Comment({
                   color={disabledColor}
                   onClick={() =>
                     onShowMenu(
-                      comment.id,
-                      comment.userId,
+                      comment,
                       liked,
                       handleLikeComment
                     )
