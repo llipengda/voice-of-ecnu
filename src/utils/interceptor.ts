@@ -67,6 +67,7 @@ const switchErrorCode = async (
         }，暂时不能执行此操作。`,
         showCancel: false,
       })
+      return res
 
     default:
       return res
