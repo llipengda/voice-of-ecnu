@@ -28,7 +28,7 @@ export default function detail() {
   const [postId] = useState(Number(params?.postId))
   const [authorName] = useState(params?.authorName!)
   const [authorAvatar] = useState(params?.authorAvatar!)
-  const [sendCommentFocus] = useState(
+  const [sendCommentFocus, setSendCommentFocus] = useState(
     params?.sendCommentFocus === 'true' || false
   )
 
@@ -512,7 +512,10 @@ export default function detail() {
           />
           <Text className='post-detail__actions__action__number at-row'>{`浏览 ${views}`}</Text>
         </View>
-        <View className='at-col-3 post-detail__actions__action'>
+        <View
+          className='at-col-3 post-detail__actions__action'
+          onClick={() => setSendCommentFocus(true)}
+        >
           <AtIcon value='message' size='20' color={disabledColor} />
           <Text className='post-detail__actions__action__number at-row'>{`评论 ${commentsCnt}`}</Text>
         </View>
@@ -629,7 +632,11 @@ export default function detail() {
                 : setCommentContent(e.detail.value)
             }
             focus={sendReplyMode ? sendReplyFocus : sendCommentFocus}
-            onBlur={sendReplyMode ? () => setSendReplyFocus(false) : () => {}}
+            onBlur={
+              sendReplyMode
+                ? () => setSendReplyFocus(false)
+                : () => setSendCommentFocus(false)
+            }
           />
           {!sendReplyMode && (
             <AtIcon

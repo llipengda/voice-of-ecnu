@@ -168,11 +168,11 @@ export default function Post({
         </View>
       </View>
       <View className='post__footer at-row'>
-        <View className='at-col-3'>
+        <View className='at-col-3' onClick={() => navigateToDetail()}>
           <AtIcon value='eye' size='20' color={disabledColor} />
           <Text className='post__footer__number'>{post.views}</Text>
         </View>
-        <View className='at-col-3'>
+        <View className='at-col-3' onClick={() => navigateToDetail(true)}>
           <AtIcon value='message' size='20' color={disabledColor} />
           <Text className='post__footer__number'>{post.comments}</Text>
         </View>
