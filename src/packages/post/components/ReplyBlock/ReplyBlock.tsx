@@ -12,13 +12,17 @@ export default function ReplyBlock({
   replyCount: number
 }) {
   const [replies, setReplies] = useState<Reply[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    getReplyList(commentId, 1, 5).then(data => setReplies(data))
+    getReplyList(commentId, 1, 5)
+      .then(data => setReplies(data))
+      .then(() => setIsLoaded(true))
   }, [replyCount])
 
   return (
     <View className='reply-block'>
+      {!isLoaded && <View className='reply-block__item'>加载中...</View>}
       {replies.map(reply => (
         <View className='reply-block__item' key={reply.id}>
           <Text className='reply-block__item__username'>{reply.userName}</Text>
@@ -30,9 +34,11 @@ export default function ReplyBlock({
           )}
           ：{reply.content}
         </View>
-      )) || '加载中...'}
+      ))}
       {replyCount > 5 && (
-        <View className='reply-block__more'>查看更多{`${replyCount - 5}条`}回复</View>
+        <View className='reply-block__more'>
+          查看更多{`${replyCount - 5}条`}回复
+        </View>
       )}
     </View>
   )
