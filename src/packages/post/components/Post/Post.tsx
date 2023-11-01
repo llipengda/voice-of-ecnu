@@ -101,7 +101,7 @@ export default function Post({
 
   const navigateToDetail = (focus: boolean = false) => {
     Taro.navigateTo({
-      url: `/packages/post/pages/home/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`,
+      url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`,
     })
   }
 

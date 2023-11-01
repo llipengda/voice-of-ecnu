@@ -15,7 +15,12 @@ export default function UserCard() {
       case 1:
       case 2:
         return (
-          <Image fadeIn lazyLoad src={user.gender == 1 ? male : famale} className='gender' />
+          <Image
+            fadeIn
+            lazyLoad
+            src={user.gender == 1 ? male : famale}
+            className='gender'
+          />
         )
       default:
         return <></>
@@ -27,11 +32,16 @@ export default function UserCard() {
       <View
         className='at-row'
         onClick={() =>
-          Taro.navigateTo({ url: '/packages/user/pages/user/update/update' })
+          Taro.navigateTo({ url: '/packages/user/pages/update/update' })
         }
       >
         <View className='at-col at-col-5'>
-          <Image fadeIn lazyLoad src={user.avatar || defaultAvatar} className='avatar' />
+          <Image
+            fadeIn
+            lazyLoad
+            src={user.avatar || defaultAvatar}
+            className='avatar'
+          />
         </View>
         <View className='at-col at-col-7 at-col__align--center'>
           <View className='at-row'>

@@ -6,7 +6,7 @@ import Taro from '@tarojs/taro'
 
 export default function UserList() {
   const navigateTo = (name: string) => {
-    Taro.navigateTo({ url: `/packages/user/pages/user/${name}/${name}` })
+    Taro.navigateTo({ url: `/packages/user/pages/${name}/${name}` })
   }
 
   return (

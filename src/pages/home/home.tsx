@@ -46,7 +46,7 @@ export default function Home() {
 
   const handleSearchClick = () => {
     Taro.navigateTo({
-      url: `/packages/post/pages/home/search/search?key=${searchText}`,
+      url: `/packages/post/pages/search/search?key=${searchText}`,
     })
   }
 
@@ -154,7 +154,7 @@ export default function Home() {
         <AtFab
           onClick={() => {
             Taro.navigateTo({
-              url: '/packages/post/pages/home/add/add',
+              url: '/packages/post/pages/add/add',
             })
           }}
         >

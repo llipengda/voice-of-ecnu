@@ -38,15 +38,11 @@ export default defineAppConfig({
   subpackages: [
     {
       root: 'packages/user',
-      pages: ['pages/user/update/update', 'pages/user/verify/verify'],
+      pages: ['pages/update/update', 'pages/verify/verify'],
     },
     {
       root: 'packages/post',
-      pages: [
-        'pages/home/search/search',
-        'pages/home/add/add',
-        'pages/home/detail/detail',
-      ],
+      pages: ['pages/search/search', 'pages/add/add', 'pages/detail/detail'],
     },
   ],
 })
