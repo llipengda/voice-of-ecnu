@@ -10,6 +10,7 @@ import '@/custom-theme.scss'
 import { setUser } from '@/redux/slice/userSlice'
 import Taro, { useLoad } from '@tarojs/taro'
 import showPrivacyPolicy from '@/utils/privacy'
+import { setLoginInfo } from '@/redux/slice/loginSlice'
 
 export default function VerifyForm() {
   const user = useAppSelector(state => state.user)
@@ -104,6 +105,9 @@ export default function VerifyForm() {
     await USERAPI.verifyUser(user.id)
     const data = await USERAPI.updateUser({ email })
     dispatch(setUser(data!))
+    const { code: loginCode } = await Taro.login()
+    const info = await USERAPI.login(loginCode)
+    dispatch(setLoginInfo(info!))
     setSubmitButtonLoading(false)
     Taro.showToast({
       title: '认证成功',
