@@ -40,12 +40,6 @@ export default function add() {
         icon: 'error',
         duration: 1000,
       })
-    } else if (!content) {
-      Taro.showToast({
-        title: '内容不能为空',
-        icon: 'error',
-        duration: 1000,
-      })
     } else {
       const imgs = await uploadImages(images.map(image => image.url))
       const data = await createPost({
@@ -53,16 +47,18 @@ export default function add() {
         content,
         images: imgs || [],
       })
-      dispatch(addPost(data))
-      setSubmitButtonLoading(false)
-      Taro.showToast({
-        title: '发帖成功',
-        icon: 'success',
-        duration: 1000,
-      })
-      setTimeout(() => {
-        Taro.navigateBack()
-      }, 1000)
+      if (data) {
+        dispatch(addPost(data))
+        setSubmitButtonLoading(false)
+        await Taro.showToast({
+          title: '发帖成功',
+          icon: 'success',
+          duration: 1000,
+        })
+        setTimeout(() => {
+          Taro.navigateBack()
+        }, 1000)
+      }
     }
     setSubmitButtonLoading(false)
   }

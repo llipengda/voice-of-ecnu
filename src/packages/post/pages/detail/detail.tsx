@@ -133,6 +133,9 @@ export default function detail() {
     setSelectedImages([])
     setCommentContent('')
     Taro.hideLoading()
+    if (!data) {
+      return
+    }
     await Taro.showToast({
       title: '发送成功',
       icon: 'success',
@@ -352,15 +355,19 @@ export default function detail() {
       replyId: replyReplyId === -1 ? undefined : replyReplyId,
       commentId: replyCommentId,
     })
-    handleAddReply(data)
+    if (data) {
+      handleAddReply(data)
+    }
     setSendReplyDisabled(false)
     setSendReplyContent('')
     Taro.hideLoading()
-    await Taro.showToast({
-      title: '发送成功',
-      icon: 'success',
-      duration: 1000,
-    })
+    if (data) {
+      await Taro.showToast({
+        title: '发送成功',
+        icon: 'success',
+        duration: 1000,
+      })
+    }
     setReplyReplyId(-1)
     setReplyUserName('')
   }
