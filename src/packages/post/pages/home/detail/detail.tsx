@@ -19,6 +19,8 @@ import CommentMenu from '@/packages/post/components/CommentMenu/CommentMenu'
 import ReplyDetail from '@/packages/post/components/ReplyDetail/ReplyDetail'
 import { createReply } from '@/api/Reply'
 import { Reply } from 'types/reply'
+import ReplyMenu from '@/packages/post/components/ReplyMenu/ReplyMenu'
+import { banUser } from '@/api/User'
 
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -88,6 +90,17 @@ export default function detail() {
     {} as Comment
   )
   const [newReply, setNewReply] = useState<Reply | null>(null)
+
+  const [showReplyMenu, setShowReplyMenu] = useState(false)
+  const [replyMenuProps, setReplyMenuProps] = useState({
+    replyId: -1,
+    replyUserId: '',
+    likedReply: false,
+    replyContent: '',
+    replyUserName: '',
+    onLikeReply: () => {},
+    onRemoveReply: (_: number) => {},
+  })
 
   const user = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
@@ -307,7 +320,7 @@ export default function detail() {
     setReplyContent(replyContent)
     setSendReplyFocus(true)
   }
-  
+
   const handleAddReply = (reply: Reply) => {
     const newComments = comments.map(c => {
       if (c.id === reply.commentId) {
@@ -352,6 +365,52 @@ export default function detail() {
     setReplyUserName('')
   }
 
+  const handelDecreaseReplies = (removeReplyCommentId: number) => {
+    const newComments = comments.map(c => {
+      if (c.id === removeReplyCommentId) {
+        c.replies--
+      }
+      return c
+    })
+    setComments(newComments)
+  }
+
+  const handelShowReplyMenu = (
+    replyId: number,
+    replyUserId: string,
+    replyContent: string,
+    replyUserName: string,
+    likedReply: boolean,
+    onLikeReply: () => void,
+    onRemoveReply: (replyId: number) => void
+  ) => {
+    setShowReplyMenu(true)
+    setReplyMenuProps({
+      replyId,
+      replyUserId,
+      likedReply,
+      replyContent,
+      replyUserName,
+      onLikeReply,
+      onRemoveReply,
+    })
+  }
+
+  const handelBanUser = async () => {
+    const res = await Taro.showModal({
+      title: '提示',
+      content: '确定要封禁用户？',
+    })
+    if (res.confirm) {
+      await banUser(1, authorId)
+      Taro.showToast({
+        title: '封禁成功',
+        icon: 'success',
+        duration: 1000,
+      })
+    }
+  }
+
   return (
     <View className='post-detail'>
       <FloatLayout
@@ -376,6 +435,20 @@ export default function detail() {
           isShow={showReplyDetail}
           onClickReply={handleClickReply}
           newReply={newReply}
+          onRemoveReply={handelDecreaseReplies}
+          onShowMenu={handelShowReplyMenu}
+        />
+      </FloatLayout>
+      <FloatLayout
+        isOpened={showReplyMenu}
+        onClose={() => setShowReplyMenu(false)}
+        title='操作'
+        zIndex={9000}
+      >
+        <ReplyMenu
+          onClose={() => setShowReplyMenu(false)}
+          onClickReply={handleClickReply}
+          {...replyMenuProps}
         />
       </FloatLayout>
       <View className='post-detail__title'>{title || '加载中...'}</View>
@@ -393,6 +466,11 @@ export default function detail() {
           <View className='post-detail__create-at at-row'>{createAt}</View>
         </View>
         <View className='at-col post-detail__delete'>
+          {user.role <= 1 && (
+            <Text onClick={handelBanUser} className='post-detail__delete__ban'>
+              封禁用户
+            </Text>
+          )}
           {(user.id === authorId || user.role <= 1) && (
             <Text onClick={handleDeletePost}>删除</Text>
           )}

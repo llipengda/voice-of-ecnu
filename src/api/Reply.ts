@@ -30,3 +30,11 @@ export const createReply = async (params: CreateReplyParams) => {
   })
   return data.data.data
 }
+
+export const deleteReply = async (replyId: number) => {
+  const data = await Taro.request<Result<Reply>>({
+    url: `${serverUrl}/reply/deleteReply?replyId=${replyId}`,
+    method: 'POST',
+  })
+  return data.data.data
+}

@@ -18,6 +18,16 @@ interface IProps {
     replyContent: string
   ) => void
   newReply: Reply | null
+  onShowMenu: (
+    replyId: number,
+    replyUserId: string,
+    replyContent: string,
+    replyUserName: string,
+    likedReply: boolean,
+    onLikeReply: () => void,
+    onRemoveReply: (replyId: number) => void
+  ) => void
+  onRemoveReply: (removeReplyCommentId: number) => void
 }
 
 export default function ReplyDetail({
@@ -25,6 +35,8 @@ export default function ReplyDetail({
   isShow,
   onClickReply,
   newReply,
+  onShowMenu,
+  onRemoveReply
 }: IProps) {
   const [replies, setReplies] = useState<Reply[]>([])
   const [hasMore, setHasMore] = useState(true)
@@ -52,6 +64,7 @@ export default function ReplyDetail({
 
   useEffect(() => {
     if (!isShow) {
+      setReplies([])
       return
     }
     handlePullDownRefresh()
@@ -62,6 +75,30 @@ export default function ReplyDetail({
       setReplies([...replies, newReply])
     }
   }, [newReply])
+
+  const handelRemoveReply = (replyId: number) => {
+    onRemoveReply(replies.find(reply => reply.id === replyId)?.commentId || -1)
+    setReplies(replies.filter(reply => reply.id !== replyId))
+  }
+
+  const handelShowMenu = (
+    replyId: number,
+    replyUserId: string,
+    replyContent: string,
+    replyUserName: string,
+    likedReply: boolean,
+    onLikeReply: () => void
+  ) => {
+    onShowMenu(
+      replyId,
+      replyUserId,
+      replyContent,
+      replyUserName,
+      likedReply,
+      onLikeReply,
+      handelRemoveReply
+    )
+  }
 
   return (
     <View
@@ -105,7 +142,7 @@ export default function ReplyDetail({
             <CReply
               key={reply.id}
               reply={reply}
-              onShowMenu={() => {}}
+              onShowMenu={handelShowMenu}
               onClickReply={onClickReply}
             />
           ))}

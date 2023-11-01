@@ -142,7 +142,7 @@ export default function Comment({
       >
         <View className='comment__body__content'>{comment.content}</View>
         <View className='comment__body__images'>
-          {comment.images.map(image => (
+          {comment.images && comment.images.map(image => (
             <Image
               src={image}
               key={image}

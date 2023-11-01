@@ -30,7 +30,7 @@ export default function ReplyBlock({
           )}
           ：{reply.content}
         </View>
-      ))}
+      )) || '加载中...'}
       {replyCount > 5 && (
         <View className='reply-block__more'>查看更多{`${replyCount - 5}条`}回复</View>
       )}

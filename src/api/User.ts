@@ -78,7 +78,8 @@ export const confirmPrivacyPolicy = async (userId: string) => {
   return data.data.data
 }
 
-export const banUser = async (bannedBefore: Date, userId: string) => {
+export const banUser = async (days: number, userId: string) => {
+  const bannedBefore = new Date(Date.now() + 86400000 * days)
   const data = await Taro.request<Result<User>>({
     url: `${serverUrl}/user/banUser?bannedBefore=${bannedBefore.toDateString()}&userId=${userId}`,
     method: 'POST',

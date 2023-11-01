@@ -12,8 +12,10 @@ interface IProps {
   onShowMenu: (
     replyId: number,
     replyUserId: string,
+    replyContent: string,
+    replyUserName: string,
     likedReply: boolean,
-    onLikeComment: () => void
+    onLikeReply: () => void
   ) => void
   onClickReply: (
     replyId: number,
@@ -90,7 +92,14 @@ export default function Comment({ reply, onShowMenu, onClickReply }: IProps) {
                 size={15}
                 color={disabledColor}
                 onClick={() =>
-                  onShowMenu(reply.id, reply.userId, liked, handleLikeReply)
+                  onShowMenu(
+                    reply.id,
+                    reply.userId,
+                    reply.content,
+                    reply.userName,
+                    liked,
+                    handleLikeReply
+                  )
                 }
               />
             </View>
