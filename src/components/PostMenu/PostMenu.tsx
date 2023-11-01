@@ -39,7 +39,7 @@ export default function CommentMenu({
     })
     if (res.confirm) {
       onClose()
-      await banUser(new Date(Date.now() + 86400000), postUserId)
+      await banUser(1, postUserId)
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',

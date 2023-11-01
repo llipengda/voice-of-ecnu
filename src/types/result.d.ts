@@ -1,6 +1,8 @@
+import { CommonErrorCode } from './commonErrorCode'
+
 export type Result<T> = {
   code: number
-  commonErrorCode?: string
+  commonErrorCode?: CommonErrorCode
   data: T
   msg: string
 }
