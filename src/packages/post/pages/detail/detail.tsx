@@ -11,7 +11,7 @@ import { disabledColor, primaryColor } from '@/common/constants'
 import ListView from 'taro-listview'
 import { Comment } from '@/types/comment'
 import CComment from '@/packages/post/components/Comment/Comment'
-import { createComment, getCommentList } from '@/api/Comments'
+import { createComment, getCommentListWithUserInfo } from '@/api/Comments'
 import './detail.scss'
 import { uploadImages } from '@/api/Image'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
@@ -21,6 +21,8 @@ import { createReply } from '@/api/Reply'
 import { Reply } from '@/types/reply'
 import ReplyMenu from '@/packages/post/components/ReplyMenu/ReplyMenu'
 import { banUser } from '@/api/User'
+import { WithUserInfo } from '@/types/withUserInfo'
+import { addUserInfo } from '@/utils/addUserInfo'
 
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -54,7 +56,7 @@ export default function detail() {
 
   const index = useRef(1)
 
-  const [comments, setComments] = useState<Comment[]>([])
+  const [comments, setComments] = useState<WithUserInfo<Comment>[]>([])
 
   const [tabIndex, setTabIndex] = useState(0)
   const tabList = [{ title: '正序' }, { title: '倒序' }]
@@ -86,9 +88,9 @@ export default function detail() {
   })
 
   const [showReplyDetail, setShowReplyDetail] = useState(false)
-  const [showDetailComment, setShowDetailComment] = useState<Comment>(
-    {} as Comment
-  )
+  const [showDetailComment, setShowDetailComment] = useState<
+    WithUserInfo<Comment>
+  >({} as WithUserInfo<Comment>)
   const [newReply, setNewReply] = useState<Reply | null>(null)
 
   const [showReplyMenu, setShowReplyMenu] = useState(false)
@@ -141,11 +143,12 @@ export default function detail() {
       icon: 'success',
       duration: 1000,
     })
+    const dataWithUserInfo = addUserInfo(data)
     setCommentsCnt(commentsCnt + 1)
     if (tabIndex === 1) {
-      setComments([data, ...comments])
+      setComments([dataWithUserInfo, ...comments])
     } else if (!hasMore) {
-      setComments([...comments, data])
+      setComments([...comments, dataWithUserInfo])
     }
   }
 
@@ -229,7 +232,7 @@ export default function detail() {
   }
 
   const handleScrollToLower = async () => {
-    const data = await getCommentList(
+    const data = await getCommentListWithUserInfo(
       postId,
       ++index.current,
       10,
@@ -241,7 +244,12 @@ export default function detail() {
 
   const getData = async () => {
     index.current = 1
-    const data = await getCommentList(postId, index.current, 10, tabIndex === 1)
+    const data = await getCommentListWithUserInfo(
+      postId,
+      index.current,
+      10,
+      tabIndex === 1
+    )
     setComments(data || [])
     setIsLoaded(true)
     setHasMore(data.length === 10)
@@ -257,7 +265,12 @@ export default function detail() {
     setComments([])
     setIsEmpty(false)
     index.current = 1
-    const data = await getCommentList(postId, index.current, 10, i === 1)
+    const data = await getCommentListWithUserInfo(
+      postId,
+      index.current,
+      10,
+      i === 1
+    )
     setComments(data || [])
     setHasMore(data.length === 10)
     setIsEmpty(data.length === 0)
@@ -284,7 +297,7 @@ export default function detail() {
   })
 
   const handleShowCommentMenu = (
-    comment: Comment,
+    comment: WithUserInfo<Comment>,
     likedComment: boolean,
     onLikeComment: () => void
   ) => {
@@ -298,7 +311,7 @@ export default function detail() {
     })
   }
 
-  const handleShowReplyDetail = (comment: Comment) => {
+  const handleShowReplyDetail = (comment: WithUserInfo<Comment>) => {
     setShowDetailComment(comment)
     setReplyCommentId(comment.id)
     setSendReplyMode(true)
@@ -361,7 +374,7 @@ export default function detail() {
     setSendReplyDisabled(false)
     setSendReplyContent('')
     if (data) {
-    Taro.hideLoading()
+      Taro.hideLoading()
       await Taro.showToast({
         title: '发送成功',
         icon: 'success',

@@ -4,8 +4,8 @@ import { useRef, useState } from 'react'
 import { AtFab, AtSearchBar } from 'taro-ui'
 import CPost from '@/packages/post/components/Post/Post'
 import ListView from 'taro-listview'
-import { getPostList } from '@/api/Post'
-import { Post } from '@/types/post'
+import { getPostListWithUserInfo } from '@/api/Post'
+import { Post as OPost } from '@/types/post'
 import Taro from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import {
@@ -16,6 +16,9 @@ import './home.scss'
 import CustomNavBar from '@/components/CustomNavBar/CustomNavBar'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import PostMenu from '@/components/PostMenu/PostMenu'
+import { WithUserInfo } from '@/types/withUserInfo'
+
+type Post = WithUserInfo<OPost>
 
 export default function Home() {
   const [searchText, setSearchText] = useState('')
@@ -53,7 +56,7 @@ export default function Home() {
   const index = useRef(1)
 
   const handleScrollToLower = async () => {
-    const data = await getPostList(++index.current, 5, selected === 1)
+    const data = await getPostListWithUserInfo(++index.current, 5, selected === 1)
     setPosts([...posts, ...data])
     setHasMore(data.length === 5)
     setIsEmpty(data.length === 0)
@@ -61,7 +64,7 @@ export default function Home() {
 
   const getData = async () => {
     index.current = 1
-    const data = await getPostList(index.current, 5, selected === 1)
+    const data = await getPostListWithUserInfo(index.current, 5, selected === 1)
     setPosts(data || [])
     setIsLoaded(true)
     setHasMore(data.length === 5)
@@ -77,7 +80,7 @@ export default function Home() {
     setPosts([])
     setIsEmpty(false)
     index.current = 1
-    const data = await getPostList(index.current, 5, selected === 0)
+    const data = await getPostListWithUserInfo(index.current, 5, selected === 0)
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length === 5)

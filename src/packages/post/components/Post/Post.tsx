@@ -1,8 +1,7 @@
 import Taro from '@tarojs/taro'
-import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
-import { Post as TPost } from '@/types/post'
+import { Post as OTPost } from '@/types/post'
 import { AtIcon } from 'taro-ui'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
 import { checkLike, like, unlike } from '@/api/Like'
@@ -11,12 +10,20 @@ import { useAppDispatch } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
 import { disabledColor } from '@/common/constants'
 import './Post.scss'
+import { WithUserInfo } from '@/types/withUserInfo'
+import { getUserById } from '@/api/User'
+
+type TPost = WithUserInfo<OTPost>
+
+function isTPost(post: TPost | OTPost): post is TPost {
+  return (post as TPost).userName !== undefined
+}
 
 export default function Post({
   post,
   onShowMenu,
 }: {
-  post: TPost
+  post: TPost | OTPost
   onShowMenu: (
     postId: number,
     postUserId: string,
@@ -43,12 +50,20 @@ export default function Post({
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    getUserById(post.userId).then(data => {
-      setAvatar(data.avatar)
-      setUsername(data.name)
-    })
     checkStar(post.id).then(data => setStared(data))
     checkLike(post.id).then(data => setLiked(data))
+  }, [])
+
+  useEffect(() => {
+    if (isTPost(post)) {
+      setAvatar(post.userAvatar)
+      setUsername(post.userName)
+    } else {
+      getUserById(post.userId).then(data => {
+        setAvatar(data.avatar)
+        setUsername(data.name)
+      })
+    }
   }, [])
 
   const handleLikePost = async () => {

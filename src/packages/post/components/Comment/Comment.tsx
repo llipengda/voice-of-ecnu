@@ -1,5 +1,4 @@
 import Taro from '@tarojs/taro'
-import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Comment as TComment } from '@/types/comment'
@@ -8,9 +7,10 @@ import './Comment.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
 import ReplyBlock from '../ReplyBlock/ReplyBlock'
+import { WithUserInfo } from '@/types/withUserInfo'
 
 interface IProps {
-  comment: TComment
+  comment: WithUserInfo<TComment>
   onShowMenu: (
     comment: TComment,
     likedComment: boolean,
@@ -20,7 +20,7 @@ interface IProps {
   showReply?: boolean
   showBorder?: boolean
   showDetail?: boolean
-  onshowReplyDetail: (comment: TComment) => void
+  onshowReplyDetail: (comment: WithUserInfo<TComment>) => void
   onCustomClickBody?: () => void
 }
 
@@ -34,8 +34,8 @@ export default function Comment({
   onshowReplyDetail,
   onCustomClickBody,
 }: IProps) {
-  const [avatar, setAvatar] = useState('')
-  const [username, setUsername] = useState('')
+  const avatar = comment.userAvatar
+  const username = comment.userName
 
   const [liked, setLiked] = useState(false)
 
@@ -44,10 +44,6 @@ export default function Comment({
   const [likeDisabled, setLikeDisabled] = useState(false)
 
   useEffect(() => {
-    getUserById(comment.userId).then(data => {
-      setAvatar(data.avatar)
-      setUsername(data.name)
-    })
     checkLike(comment.id, 1).then(data => setLiked(data))
   }, [])
 
