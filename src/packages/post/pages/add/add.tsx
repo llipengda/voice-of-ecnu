@@ -8,6 +8,8 @@ import './add.scss'
 import { createPost } from '@/api/Post'
 import { useAppDispatch } from '@/redux/hooks'
 import { addPost } from '@/redux/slice/postSlice'
+import sleep from '@/utils/sleep'
+import { addUserInfo } from '@/utils/addUserInfo'
 
 interface FileItem {
   path: string
@@ -48,16 +50,16 @@ export default function add() {
         images: imgs || [],
       })
       if (data) {
-        dispatch(addPost(data))
+        const newData = addUserInfo(data)
+        dispatch(addPost(newData))
         setSubmitButtonLoading(false)
         await Taro.showToast({
           title: '发帖成功',
           icon: 'success',
           duration: 1000,
         })
-        setTimeout(() => {
-          Taro.navigateBack()
-        }, 1000)
+        await sleep(1000)
+        Taro.navigateBack()
       }
     }
     setSubmitButtonLoading(false)

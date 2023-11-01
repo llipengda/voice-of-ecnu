@@ -2,6 +2,7 @@ import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { CreatePostParams, Post } from '@/types/post'
 import { Result } from '@/types/result'
+import { WithUserInfo } from '@/types/withUserInfo'
 
 export const getPostList = async (
   page: number,
@@ -61,6 +62,23 @@ export const getPostById = async (postId: number) => {
     url: `${serverUrl}/post/getPostById`,
     method: 'GET',
     data: { postId },
+  })
+  return data.data.data
+}
+
+export const getPostListWithUserInfo = async (
+  page: number,
+  pageSize: number,
+  orderByPopularity: boolean = false
+) => {
+  const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
+    url: `${serverUrl}/post/posts`,
+    method: 'GET',
+    data: {
+      page,
+      pageSize,
+      orderByPopularity,
+    },
   })
   return data.data.data
 }

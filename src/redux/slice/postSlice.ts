@@ -1,5 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { Post } from '@/types/post'
+import { Post as OPost } from '@/types/post'
+import { WithUserInfo } from '@/types/withUserInfo'
+
+type Post = WithUserInfo<OPost>
 
 const initialState: {
   posts: Post[]

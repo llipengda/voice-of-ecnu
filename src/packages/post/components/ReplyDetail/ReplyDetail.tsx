@@ -8,9 +8,10 @@ import CReply from '../Reply/Reply'
 import { getReplyList } from '@/api/Reply'
 import './ReplyDetail.scss'
 import { AtDivider } from 'taro-ui'
+import { WithUserInfo } from '@/types/withUserInfo'
 
 interface IProps {
-  comment: Comment
+  comment: WithUserInfo<Comment>
   isShow: boolean
   onClickReply: (
     replyId: number,
