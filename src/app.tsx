@@ -7,10 +7,51 @@ import { setLoginInfo, setToken, setUserId } from './redux/slice/loginSlice'
 import { setUser } from './redux/slice/userSlice'
 import { useAppDispatch } from './redux/hooks'
 import interceptor from './utils/interceptor'
+import { checkNotice } from './api/Notice'
 import './custom-theme.scss'
 
 function MyApp({ children }: PropsWithChildren<any>) {
   const dispatch = useAppDispatch()
+
+  const tryLogin = async (
+    needLogin: boolean,
+    userId: string,
+    token: string
+  ) => {
+    try {
+      if (needLogin) {
+        const { code } = await Taro.login()
+        const info = await login(code)
+        dispatch(setLoginInfo(info!))
+        userId = info!.userId
+      } else {
+        dispatch(setToken(token))
+        dispatch(setUserId(userId))
+      }
+      const user = await getUserById(userId)
+      dispatch(setUser(user!))
+      Taro.hideLoading()
+      await Taro.showToast({
+        title: '登录成功',
+        icon: 'success',
+      })
+    } catch (err) {
+      console.error(err)
+      await Taro.showToast({
+        title: '登录失败',
+        icon: 'error',
+      })
+    }
+  }
+
+  const getNoticeCnt = async () => {
+    const data = await checkNotice()
+    if (data.total === 0) return
+    Taro.setTabBarBadge({
+      index: 1,
+      text: data.total > 99 ? '99+' : data.total.toString(),
+    })
+  }
 
   useEffect(() => {
     Taro.addInterceptor(Taro.interceptors.logInterceptor)
@@ -25,30 +66,8 @@ function MyApp({ children }: PropsWithChildren<any>) {
       let userId = Taro.getStorageSync('userId')
       const needLogin = !((await checkLogin()) && token && userId)
       console.log('needLogin', needLogin)
-      try {
-        if (needLogin) {
-          const { code } = await Taro.login()
-          const info = await login(code)
-          dispatch(setLoginInfo(info!))
-          userId = info!.userId
-        } else {
-          dispatch(setToken(token))
-          dispatch(setUserId(userId))
-        }
-        const user = await getUserById(userId)
-        dispatch(setUser(user!))
-        Taro.hideLoading()
-        await Taro.showToast({
-          title: '登录成功',
-          icon: 'success',
-        })
-      } catch (err) {
-        console.error(err)
-        await Taro.showToast({
-          title: '登录失败',
-          icon: 'error',
-        })
-      }
+      await tryLogin(needLogin, userId, token)
+      await getNoticeCnt()
     })()
   }, [])
 

@@ -1,4 +1,5 @@
-import { Text } from '@tarojs/components'
+import MessageList from '@/packages/messages/components/MessageList/MessageList'
+import { View } from '@tarojs/components'
 import { useLoad } from '@tarojs/taro'
 
 export default function message() {
@@ -6,5 +7,9 @@ export default function message() {
     console.log('message loaded')
   })
 
-  return <Text>Hello from message</Text>
+  return (
+    <View>
+      <MessageList />
+    </View>
+  )
 }
