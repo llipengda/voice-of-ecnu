@@ -9,6 +9,7 @@ import { useAppDispatch } from './redux/hooks'
 import interceptor from './utils/interceptor'
 import { checkNotice } from './api/Notice'
 import './custom-theme.scss'
+import { setNoticeCnt } from './redux/slice/noticeSlice'
 
 function MyApp({ children }: PropsWithChildren<any>) {
   const dispatch = useAppDispatch()
@@ -46,6 +47,7 @@ function MyApp({ children }: PropsWithChildren<any>) {
 
   const getNoticeCnt = async () => {
     const data = await checkNotice()
+    dispatch(setNoticeCnt(data))
     if (data.total === 0) return
     Taro.setTabBarBadge({
       index: 1,
