@@ -4,9 +4,10 @@ import { Result } from '@/types/result'
 
 export const uploadImage = async (filePath: string) => {
   try {
-    Taro.showLoading({
+    await Taro.showLoading({
       title: '上传中...',
     })
+    console.log('尝试上传图片', filePath)
     const data = await Taro.uploadFile({
       url: `${serverUrl}/uploadImage`,
       filePath,
@@ -22,22 +23,25 @@ export const uploadImage = async (filePath: string) => {
     if (newData.code !== 0) {
       throw new Error(newData.msg)
     }
+    Taro.hideLoading()
+    console.log('上传成功', newData)
     return newData.data
   } catch (err) {
-    Taro.showToast({
+    console.error('上传失败', err)
+    await Taro.showToast({
       title: err.message,
       icon: 'error',
+      duration: 1000,
     })
-  } finally {
-    Taro.hideLoading()
   }
 }
 
 export const uploadImages = async (files: string[]) => {
   try {
-    Taro.showLoading({
+    await Taro.showLoading({
       title: '上传图片中...',
     })
+    console.log('尝试上传多张图片', files)
     const res: string[] = []
     const tasks = files.map(async filePath => {
       return Taro.uploadFile({
@@ -53,6 +57,7 @@ export const uploadImages = async (files: string[]) => {
       })
     })
     const datas = await Promise.all(tasks)
+    console.log('服务器返回数据', datas)
     datas.forEach(data => {
       const newData: Result<string> = JSON.parse(data.data)
       if (newData.code !== 0) {
@@ -60,13 +65,15 @@ export const uploadImages = async (files: string[]) => {
       }
       res.push(newData.data)
     })
+    console.log('上传多张图片成功', res)
+    Taro.hideLoading()
     return res
   } catch (err) {
-    Taro.showToast({
+    console.error('上传多张图片失败', err)
+    await Taro.showToast({
       title: err.message,
       icon: 'error',
+      duration: 1000,
     })
-  } finally {
-    Taro.hideLoading()
   }
 }
