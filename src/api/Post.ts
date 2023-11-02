@@ -82,3 +82,22 @@ export const getPostListWithUserInfo = async (
   })
   return data.data.data
 }
+
+export const searchByPostOrCommentOrReplyWithUserInfo = async (
+  page: number,
+  pageSize: number,
+  postOrCommentOrReply: string,
+  orderByPopularity: boolean = false
+) => {
+  const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
+    url: `${serverUrl}/post/search`,
+    method: 'GET',
+    data: {
+      postOrCommentOrReply,
+      page,
+      pageSize,
+      orderByPopularity,
+    },
+  })
+  return data.data.data
+}

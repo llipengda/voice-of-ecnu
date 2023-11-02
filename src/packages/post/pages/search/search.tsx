@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { searchByPostOrCommentOrReply } from '@/api/Post'
+import { searchByPostOrCommentOrReplyWithUserInfo } from '@/api/Post'
 import { View } from '@tarojs/components'
 import { useState, useRef } from 'react'
 import ListView from 'taro-listview'
@@ -8,6 +8,7 @@ import CPost from '@/packages/post/components/Post/Post'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import PostMenu from '@/components/PostMenu/PostMenu'
 import './search.scss'
+import { WithUserInfo } from '@/types/withUserInfo'
 
 export default function search() {
   const params = Taro.getCurrentInstance().router?.params
@@ -15,7 +16,7 @@ export default function search() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
-  const [posts, setPosts] = useState<Post[]>([])
+  const [posts, setPosts] = useState<WithUserInfo<Post>[]>([])
 
   const index = useRef(1)
 
@@ -33,7 +34,7 @@ export default function search() {
   })
 
   const handleScrollToLower = async () => {
-    const data = await searchByPostOrCommentOrReply(
+    const data = await searchByPostOrCommentOrReplyWithUserInfo(
       ++index.current,
       5,
       params?.key || ''
@@ -44,7 +45,7 @@ export default function search() {
 
   const handlePullDownRefresh = async () => {
     index.current = 1
-    const data = await searchByPostOrCommentOrReply(1, 5, params?.key || '')
+    const data = await searchByPostOrCommentOrReplyWithUserInfo(1, 5, params?.key || '')
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length === 5)
