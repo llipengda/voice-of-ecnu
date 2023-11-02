@@ -44,5 +44,9 @@ export default defineAppConfig({
       root: 'packages/post',
       pages: ['pages/search/search', 'pages/add/add', 'pages/detail/detail'],
     },
+    {
+      root: 'packages/message',
+      pages: ['pages/noticeList/noticeList'],
+    },
   ],
 })

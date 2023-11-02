@@ -48,7 +48,16 @@ function MyApp({ children }: PropsWithChildren<any>) {
   const getNoticeCnt = async () => {
     const data = await checkNotice()
     dispatch(setNoticeCnt(data))
-    if (data.total === 0) return
+    if (data.total === 0) {
+      try {
+        await Taro.hideTabBarRedDot({
+          index: 1,
+        })
+      } catch (err) {
+        console.error(err)
+      }
+      return
+    }
     Taro.setTabBarBadge({
       index: 1,
       text: data.total > 99 ? '99+' : data.total.toString(),
