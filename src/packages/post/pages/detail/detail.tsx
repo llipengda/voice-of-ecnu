@@ -36,7 +36,7 @@ export default function detail() {
 
   const [authorId, setAuthorId] = useState('')
   const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState<string | null>(null)
   const [images, setImages] = useState<string[]>([])
   const [createAt, setCreateAt] = useState('')
   const [views, setViews] = useState(0)
@@ -128,7 +128,7 @@ export default function detail() {
     })
     const data = await createComment({
       content: commentContent,
-      image: imgs || [],
+      images: imgs || [],
       postId,
     })
     setSendCommentDisabled(false)
@@ -501,7 +501,9 @@ export default function detail() {
           )}
         </View>
       </View>
-      <View className='post-detail__content'>{content || '努力加载中...'}</View>
+      <View className='post-detail__content'>
+        {content === null ? '努力加载中...' : content}
+      </View>
       <View className='post-detail__images'>
         {images.map(image => (
           <Image
