@@ -12,7 +12,6 @@ import ListView from 'taro-listview'
 import { Comment } from '@/types/comment'
 import CComment from '@/packages/post/components/Comment/Comment'
 import { createComment, getCommentListWithUserInfo } from '@/api/Comments'
-import './detail.scss'
 import { uploadImages } from '@/api/Image'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import CommentMenu from '@/packages/post/components/CommentMenu/CommentMenu'
@@ -23,6 +22,7 @@ import ReplyMenu from '@/packages/post/components/ReplyMenu/ReplyMenu'
 import { banUser } from '@/api/User'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { addUserInfo } from '@/utils/addUserInfo'
+import './detail.scss'
 
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -30,6 +30,7 @@ export default function detail() {
   const [postId] = useState(Number(params?.postId))
   const [authorName] = useState(params?.authorName!)
   const [authorAvatar] = useState(params?.authorAvatar!)
+  const [scrollTo] = useState(params?.scrollTo || null)
   const [sendCommentFocus, setSendCommentFocus] = useState(
     params?.sendCommentFocus === 'true' || false
   )
@@ -106,6 +107,20 @@ export default function detail() {
 
   const user = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
+
+  useLoad(async () => {
+    try {
+      if (scrollTo === null) {
+        return
+      }
+      await Taro.pageScrollTo({
+        selector: scrollTo,
+        duration: 1000
+      })
+    } catch (err) {
+      console.log('scroll failed')
+    }
+  })
 
   const handleSendComment = async () => {
     if (sendCommentDisabled) {
@@ -584,6 +599,7 @@ export default function detail() {
             <CComment
               comment={c}
               key={c.id}
+              id={`comment-${c.id}`}
               onShowMenu={handleShowCommentMenu}
               onshowReplyDetail={c => handleShowReplyDetail(c)}
             />

@@ -16,6 +16,7 @@ interface IProps {
     likedComment: boolean,
     onLikeComment: () => void
   ) => void
+  id?: string
   showMenuBtn?: boolean
   showReply?: boolean
   showBorder?: boolean
@@ -27,6 +28,7 @@ interface IProps {
 export default function Comment({
   comment,
   onShowMenu,
+  id = 'comment',
   showMenuBtn = true,
   showReply = true,
   showBorder = true,
@@ -71,7 +73,7 @@ export default function Comment({
   }
 
   return (
-    <View className='comment skeleton-bg'>
+    <View className='comment skeleton-bg' id={id}>
       <View className='comment__header at-row'>
         <Image
           className='comment__header__avatar skeleton-redius at-col at-col-1 at-col--auto'
