@@ -1,5 +1,5 @@
 import Taro, { useLoad, useReachBottom } from '@tarojs/taro'
-import { deletePost, getPostById } from '@/api/Post'
+import { deletePost, getPostByIdWithUserInfo } from '@/api/Post'
 import { View, Image, Text, Textarea } from '@tarojs/components'
 import { useRef, useState } from 'react'
 import { AtAvatar, AtIcon, AtTabs } from 'taro-ui'
@@ -187,7 +187,7 @@ export default function detail() {
   }
 
   useLoad(async () => {
-    const data = await getPostById(postId)
+    const data = await getPostByIdWithUserInfo(postId)
     setAuthorId(data.userId)
     setTitle(data.title)
     setContent(data.content)

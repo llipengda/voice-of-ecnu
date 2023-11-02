@@ -101,3 +101,12 @@ export const searchByPostOrCommentOrReplyWithUserInfo = async (
   })
   return data.data.data
 }
+
+export const getPostByIdWithUserInfo = async (postId: number) => {
+  const data = await Taro.request<Result<WithUserInfo<Post>>>({
+    url: `${serverUrl}/post/get`,
+    method: 'GET',
+    data: { postId },
+  })
+  return data.data.data
+}
