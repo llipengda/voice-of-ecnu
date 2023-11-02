@@ -58,3 +58,14 @@ export const getCommentListWithUserInfo = async (
   })
   return data.data.data
 }
+
+export const getCommentById = async (commentId: number) => {
+  const data = await Taro.request<Result<WithUserInfo<Comment>>>({
+    url: `${serverUrl}/comment/getById`,
+    method: 'GET',
+    data: {
+      commentId,
+    },
+  })
+  return data.data.data
+}
