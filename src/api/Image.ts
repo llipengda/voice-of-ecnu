@@ -4,6 +4,9 @@ import { Result } from '@/types/result'
 
 export const uploadImage = async (filePath: string) => {
   try {
+    if (!filePath) {
+      return
+    }
     await Taro.showLoading({
       title: '上传中...',
     })
@@ -38,6 +41,9 @@ export const uploadImage = async (filePath: string) => {
 
 export const uploadImages = async (files: string[]) => {
   try {
+    if (!files) {
+      return
+    }
     await Taro.showLoading({
       title: '上传图片中...',
     })
