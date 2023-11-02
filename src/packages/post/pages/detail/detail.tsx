@@ -128,7 +128,7 @@ export default function detail() {
     })
     const data = await createComment({
       content: commentContent,
-      image: imgs || [],
+      images: imgs || [],
       postId,
     })
     setSendCommentDisabled(false)
