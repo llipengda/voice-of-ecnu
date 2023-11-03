@@ -2,6 +2,7 @@ import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { Result } from '@/types/result'
 import { LoginInfo, UpdateUserParams, User } from '@/types/user'
+import { sendNotice } from './Notice'
 
 export const login = async (code: string) => {
   const data = await Taro.request<Result<LoginInfo>>({
@@ -67,6 +68,7 @@ export const verifyUser = async (userId: string) => {
     url: `${serverUrl}/user/verifyUser?userId=${userId}`,
     method: 'POST',
   })
+  await sendNotice('您已成功完成认证', userId)
   return data.data.data
 }
 
@@ -84,5 +86,6 @@ export const banUser = async (days: number, userId: string) => {
     url: `${serverUrl}/user/banUser?bannedBefore=${bannedBefore.toDateString()}&userId=${userId}`,
     method: 'POST',
   })
+  await sendNotice(`您被被管理员封禁${days}天`, userId)
   return data.data.data
 }

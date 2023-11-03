@@ -1,11 +1,13 @@
-import { getUserById } from '@/api/User'
 import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
-import { Reply as TReply } from '@/types/reply'
+import { Reply as OTReply } from '@/types/reply'
 import { checkLike, like, unlike } from '@/api/Like'
 import './Reply.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
+import { WithUserInfo } from '@/types/withUserInfo'
+
+type TReply = WithUserInfo<OTReply>
 
 interface IProps {
   reply: TReply
@@ -24,15 +26,12 @@ interface IProps {
   ) => void
 }
 
-export default function Comment({ reply, onShowMenu, onClickReply }: IProps) {
-  const [avatar, setAvatar] = useState('')
-
+export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(reply.likes)
   const [likeDisabled, setLikeDisabled] = useState(false)
 
   useEffect(() => {
-    getUserById(reply.userId).then(data => setAvatar(data.avatar))
     checkLike(reply.id, 2).then(data => setLiked(data))
   }, [])
 
@@ -57,7 +56,7 @@ export default function Comment({ reply, onShowMenu, onClickReply }: IProps) {
       <View className='reply__header at-row'>
         <Image
           className='reply__header__avatar skeleton-redius at-col at-col-1 at-col--auto'
-          src={avatar}
+          src={reply.userAvatar}
           fadeIn
           lazyLoad
         />

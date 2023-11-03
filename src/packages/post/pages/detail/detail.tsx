@@ -11,18 +11,21 @@ import { disabledColor, primaryColor } from '@/common/constants'
 import ListView from 'taro-listview'
 import { Comment } from '@/types/comment'
 import CComment from '@/packages/post/components/Comment/Comment'
-import { createComment, getCommentListWithUserInfo } from '@/api/Comments'
+import { createComment, getCommentListWithUserInfo } from '@/api/Comment'
 import { uploadImages } from '@/api/Image'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import CommentMenu from '@/packages/post/components/CommentMenu/CommentMenu'
 import ReplyDetail from '@/packages/post/components/ReplyDetail/ReplyDetail'
 import { createReply } from '@/api/Reply'
-import { Reply } from '@/types/reply'
+import { Reply as OReply } from '@/types/reply'
 import ReplyMenu from '@/packages/post/components/ReplyMenu/ReplyMenu'
 import { banUser } from '@/api/User'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { addUserInfo } from '@/utils/addUserInfo'
 import './detail.scss'
+import sleep from '@/utils/sleep'
+
+type Reply = WithUserInfo<OReply>
 
 export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -110,12 +113,14 @@ export default function detail() {
 
   useLoad(async () => {
     try {
-      if (scrollTo === null) {
+      if (!scrollTo) {
         return
       }
+      await sleep(1000)
+      console.log('try scroll', scrollTo)
       await Taro.pageScrollTo({
         selector: scrollTo,
-        duration: 1000
+        duration: 200,
       })
     } catch (err) {
       console.log('scroll failed')
@@ -384,7 +389,7 @@ export default function detail() {
       commentId: replyCommentId,
     })
     if (data) {
-      handleAddReply(data)
+      handleAddReply(addUserInfo(data))
     }
     setSendReplyDisabled(false)
     setSendReplyContent('')

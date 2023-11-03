@@ -5,7 +5,7 @@ import '@/custom-theme.scss'
 import './CommentMenu.scss'
 import { useAppSelector } from '@/redux/hooks'
 import Taro from '@tarojs/taro'
-import { deleteComment } from '@/api/Comments'
+import { deleteComment } from '@/api/Comment'
 import { banUser } from '@/api/User'
 
 interface IProps {
@@ -25,7 +25,7 @@ export default function CommentMenu({
   onLikeComment,
   onRemoveComment,
   onClose,
-  onClickReply
+  onClickReply,
 }: IProps) {
   const user = useAppSelector(state => state.user)
 
@@ -86,7 +86,12 @@ export default function CommentMenu({
         </View>
       </View>
       <View className='comment-menu__item'>
-        <AtIcon value='message' size='35' color={disabledColor} onClick={handleClickReply}/>
+        <AtIcon
+          value='message'
+          size='35'
+          color={disabledColor}
+          onClick={handleClickReply}
+        />
         <View className='comment-menu__item__text'>回复</View>
       </View>
       {(user.id === commentUserId || user.role <= 1) && (

@@ -1,0 +1,28 @@
+@import '@/common/constants.scss';
+
+.simple-reply {
+  border-radius: 20px;
+  padding: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+
+  &__username {
+    color: $primary-color;
+    font-weight: 700;
+    font-size: 32px;
+  }
+
+  &__title {
+    font-size: 30px;
+    overflow: hidden;
+    word-break: break-all;
+  }
+
+  &__post {
+    margin: 15px 0;
+  }
+}

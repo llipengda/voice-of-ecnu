@@ -3,6 +3,7 @@ import { serverUrl } from '@/common/constants'
 import { Notice, NoticeMap } from '@/types/notice'
 import { Result } from '@/types/result'
 import { mapToNoticeCnt } from '@/utils/mapToNoticeCnt'
+import { WithUserInfo } from '@/types/withUserInfo'
 
 export const checkNotice = async () => {
   const data = await Taro.request<Result<NoticeMap>>({
@@ -12,13 +13,11 @@ export const checkNotice = async () => {
   return mapToNoticeCnt(data.data.data)
 }
 
-/**
- * @param type 0:系统 1:给帖子点赞 2:给帖子回复 3:给评论点赞 4:给评论回复 5:给回复点赞 6:给回复回复
- */
 export const getNoticeList = async (
   page: number,
   pageSize: number,
-  type: Notice['type']
+  /** 0-系统 1-点赞 2-评论 */
+  type: 0 | 1 | 2
 ) => {
   const data = await Taro.request<Result<Notice[]>>({
     url: `${serverUrl}/notice/getList`,
@@ -28,6 +27,32 @@ export const getNoticeList = async (
       pageSize,
       type,
     },
+  })
+  return data.data.data
+}
+
+export const getNoticeListWithUserInfo = async (
+  page: number,
+  pageSize: number,
+  /** 0-系统 1-点赞 2-评论 */
+  type: 0 | 1 | 2
+) => {
+  const data = await Taro.request<Result<WithUserInfo<Notice>[]>>({
+    url: `${serverUrl}/notice/notices`,
+    method: 'GET',
+    data: {
+      page,
+      pageSize,
+      type,
+    },
+  })
+  return data.data.data
+}
+
+export const sendNotice = async (msg: string, userId: string) => {
+  const data = await Taro.request<Result<boolean>>({
+    url: `${serverUrl}/notice/send?msg=${msg}&userId=${userId}`,
+    method: 'POST',
   })
   return data.data.data
 }

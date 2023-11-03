@@ -2,13 +2,15 @@ import { View } from '@tarojs/components'
 import { useEffect, useRef, useState } from 'react'
 import ListView from 'taro-listview'
 import { Comment } from '@/types/comment'
-import { Reply } from '@/types/reply'
+import { Reply as OReply } from '@/types/reply'
 import CComment from '../Comment/Comment'
 import CReply from '../Reply/Reply'
 import { getReplyList } from '@/api/Reply'
 import './ReplyDetail.scss'
 import { AtDivider } from 'taro-ui'
 import { WithUserInfo } from '@/types/withUserInfo'
+
+type Reply = WithUserInfo<OReply>
 
 interface IProps {
   comment: WithUserInfo<Comment>

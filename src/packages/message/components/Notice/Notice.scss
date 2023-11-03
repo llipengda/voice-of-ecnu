@@ -1,0 +1,57 @@
+@import '@/common/constants.scss';
+
+.notice {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-top: 40px;  
+  padding-bottom: 30px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    &__avatar {
+      width: 80px;
+      height: 80px;
+      min-width: 80px;
+      min-height: 80px;
+      border-radius: 50%;
+      background-color: #666;
+      border: 2px solid #eee;
+      margin-right: 20px;
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+
+      &__name {
+        font-size: 38px;
+        font-weight: 700;
+        color: $primary-color;
+      }
+
+      &__message {
+        font-size: 25px;
+        color: $disabled-color;
+        font-weight: 700;
+      }
+
+      &__time {
+        font-weight: normal;
+      }
+    }
+  }
+
+  &__content {
+    font-style: 26px;
+    margin-top: 20px;
+    margin-left: 10px;
+  }
+
+  &__link {
+    margin-top: 20px;
+  }
+}

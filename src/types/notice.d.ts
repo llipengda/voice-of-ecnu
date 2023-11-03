@@ -28,11 +28,11 @@ export type NoticeCnt = {
 
 export type Notice = {
   content: string
-  deleteAt: Date
+  deleteAt: string
   id: number
   objectId: number
   receiverId: string
-  sendAt: Date
+  sendAt: string
   senderId: string
   /** 0:系统 1:给帖子点赞 2:给帖子回复 3:给评论点赞 4:给评论回复 5:给回复点赞 6:给回复回复 */
   type: 0 | 1 | 2 | 3 | 4 | 5 | 6
