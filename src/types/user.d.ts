@@ -36,3 +36,9 @@ type _UpdateUserParams = {
 }
 
 export type UpdateUserParams = Partial<_UpdateUserParams>
+
+export type UserStatistics = {
+  stars: number
+  posts: number
+  likes: number
+}

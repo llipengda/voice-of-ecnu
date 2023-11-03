@@ -1,7 +1,7 @@
 import { serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { Result } from '@/types/result'
-import { LoginInfo, UpdateUserParams, User } from '@/types/user'
+import { LoginInfo, UpdateUserParams, User, UserStatistics } from '@/types/user'
 import { sendNotice } from './Notice'
 
 export const login = async (code: string) => {
@@ -87,5 +87,13 @@ export const banUser = async (days: number, userId: string) => {
     method: 'POST',
   })
   await sendNotice(`您被被管理员封禁${days}天`, userId)
+  return data.data.data
+}
+
+export const getUserStatistics = async () => {
+  const data = await Taro.request<Result<UserStatistics>>({
+    url: `${serverUrl}/user/getInfos`,
+    method: 'GET',
+  })
   return data.data.data
 }

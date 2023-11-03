@@ -1,16 +1,26 @@
+import { getUserStatistics } from '@/api/User'
 import UserCard from '@/packages/user/components/UserCard/UserCard'
 import UserList from '@/packages/user/components/UserList/UserList'
+import { UserStatistics } from '@/types/user'
 import { View } from '@tarojs/components'
-import { useLoad } from '@tarojs/taro'
+import { useDidShow } from '@tarojs/taro'
+import { useState } from 'react'
 
 export default function User() {
-  useLoad(() => {
-    console.log('Page loaded in Me.')
+  const [userStatistics, setUserStatistics] = useState<UserStatistics>({
+    posts: 0,
+    likes: 0,
+    stars: 0,
+  })
+
+  useDidShow(async () => {
+    const data = await getUserStatistics()
+    setUserStatistics(data)
   })
 
   return (
     <View>
-      <UserCard />
+      <UserCard userStatistics={userStatistics} />
       <UserList />
     </View>
   )

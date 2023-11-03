@@ -4,10 +4,15 @@ import Taro from '@tarojs/taro'
 import { defaultAvatar } from '@/common/constants'
 import male from '@/assets/male.drawio.svg'
 import famale from '@/assets/famale.drawio.svg'
+import { UserStatistics } from '@/types/user'
 import '@/custom-theme.scss'
 import './UserCard.scss'
 
-export default function UserCard() {
+export default function UserCard({
+  userStatistics,
+}: {
+  userStatistics: UserStatistics
+}) {
   const user = useAppSelector(state => state.user)
 
   const displayGender = () => {
@@ -75,15 +80,15 @@ export default function UserCard() {
       </View>
       <View className='at-row grid'>
         <View className='at-col grid-text'>
-          <View className='count'>10</View>
+          <View className='count'>{userStatistics.likes}</View>
           <View>获赞</View>
         </View>
         <View className='at-col grid-text'>
-          <View className='count'>5</View>
+          <View className='count'>{userStatistics.posts}</View>
           <View>我的贴子</View>
         </View>
         <View className='at-col grid-text'>
-          <View className='count'>158</View>
+          <View className='count'>{userStatistics.stars}</View>
           <View>我的收藏</View>
         </View>
       </View>
