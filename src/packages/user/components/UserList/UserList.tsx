@@ -17,9 +17,7 @@ export default function UserList() {
         arrow='right'
         hasBorder={false}
         iconInfo={{ value: 'edit', color: primaryColor }}
-        onClick={() => {
-          navigateTo('update')
-        }}
+        onClick={() => navigateTo('update')}
       />
       <AtListItem
         className='item'
@@ -27,9 +25,7 @@ export default function UserList() {
         arrow='right'
         hasBorder={false}
         iconInfo={{ value: 'user', color: primaryColor }}
-        onClick={() => {
-          navigateTo('verify')
-        }}
+        onClick={() => navigateTo('verify')}
       />
       <AtListItem
         className='item'
@@ -37,6 +33,7 @@ export default function UserList() {
         arrow='right'
         hasBorder={false}
         iconInfo={{ value: 'settings', color: primaryColor }}
+        onClick={() => navigateTo('settings')}
       />
     </AtList>
   )

@@ -6,7 +6,7 @@ import CPost from '@/packages/post/components/Post/Post'
 import ListView from 'taro-listview'
 import { getPostListWithUserInfo } from '@/api/Post'
 import { Post as OPost } from '@/types/post'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import {
   setPosts as RSetPosts,
@@ -108,6 +108,12 @@ export default function Home() {
       onNavigateToPost,
     })
   }
+
+  useDidShow(async () => {
+    if (isLoaded) {
+      handlePullDownRefresh()
+    }
+  })
 
   return (
     <View style={{ width: '100%' }}>

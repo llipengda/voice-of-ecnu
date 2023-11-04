@@ -84,12 +84,15 @@ const showError = async (
         url: `/pages/error/error?errorCode=${res.data.commonErrorCode?.errorCode}`,
       })
       break
+    case ErrorCode.USER_NOT_VERIFIED:
+      break
     default:
       await Taro.showToast({
         title: res.data.msg,
         icon: 'error',
         duration: 1000,
       })
+      await sleep(1000)
       break
   }
 }
@@ -128,7 +131,6 @@ const interceptor: Taro.interceptor = chain => {
           res
         )
         await showError(res)
-        await sleep(1000)
         return await switchErrorCode(res, chain)
       }
       return res

@@ -97,3 +97,11 @@ export const getUserStatistics = async () => {
   })
   return data.data.data
 }
+
+export const deleteUser = async () => {
+  const data = await Taro.request<Result<string>>({
+    url: `${serverUrl}/user/delete`,
+    method: 'POST',
+  })
+  return data.data.data
+}
