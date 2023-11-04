@@ -6,7 +6,7 @@ import { uploadImages } from '@/api/Image'
 import '@/custom-theme.scss'
 import './add.scss'
 import { createPost } from '@/api/Post'
-import { useAppDispatch } from '@/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { addPost } from '@/redux/slice/postSlice'
 import sleep from '@/utils/sleep'
 import { addUserInfo } from '@/utils/addUserInfo'
@@ -29,6 +29,8 @@ export default function add() {
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
 
   const dispatch = useAppDispatch()
+
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   const handleCancel = () => {
     Taro.navigateBack()
@@ -74,44 +76,50 @@ export default function add() {
 
   return (
     <View>
-      <View className='input-wrap'>
-        <Input
-          name='title'
-          type='text'
-          placeholder='起个标题吧...'
-          value={title}
-          onInput={e => setTitle(e.detail.value)}
-          className='title'
-        />
-        <AtTextarea
-          value={content}
-          onChange={e => setContent(e)}
-          maxLength={500}
-          placeholder='畅所欲言吧...'
-          className='content'
-          height={400}
-        />
-        <AtImagePicker
-          files={images}
-          onChange={e => setImages(e)}
-          onImageClick={(_, f: File) => showImage(f.url)}
-          multiple
-          count={9}
-        />
-        <View className='action-container'>
-          <AtButton type='secondary' className='button' onClick={handleCancel}>
-            取消
-          </AtButton>
-          <AtButton
-            type='primary'
-            className='button'
-            onClick={handleSubmit}
-            loading={submitButtonLoading}
-          >
-            发布
-          </AtButton>
+      {showComponent && (
+        <View className='input-wrap'>
+          <Input
+            name='title'
+            type='text'
+            placeholder='起个标题吧...'
+            value={title}
+            onInput={e => setTitle(e.detail.value)}
+            className='title'
+          />
+          <AtTextarea
+            value={content}
+            onChange={e => setContent(e)}
+            maxLength={500}
+            placeholder='畅所欲言吧...'
+            className='content'
+            height={400}
+          />
+          <AtImagePicker
+            files={images}
+            onChange={e => setImages(e)}
+            onImageClick={(_, f: File) => showImage(f.url)}
+            multiple
+            count={9}
+          />
+          <View className='action-container'>
+            <AtButton
+              type='secondary'
+              className='button'
+              onClick={handleCancel}
+            >
+              取消
+            </AtButton>
+            <AtButton
+              type='primary'
+              className='button'
+              onClick={handleSubmit}
+              loading={submitButtonLoading}
+            >
+              发布
+            </AtButton>
+          </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }
