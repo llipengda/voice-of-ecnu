@@ -16,6 +16,7 @@ interface IProps {
   bgColor?: string
   postBgColor?: string
   isLoaded: boolean
+  isPostLoaded: boolean
 }
 
 export default function SimpleComment({
@@ -25,6 +26,7 @@ export default function SimpleComment({
   bgColor = isTop ? '#eee' : '#f6f6f6',
   postBgColor = isTop ? '#f6f6f6' : '#eee',
   isLoaded,
+  isPostLoaded,
 }: IProps) {
   if (isLoaded && !comment) {
     return (
@@ -56,11 +58,13 @@ export default function SimpleComment({
         e.stopPropagation()
         if (post && comment && isLoaded) {
           Taro.navigateTo({
-            url: `/packages/post/pages/detail/detail?postId=${
-              post.id
-            }&authorName=${post.userName}&authorAvatar=${
-              post.userAvatar
-            }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
+            url: post.deleteAt
+              ? '/pages/error/error?errorCode=9031&showErrorCode=false'
+              : `/packages/post/pages/detail/detail?postId=${
+                  post.id
+                }&authorName=${post.userName}&authorAvatar=${
+                  post.userAvatar
+                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
           })
         }
       }}
@@ -78,7 +82,7 @@ export default function SimpleComment({
         {!isLoaded && '加载中'}
       </View>
       <View className='simple-comment__post'>
-        <SimplePost post={post} bgColor={postBgColor} isLoaded={isLoaded} />
+        <SimplePost post={post} bgColor={postBgColor} isLoaded={isPostLoaded} />
       </View>
     </View>
   )

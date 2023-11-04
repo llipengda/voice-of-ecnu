@@ -49,7 +49,10 @@ export default function Notice({ notice }: IProps) {
   const [post, setPost] = useState<Post | null>(null)
   const [comment, setComment] = useState<Comment | null>(null)
   const [reply, setReply] = useState<Reply | null>(null)
-  const [isLoaded, setIsLoaded] = useState(false)
+
+  const [isReplyLoaded, setIsReplyLoaded] = useState(false)
+  const [isCommentLoaded, setIsCommentLoaded] = useState(false)
+  const [isPostLoaded, setIsPostLoaded] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -60,37 +63,32 @@ export default function Notice({ notice }: IProps) {
         case 2:
           const postData = await getPostByIdWithUserInfo(notice.objectId)
           setPost(postData)
-          setIsLoaded(true)
+          setIsPostLoaded(true)
           break
         case 3:
         case 4:
           const commentData = await getCommentById(notice.objectId)
-          if (!commentData) {
-            setIsLoaded(true)
-            break
-          }
+          setIsCommentLoaded(true)
           setComment(commentData)
           const postCommentData = await getPostByIdWithUserInfo(
             commentData.postId
           )
           setPost(postCommentData)
-          setIsLoaded(true)
+          setIsPostLoaded(true)
           break
         case 5:
         case 6:
           const replyData = await getReplyById(notice.objectId)
-          if (!replyData) {
-            setIsLoaded(true)
-            break
-          }
+          setIsReplyLoaded(true)
           setReply(replyData)
           const commentReplyData = await getCommentById(replyData.commentId)
+          setIsCommentLoaded(true)
           setComment(commentReplyData)
           const postReplyData = await getPostByIdWithUserInfo(
             commentReplyData.postId
           )
           setPost(postReplyData)
-          setIsLoaded(true)
+          setIsPostLoaded(true)
           break
         default:
           break
@@ -107,11 +105,16 @@ export default function Notice({ notice }: IProps) {
         return <></>
       case 1:
       case 2:
-        return <SimplePost post={post!} isLoaded={isLoaded} />
+        return <SimplePost post={post!} isLoaded={isPostLoaded} />
       case 3:
       case 4:
         return (
-          <SimpleComment post={post!} comment={comment!} isLoaded={isLoaded} />
+          <SimpleComment
+            post={post!}
+            comment={comment!}
+            isLoaded={isCommentLoaded}
+            isPostLoaded={isPostLoaded}
+          />
         )
       case 5:
       case 6:
@@ -120,7 +123,9 @@ export default function Notice({ notice }: IProps) {
             post={post!}
             comment={comment!}
             reply={reply!}
-            isLoaded={isLoaded}
+            isLoaded={isReplyLoaded}
+            isCommentLoaded={isCommentLoaded}
+            isPostLoaded={isPostLoaded}
           />
         )
       default:

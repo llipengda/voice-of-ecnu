@@ -115,6 +115,30 @@ export enum ErrorCode {
 
   /** 用户未认证 - 用户未认证 */
   USER_NOT_VERIFIED = 9040,
+
+  /** 请求出错 */
+  BAD_REQUEST = 400,
+
+  /** 未授权 */
+  UNAUTHORIZED = 401,
+
+  /** 禁止访问 */
+  FORBIDDEN = 403,
+
+  /** 未找到 */
+  NOT_FOUND = 404,
+
+  /** 请求超时 */
+  REQUEST_TIMEOUT = 408,
+
+  /** 服务器错误 */
+  INTERNAL_SERVER_ERROR = 500,
+
+  /** 服务不可用 */
+  SERVICE_UNAVAILABLE = 503,
+
+  /** 网络超时 */
+  GATEWAY_TIMEOUT = 504,
 }
 
 export type CommonErrorCode = {

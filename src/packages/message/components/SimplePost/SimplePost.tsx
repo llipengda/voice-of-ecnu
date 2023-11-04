@@ -50,11 +50,13 @@ export default function SimplePost({
         e.stopPropagation()
         if (post && isLoaded) {
           Taro.navigateTo({
-            url: `/packages/post/pages/detail/detail?postId=${
-              post.id
-            }&authorName=${post.userName}&authorAvatar=${
-              post.userAvatar
-            }&sendCommentFocus=${false}`,
+            url: post.deleteAt
+              ? '/pages/error/error?errorCode=9031&showErrorCode=false'
+              : `/packages/post/pages/detail/detail?postId=${
+                  post.id
+                }&authorName=${post.userName}&authorAvatar=${
+                  post.userAvatar
+                }&sendCommentFocus=${false}`,
           })
         }
       }}

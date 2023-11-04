@@ -16,6 +16,8 @@ interface IProps {
   reply: Reply
   bgColor?: string
   isLoaded: boolean
+  isCommentLoaded: boolean
+  isPostLoaded: boolean
 }
 
 export default function SimpleReply({
@@ -24,6 +26,8 @@ export default function SimpleReply({
   reply,
   bgColor = '#eee',
   isLoaded,
+  isCommentLoaded,
+  isPostLoaded,
 }: IProps) {
   if (isLoaded && !reply) {
     return (
@@ -54,11 +58,13 @@ export default function SimpleReply({
         e.stopPropagation()
         if (post && comment && reply && isLoaded) {
           Taro.navigateTo({
-            url: `/packages/post/pages/detail/detail?postId=${
-              post.id
-            }&authorName=${post.userName}&authorAvatar=${
-              post.userAvatar
-            }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
+            url: post.deleteAt
+              ? '/pages/error/error?errorCode=9031&showErrorCode=false'
+              : `/packages/post/pages/detail/detail?postId=${
+                  post.id
+                }&authorName=${post.userName}&authorAvatar=${
+                  post.userAvatar
+                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
           })
         }
       }}
@@ -80,7 +86,8 @@ export default function SimpleReply({
           post={post}
           comment={comment}
           isTop={false}
-          isLoaded={isLoaded}
+          isLoaded={isCommentLoaded}
+          isPostLoaded={isPostLoaded}
         />
       </View>
     </View>
