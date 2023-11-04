@@ -15,6 +15,7 @@ interface IProps {
   comment: Comment
   reply: Reply
   bgColor?: string
+  isLoaded: boolean
 }
 
 export default function SimpleReply({
@@ -22,9 +23,28 @@ export default function SimpleReply({
   comment,
   reply,
   bgColor = '#eee',
+  isLoaded,
 }: IProps) {
+  if (isLoaded && !reply) {
+    return (
+      <View className='simple-reply' style={{ backgroundColor: bgColor }}>
+        <View className='simple-reply__title'>回复消失了...</View>
+      </View>
+    )
+  }
   if (!reply) {
-    return <></>
+    reply = {
+      id: -1,
+      userId: '',
+      userName: '',
+      postId: -1,
+      commentId: -1,
+      replyUserId: '',
+      replyUserName: '',
+      content: '',
+      createAt: '',
+      likes: -1,
+    }
   }
   return (
     <View
@@ -32,25 +52,36 @@ export default function SimpleReply({
       style={{ backgroundColor: bgColor }}
       onClick={e => {
         e.stopPropagation()
-        Taro.navigateTo({
-          url: `/packages/post/pages/detail/detail?postId=${
-            post.id
-          }&authorName=${post.userName}&authorAvatar=${
-            post.userAvatar
-          }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
-        })
+        if (post && comment && reply && isLoaded) {
+          Taro.navigateTo({
+            url: `/packages/post/pages/detail/detail?postId=${
+              post.id
+            }&authorName=${post.userName}&authorAvatar=${
+              post.userAvatar
+            }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
+          })
+        }
       }}
     >
       <View className='simple-reply__title'>
-        <Text className='simple-reply__username'>{reply.userName}：</Text>
+        <Text className='simple-reply__username'>
+          {reply.userName}
+          {reply.userName ? '：' : ''}
+        </Text>
         {(reply.replyUserId?.length || -1) > 0 &&
           `回复 ${reply.replyUserName}：`}
         {reply.content.length > 50
           ? reply.content.slice(0, 50) + '...'
           : reply.content}
+        {!isLoaded && '加载中...'}
       </View>
       <View className='simple-reply__post'>
-        <SimpleComment post={post} comment={comment} isTop={false} />
+        <SimpleComment
+          post={post}
+          comment={comment}
+          isTop={false}
+          isLoaded={isLoaded}
+        />
       </View>
     </View>
   )

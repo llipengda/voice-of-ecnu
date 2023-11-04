@@ -49,6 +49,7 @@ export default function Notice({ notice }: IProps) {
   const [post, setPost] = useState<Post | null>(null)
   const [comment, setComment] = useState<Comment | null>(null)
   const [reply, setReply] = useState<Reply | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -59,19 +60,29 @@ export default function Notice({ notice }: IProps) {
         case 2:
           const postData = await getPostByIdWithUserInfo(notice.objectId)
           setPost(postData)
+          setIsLoaded(true)
           break
         case 3:
         case 4:
           const commentData = await getCommentById(notice.objectId)
+          if (!commentData) {
+            setIsLoaded(true)
+            break
+          }
           setComment(commentData)
           const postCommentData = await getPostByIdWithUserInfo(
             commentData.postId
           )
           setPost(postCommentData)
+          setIsLoaded(true)
           break
         case 5:
         case 6:
           const replyData = await getReplyById(notice.objectId)
+          if (!replyData) {
+            setIsLoaded(true)
+            break
+          }
           setReply(replyData)
           const commentReplyData = await getCommentById(replyData.commentId)
           setComment(commentReplyData)
@@ -79,6 +90,7 @@ export default function Notice({ notice }: IProps) {
             commentReplyData.postId
           )
           setPost(postReplyData)
+          setIsLoaded(true)
           break
         default:
           break
@@ -95,13 +107,22 @@ export default function Notice({ notice }: IProps) {
         return <></>
       case 1:
       case 2:
-        return <SimplePost post={post!} />
+        return <SimplePost post={post!} isLoaded={isLoaded} />
       case 3:
       case 4:
-        return <SimpleComment post={post!} comment={comment!} />
+        return (
+          <SimpleComment post={post!} comment={comment!} isLoaded={isLoaded} />
+        )
       case 5:
       case 6:
-        return <SimpleReply post={post!} comment={comment!} reply={reply!} />
+        return (
+          <SimpleReply
+            post={post!}
+            comment={comment!}
+            reply={reply!}
+            isLoaded={isLoaded}
+          />
+        )
       default:
         return <></>
     }

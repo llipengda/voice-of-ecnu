@@ -15,6 +15,7 @@ interface IProps {
   isTop?: boolean
   bgColor?: string
   postBgColor?: string
+  isLoaded: boolean
 }
 
 export default function SimpleComment({
@@ -23,9 +24,29 @@ export default function SimpleComment({
   isTop = true,
   bgColor = isTop ? '#eee' : '#f6f6f6',
   postBgColor = isTop ? '#f6f6f6' : '#eee',
+  isLoaded,
 }: IProps) {
+  if (isLoaded && !comment) {
+    return (
+      <View className='simple-comment' style={{ backgroundColor: bgColor }}>
+        <View className='simple-comment__title'>评论不见了...</View>
+      </View>
+    )
+  }
   if (!comment) {
-    return <></>
+    comment = {
+      content: '',
+      createAt: '',
+      deleteAt: '',
+      id: -1,
+      images: [],
+      likes: -1,
+      postId: -1,
+      replies: -1,
+      userId: '',
+      userName: '',
+      userAvatar: '',
+    }
   }
   return (
     <View
@@ -33,25 +54,31 @@ export default function SimpleComment({
       style={{ backgroundColor: bgColor }}
       onClick={e => {
         e.stopPropagation()
-        Taro.navigateTo({
-          url: `/packages/post/pages/detail/detail?postId=${
-            post.id
-          }&authorName=${post.userName}&authorAvatar=${
-            post.userAvatar
-          }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
-        })
+        if (post && comment && isLoaded) {
+          Taro.navigateTo({
+            url: `/packages/post/pages/detail/detail?postId=${
+              post.id
+            }&authorName=${post.userName}&authorAvatar=${
+              post.userAvatar
+            }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
+          })
+        }
       }}
     >
       <View className='simple-comment__title'>
-        <Text className='simple-comment__username'>{comment.userName}：</Text>
+        <Text className='simple-comment__username'>
+          {comment.userName}
+          {comment.userName ? '：' : ''}
+        </Text>
         {comment.content.length > 50
           ? comment.content.slice(0, 50) +
             '...' +
             (comment.images.length > 0 ? '[图片]' : '')
           : comment.content + (comment.images.length > 0 ? '[图片]' : '')}
+        {!isLoaded && '加载中'}
       </View>
       <View className='simple-comment__post'>
-        <SimplePost post={post} bgColor={postBgColor} />
+        <SimplePost post={post} bgColor={postBgColor} isLoaded={isLoaded} />
       </View>
     </View>
   )

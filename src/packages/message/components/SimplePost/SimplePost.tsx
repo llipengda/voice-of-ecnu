@@ -9,11 +9,38 @@ type Post = WithUserInfo<OPost>
 interface IProps {
   post: Post
   bgColor?: string
+  isLoaded: boolean
 }
 
-export default function SimplePost({ post, bgColor = '#eee' }: IProps) {
+export default function SimplePost({
+  post,
+  bgColor = '#eee',
+  isLoaded,
+}: IProps) {
+  if (isLoaded && !post) {
+    return (
+      <View className='simple-post' style={{ backgroundColor: bgColor }}>
+        <View className='simple-post__title'>帖子走丢了...</View>
+      </View>
+    )
+  }
   if (!post) {
-    return <></>
+    post = {
+      comments: -1,
+      content: '',
+      createAt: '',
+      deleteAt: '',
+      id: -1,
+      images: [],
+      likes: -1,
+      stars: -1,
+      title: '',
+      updateAt: '',
+      userId: '',
+      views: -1,
+      userName: '',
+      userAvatar: '',
+    }
   }
   return (
     <View
@@ -21,13 +48,15 @@ export default function SimplePost({ post, bgColor = '#eee' }: IProps) {
       style={{ backgroundColor: bgColor }}
       onClick={e => {
         e.stopPropagation()
-        Taro.navigateTo({
-          url: `/packages/post/pages/detail/detail?postId=${
-            post.id
-          }&authorName=${post.userName}&authorAvatar=${
-            post.userAvatar
-          }&sendCommentFocus=${false}`,
-        })
+        if (post && isLoaded) {
+          Taro.navigateTo({
+            url: `/packages/post/pages/detail/detail?postId=${
+              post.id
+            }&authorName=${post.userName}&authorAvatar=${
+              post.userAvatar
+            }&sendCommentFocus=${false}`,
+          })
+        }
       }}
     >
       {post.images.length > 0 && (
@@ -38,8 +67,12 @@ export default function SimplePost({ post, bgColor = '#eee' }: IProps) {
         />
       )}
       <View className='simple-post__title'>
-        <Text className='simple-post__username'>{post.userName}：</Text>
+        <Text className='simple-post__username'>
+          {post.userName}
+          {post.userName ? '：' : ''}
+        </Text>
         {post.title.length > 30 ? post.title.slice(0, 30) + '...' : post.title}
+        {!isLoaded && '加载中...'}
       </View>
     </View>
   )

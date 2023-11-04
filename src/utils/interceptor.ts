@@ -74,6 +74,23 @@ const switchErrorCode = async (
   }
 }
 
+const showError = async (
+  res: Taro.request.SuccessCallbackResult<Result<any>>
+) => {
+  switch (res.data.commonErrorCode?.errorCode) {
+    case ErrorCode.POST_NOT_EXIST:
+    case ErrorCode.POST_NOT_FOUND:
+      break
+    default:
+      await Taro.showToast({
+        title: res.data.msg,
+        icon: 'error',
+        duration: 1000,
+      })
+      break
+  }
+}
+
 const interceptor: Taro.interceptor = chain => {
   const requestParams = chain.requestParams
   const token = Taro.getStorageSync('token')
@@ -87,19 +104,29 @@ const interceptor: Taro.interceptor = chain => {
     .proceed(requestParams)
     .then(async (res: Taro.request.SuccessCallbackResult<Result<any>>) => {
       if (res.statusCode !== 200) {
-        console.error(res)
+        console.error(
+          'ERROR',
+          chain.requestParams.method,
+          chain.requestParams.url,
+          'data:',
+          chain.requestParams.data,
+          res
+        )
         await Taro.showToast({
           title: '发生了未知错误',
           icon: 'error',
           duration: 1000,
         })
       } else if (res.data.code !== 0) {
-        console.error(res)
-        await Taro.showToast({
-          title: res.data.msg,
-          icon: 'error',
-          duration: 1000,
-        })
+        console.error(
+          'ERROR',
+          chain.requestParams.method,
+          chain.requestParams.url,
+          'data:',
+          chain.requestParams.data,
+          res
+        )
+        await showError(res)
         await sleep(1000)
         return await switchErrorCode(res, chain)
       }
