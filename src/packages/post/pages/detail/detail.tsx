@@ -111,6 +111,8 @@ export default function detail() {
   const user = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
 
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   useLoad(async () => {
     try {
       if (!scrollTo) {
@@ -615,89 +617,91 @@ export default function detail() {
           {!isEmpty && !hasMore && <View className='tip2'>没有更多内容</View>}
         </ListView>
       </View>
-      <View
-        className='post-detail__send'
-        style={{
-          bottom: `${keyboardHeight}Px`,
-          zIndex: sendReplyMode ? 8080 : 3000,
-        }}
-      >
-        {sendReplyMode && replyReplyId !== -1 && replyUserName.length > 0 && (
-          <View className='post-detail__send__reply'>
-            <Text>{`回复 ${replyUserName}：${replyContent}：`}</Text>
-          </View>
-        )}
-        {!sendReplyMode && selectedImages.length > 0 && (
-          <View className='post-detail__send__image-wrap'>
-            {selectedImages.map(i => (
-              <>
-                <Image
-                  src={i}
-                  key={i}
-                  fadeIn
-                  lazyLoad
-                  className='post-detail__send__image'
-                  mode='aspectFill'
-                >
-                  <AtIcon
-                    value='close-circle'
-                    size='20'
-                    color={primaryColor}
-                    className='post-detail__send__image__close'
-                    onClick={() =>
-                      setSelectedImages(selectedImages.filter(j => j !== i))
-                    }
-                  />
-                </Image>
-              </>
-            ))}
-          </View>
-        )}
-        <View className='at-row'>
-          <Textarea
-            placeholder='说点什么吧...'
-            className={`post-detail__send__input at-col at-col-${
-              sendReplyMode ? 9 : 8
-            }`}
-            onKeyboardHeightChange={e => setKeyboardHeight(e.detail.height)}
-            adjustPosition={false}
-            autoHeight
-            showConfirmBar={false}
-            value={sendReplyMode ? sendReplyContent : commentContent}
-            onInput={e =>
-              sendReplyMode
-                ? setSendReplyContent(e.detail.value)
-                : setCommentContent(e.detail.value)
-            }
-            focus={sendReplyMode ? sendReplyFocus : sendCommentFocus}
-            onBlur={
-              sendReplyMode
-                ? () => setSendReplyFocus(false)
-                : () => setSendCommentFocus(false)
-            }
-          />
-          {!sendReplyMode && (
-            <AtIcon
-              value='image'
-              size='25'
-              color={primaryColor}
-              className='post-detail__send__icon at-col-1'
-              onClick={handleSelectImage}
-            />
+      {showComponent && (
+        <View
+          className='post-detail__send'
+          style={{
+            bottom: `${keyboardHeight}Px`,
+            zIndex: sendReplyMode ? 8080 : 3000,
+          }}
+        >
+          {sendReplyMode && replyReplyId !== -1 && replyUserName.length > 0 && (
+            <View className='post-detail__send__reply'>
+              <Text>{`回复 ${replyUserName}：${replyContent}：`}</Text>
+            </View>
           )}
-          <View
-            className='post-detail__send__button at-col at-col-1'
-            style={{
-              color: (sendReplyMode ? sendReplyDisabled : sendCommentDisabled)
-                ? disabledColor
-                : primaryColor,
-            }}
-            onClick={sendReplyMode ? handleSendReply : handleSendComment}
-          >
-            发送
+          {!sendReplyMode && selectedImages.length > 0 && (
+            <View className='post-detail__send__image-wrap'>
+              {selectedImages.map(i => (
+                <>
+                  <Image
+                    src={i}
+                    key={i}
+                    fadeIn
+                    lazyLoad
+                    className='post-detail__send__image'
+                    mode='aspectFill'
+                  >
+                    <AtIcon
+                      value='close-circle'
+                      size='20'
+                      color={primaryColor}
+                      className='post-detail__send__image__close'
+                      onClick={() =>
+                        setSelectedImages(selectedImages.filter(j => j !== i))
+                      }
+                    />
+                  </Image>
+                </>
+              ))}
+            </View>
+          )}
+          <View className='at-row'>
+            <Textarea
+              placeholder='说点什么吧...'
+              className={`post-detail__send__input at-col at-col-${
+                sendReplyMode ? 9 : 8
+              }`}
+              onKeyboardHeightChange={e => setKeyboardHeight(e.detail.height)}
+              adjustPosition={false}
+              autoHeight
+              showConfirmBar={false}
+              value={sendReplyMode ? sendReplyContent : commentContent}
+              onInput={e =>
+                sendReplyMode
+                  ? setSendReplyContent(e.detail.value)
+                  : setCommentContent(e.detail.value)
+              }
+              focus={sendReplyMode ? sendReplyFocus : sendCommentFocus}
+              onBlur={
+                sendReplyMode
+                  ? () => setSendReplyFocus(false)
+                  : () => setSendCommentFocus(false)
+              }
+            />
+            {!sendReplyMode && (
+              <AtIcon
+                value='image'
+                size='25'
+                color={primaryColor}
+                className='post-detail__send__icon at-col-1'
+                onClick={handleSelectImage}
+              />
+            )}
+            <View
+              className='post-detail__send__button at-col at-col-1'
+              style={{
+                color: (sendReplyMode ? sendReplyDisabled : sendCommentDisabled)
+                  ? disabledColor
+                  : primaryColor,
+              }}
+              onClick={sendReplyMode ? handleSendReply : handleSendComment}
+            >
+              发送
+            </View>
           </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }

@@ -90,3 +90,5 @@ export const serverUrl = 'https://www.xiaowu.fun'
 // export const serverUrl = 'http://localhost:8080'
 
 export const defaultAvatar = 'https://www.xiaowu.fun/static/voecnu.png'
+
+export const expectedReviewDate = new Date('2023-11-06T00:00:00+08:00')

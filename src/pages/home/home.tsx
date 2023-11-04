@@ -47,6 +47,8 @@ export default function Home() {
     onNavigateToPost: (_: boolean) => {},
   })
 
+  const showCompent = useAppSelector(state => state.review.showComponent)
+
   const handleSearchClick = () => {
     Taro.navigateTo({
       url: `/packages/post/pages/search/search?key=${searchText}`,
@@ -56,7 +58,11 @@ export default function Home() {
   const index = useRef(1)
 
   const handleScrollToLower = async () => {
-    const data = await getPostListWithUserInfo(++index.current, 5, selected === 1)
+    const data = await getPostListWithUserInfo(
+      ++index.current,
+      5,
+      selected === 1
+    )
     setPosts([...posts, ...data])
     setHasMore(data.length === 5)
     setIsEmpty(data.length === 0)
@@ -159,17 +165,19 @@ export default function Home() {
           </ListView>
         </View>
       )}
-      <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
-        <AtFab
-          onClick={() => {
-            Taro.navigateTo({
-              url: '/packages/post/pages/add/add',
-            })
-          }}
-        >
-          <View className='at-fab__icon at-icon at-icon-add' />
-        </AtFab>
-      </View>
+      {showCompent && (
+        <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
+          <AtFab
+            onClick={() => {
+              Taro.navigateTo({
+                url: '/packages/post/pages/add/add',
+              })
+            }}
+          >
+            <View className='at-fab__icon at-icon at-icon-add' />
+          </AtFab>
+        </View>
+      )}
     </View>
   )
 }
