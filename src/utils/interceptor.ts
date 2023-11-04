@@ -80,6 +80,9 @@ const showError = async (
   switch (res.data.commonErrorCode?.errorCode) {
     case ErrorCode.POST_NOT_EXIST:
     case ErrorCode.POST_NOT_FOUND:
+      await Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${res.data.commonErrorCode?.errorCode}`,
+      })
       break
     default:
       await Taro.showToast({
@@ -112,10 +115,8 @@ const interceptor: Taro.interceptor = chain => {
           chain.requestParams.data,
           res
         )
-        await Taro.showToast({
-          title: '发生了未知错误',
-          icon: 'error',
-          duration: 1000,
+        await Taro.navigateTo({
+          url: `/pages/error/error?errorCode=${res.statusCode}`,
         })
       } else if (res.data.code !== 0) {
         console.error(
