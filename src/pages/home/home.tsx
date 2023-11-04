@@ -80,7 +80,7 @@ export default function Home() {
     setPosts([])
     setIsEmpty(false)
     index.current = 1
-    const data = await getPostListWithUserInfo(index.current, 5, selected === 0)
+    const data = await getPostListWithUserInfo(index.current, 5, i === 1)
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length === 5)
