@@ -389,7 +389,9 @@ export default function detail() {
       commentId: replyCommentId,
     })
     if (data) {
-      handleAddReply(addUserInfo(data))
+      const newData = addUserInfo(data)
+      newData.replyUserName = replyUserName
+      handleAddReply(newData)
     }
     setSendReplyDisabled(false)
     setSendReplyContent('')
