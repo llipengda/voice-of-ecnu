@@ -12,6 +12,7 @@ import SimpleReply from '../SimpleReply/SimpleReply'
 import { getPostByIdWithUserInfo } from '@/api/Post'
 import { getCommentById } from '@/api/Comment'
 import { getReplyById } from '@/api/Reply'
+import { defaultAvatar } from '@/common/constants'
 
 type Notice = WithUserInfo<ONotice>
 type Post = WithUserInfo<OPost>
@@ -136,7 +137,23 @@ export default function Notice({ notice }: IProps) {
   return (
     <View className='notice'>
       {notice.type === 0 ? (
-        <View className='notice__content'>{notice.content}</View>
+        <View>
+          <View className='notice__header'>
+            <Image
+              className='notice__header__avatar'
+              src={defaultAvatar}
+              fadeIn
+              lazyLoad
+            />
+            <View className='notice__header__info'>
+              <View className='notice__header__info__name'>系统消息</View>
+              <View className='notice__header__info__message'>
+                <Text className='notice__header__info__time'>{` ${notice.sendAt}`}</Text>
+              </View>
+            </View>
+          </View>
+          <View className='notice__content'>{notice.content}</View>
+        </View>
       ) : (
         <View>
           <View className='notice__header'>
