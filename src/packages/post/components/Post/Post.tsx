@@ -6,12 +6,13 @@ import { AtIcon } from 'taro-ui'
 import { checkStar, starPost, unstarPost } from '@/api/Star'
 import { checkLike, like, unlike } from '@/api/Like'
 import { deletePost } from '@/api/Post'
-import { useAppDispatch } from '@/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
 import { disabledColor } from '@/common/constants'
 import './Post.scss'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { getUserById } from '@/api/User'
+import { ErrorCode } from '@/types/commonErrorCode'
 
 type TPost = WithUserInfo<OTPost>
 
@@ -48,6 +49,8 @@ export default function Post({
   const [starDisabled, setStarDisabled] = useState(false)
 
   const dispatch = useAppDispatch()
+
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   useEffect(() => {
     checkStar(post.id).then(data => setStared(data))
@@ -115,6 +118,12 @@ export default function Post({
   }
 
   const navigateToDetail = (focus: boolean = false) => {
+    if (!showComponent) {
+      Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`,
+      })
+      return
+    }
     Taro.navigateTo({
       url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`,
     })

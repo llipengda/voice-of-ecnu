@@ -139,6 +139,9 @@ export enum ErrorCode {
 
   /** 网络超时 */
   GATEWAY_TIMEOUT = 504,
+
+  /** 没有更多内容 */
+  NO_MORE_CONTENT = 10001,
 }
 
 export type CommonErrorCode = {

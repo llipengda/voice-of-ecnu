@@ -37,6 +37,8 @@ export const generateErrorMessage = (errorCode: ErrorCode) => {
       return '服务不可用，请联系管理员'
     case ErrorCode.GATEWAY_TIMEOUT:
       return '网络超时，请联系管理员'
+    case ErrorCode.NO_MORE_CONTENT:
+      return '没有更多内容'
     default:
       return '发生了未知错误'
   }

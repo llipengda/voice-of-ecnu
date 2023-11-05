@@ -3,6 +3,8 @@ import { Post as OPost } from '@/types/post'
 import { WithUserInfo } from '@/types/withUserInfo'
 import './SimplePost.scss'
 import Taro from '@tarojs/taro'
+import { ErrorCode } from '@/types/commonErrorCode'
+import { useAppSelector } from '@/redux/hooks'
 
 type Post = WithUserInfo<OPost>
 
@@ -42,6 +44,9 @@ export default function SimplePost({
       userAvatar: '',
     }
   }
+
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   return (
     <View
       className='simple-post'
@@ -49,6 +54,12 @@ export default function SimplePost({
       onClick={e => {
         e.stopPropagation()
         if (post && isLoaded) {
+          if (!showComponent) {
+            Taro.navigateTo({
+              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`,
+            })
+            return
+          }
           Taro.navigateTo({
             url: post.deleteAt
               ? '/pages/error/error?errorCode=9031&showErrorCode=false'

@@ -1,4 +1,4 @@
-import Taro, { useLoad, useReachBottom } from '@tarojs/taro'
+import Taro, { useDidShow, useLoad, useReachBottom } from '@tarojs/taro'
 import { deletePost, getPostByIdWithUserInfo } from '@/api/Post'
 import { View, Image, Text, Textarea } from '@tarojs/components'
 import { useRef, useState } from 'react'
@@ -24,6 +24,7 @@ import { WithUserInfo } from '@/types/withUserInfo'
 import { addUserInfo } from '@/utils/addUserInfo'
 import './detail.scss'
 import sleep from '@/utils/sleep'
+import { ErrorCode } from '@/types/commonErrorCode'
 
 type Reply = WithUserInfo<OReply>
 

@@ -5,6 +5,8 @@ import { WithUserInfo } from '@/types/withUserInfo'
 import './SimpleComment.scss'
 import { Comment as OComment } from '@/types/comment'
 import Taro from '@tarojs/taro'
+import { useAppSelector } from '@/redux/hooks'
+import { ErrorCode } from '@/types/commonErrorCode'
 
 type Post = WithUserInfo<OPost>
 type Comment = WithUserInfo<OComment>
@@ -50,6 +52,9 @@ export default function SimpleComment({
       userAvatar: '',
     }
   }
+
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   return (
     <View
       className='simple-comment'
@@ -57,6 +62,12 @@ export default function SimpleComment({
       onClick={e => {
         e.stopPropagation()
         if (post && comment && isLoaded) {
+          if (!showComponent) {
+            Taro.navigateTo({
+              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`,
+            })
+            return
+          }
           Taro.navigateTo({
             url: post.deleteAt
               ? '/pages/error/error?errorCode=9031&showErrorCode=false'
