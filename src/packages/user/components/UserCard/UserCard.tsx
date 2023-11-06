@@ -14,6 +14,7 @@ export default function UserCard({
   userStatistics: UserStatistics
 }) {
   const user = useAppSelector(state => state.user)
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   const displayGender = () => {
     switch (user.gender) {
@@ -83,11 +84,25 @@ export default function UserCard({
           <View className='count'>{userStatistics.likes}</View>
           <View>获赞</View>
         </View>
-        <View className='at-col grid-text'>
+        <View
+          className='at-col grid-text'
+          onClick={() => {
+            Taro.navigateTo({
+              url: '/packages/post/pages/my/my?type=post',
+            })
+          }}
+        >
           <View className='count'>{userStatistics.posts}</View>
-          <View>我的贴子</View>
+          <View>我的{showComponent && '贴子'}</View>
         </View>
-        <View className='at-col grid-text'>
+        <View
+          className='at-col grid-text'
+          onClick={() => {
+            Taro.navigateTo({
+              url: '/packages/post/pages/my/my?type=star',
+            })
+          }}
+        >
           <View className='count'>{userStatistics.stars}</View>
           <View>我的收藏</View>
         </View>

@@ -1,6 +1,8 @@
 import Taro from '@tarojs/taro'
 import { serverUrl } from '@/common/constants'
 import { Result } from '@/types/result'
+import { WithUserInfo } from '@/types/withUserInfo'
+import { Post } from '@/types/post'
 
 export const checkStar = async (postId: number) => {
   const data = await Taro.request<Result<boolean>>({
@@ -25,6 +27,14 @@ export const unstarPost = async (postId: number) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/star/unstarPost?postId=${postId}`,
     method: 'POST',
+  })
+  return data.data.data
+}
+
+export const getStarList = async () => {
+  const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
+    url: `${serverUrl}/star/getStarListByUserId`,
+    method: 'GET'
   })
   return data.data.data
 }
