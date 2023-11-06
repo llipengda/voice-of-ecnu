@@ -34,7 +34,19 @@ export const unstarPost = async (postId: number) => {
 export const getStarList = async () => {
   const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
     url: `${serverUrl}/star/getStarListByUserId`,
-    method: 'GET'
+    method: 'GET',
+  })
+  return data.data.data
+}
+
+export const getStarListPage = async (page: number, pageSize: number) => {
+  const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
+    url: `${serverUrl}/star/get`,
+    method: 'GET',
+    data: {
+      page,
+      pageSize,
+    },
   })
   return data.data.data
 }

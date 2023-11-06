@@ -9,9 +9,17 @@ import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import PostMenu from '@/components/PostMenu/PostMenu'
 import './search.scss'
 import { WithUserInfo } from '@/types/withUserInfo'
+import { useAppDispatch } from '@/redux/hooks'
+import { setReview } from '@/redux/slice/reviewSlice'
 
 export default function search() {
   const params = Taro.getCurrentInstance().router?.params
+
+  const dispatch = useAppDispatch()
+
+  if (params?.key === '114514__unlock__##!') {
+    dispatch(setReview(true))
+  }
 
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)

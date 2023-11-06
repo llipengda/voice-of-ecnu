@@ -124,9 +124,15 @@ export default function Post({
       })
       return
     }
-    Taro.navigateTo({
-      url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`,
-    })
+    if (!post.deleteAt) {
+      Taro.navigateTo({
+        url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`,
+      })
+    } else {
+      Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_FOUND}&showErrorCode=false`,
+      })
+    }
   }
 
   return (

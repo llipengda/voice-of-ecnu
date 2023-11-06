@@ -10,7 +10,7 @@ import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import CPost from '@/packages/post/components/Post/Post'
 import { getPostByUserId } from '@/api/Post'
 import { addUserInfo } from '@/utils/addUserInfo'
-import { getStarList } from '@/api/Star'
+import { getStarListPage } from '@/api/Star'
 import './my.scss'
 
 export default function my() {
@@ -54,9 +54,13 @@ export default function my() {
 
   const handleScrollToLower = async () => {
     if (type === 'post') {
-      const data = await getPostByUserId(++index.current, 5, user.id) || []
+      const data = (await getPostByUserId(++index.current, 5, user.id)) || []
       const newData = data.map(post => addUserInfo(post))
       setPosts([...posts, ...newData])
+      setHasMore(data.length === 5)
+    } else {
+      const data = (await getStarListPage(++index.current, 5)) || []
+      setPosts([...posts, ...data])
       setHasMore(data.length === 5)
     }
   }
@@ -64,16 +68,16 @@ export default function my() {
   const handlePullDownRefresh = async () => {
     index.current = 1
     if (type === 'post') {
-      const data = await getPostByUserId(1, 5, user.id) || []
+      const data = (await getPostByUserId(1, 5, user.id)) || []
       const newData = data.map(post => addUserInfo(post))
       setPosts(newData)
       setIsLoaded(true)
       setHasMore(data.length === 5)
     } else {
-      const data = await getStarList() || []
+      const data = (await getStarListPage(1, 5)) || []
       setPosts(data)
       setIsLoaded(true)
-      setHasMore(false)
+      setHasMore(data.length === 5)
     }
   }
 
