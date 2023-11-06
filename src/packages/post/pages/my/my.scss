@@ -1,17 +1,19 @@
 @import '@/common/constants.scss';
 
-.loading {
-  color: $disabled-color;
-  margin-top: 5px;
-  text-align: center;
-  margin-bottom: 5px;
-  padding-bottom: 10px;
-  overflow-x: hidden;
-}
+.me {
+  .loading {
+    color: $disabled-color;
+    margin-top: 5px;
+    text-align: center;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    overflow-x: hidden;
+  }
 
-.tip {
-  color: $disabled-color;
-  padding-top: 120Px;
-  text-align: center;
-  margin-bottom: 5px;
+  .tip {
+    color: $disabled-color;
+    padding-top: 120px;
+    text-align: center;
+    margin-bottom: 5px;
+  }
 }

@@ -101,7 +101,7 @@ export default function my() {
   }
 
   return (
-    <View>
+    <View className='me'>
       <FloatLayout
         title='操作'
         isOpened={showMenu}
