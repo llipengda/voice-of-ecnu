@@ -546,24 +546,19 @@ export default function detail() {
         ))}
       </View>
       <View className='post-detail__actions at-row'>
-        <View className='at-col-3 post-detail__actions__action'>
-          <AtIcon
-            value='eye'
-            size='20'
-            color={disabledColor}
-            className='at-row'
-          />
-          <Text className='post-detail__actions__action__number at-row'>{`浏览 ${views}`}</Text>
+        <View className='post-detail__actions__action'>
+          <AtIcon value='eye' size='20' color={disabledColor} />
+          <Text className='post-detail__actions__action__number'>{`浏览 ${views}`}</Text>
         </View>
         <View
-          className='at-col-3 post-detail__actions__action'
+          className='post-detail__actions__action'
           onClick={() => setSendCommentFocus(true)}
         >
           <AtIcon value='message' size='20' color={disabledColor} />
-          <Text className='post-detail__actions__action__number at-row'>{`评论 ${commentsCnt}`}</Text>
+          <Text className='post-detail__actions__action__number'>{`评论 ${commentsCnt}`}</Text>
         </View>
         <View
-          className='at-col-3 post-detail__actions__action'
+          className='post-detail__actions__action'
           onClick={handleLikePost}
         >
           <AtIcon
@@ -571,10 +566,10 @@ export default function detail() {
             size='20'
             color={disabledColor}
           />
-          <Text className='post-detail__actions__action__number at-row'>{`点赞 ${likes}`}</Text>
+          <Text className='post-detail__actions__action__number'>{`点赞 ${likes}`}</Text>
         </View>
         <View
-          className='at-col-3 post-detail__actions__action'
+          className='post-detail__actions__action'
           onClick={handleStarPost}
         >
           <AtIcon
@@ -582,7 +577,7 @@ export default function detail() {
             size='20'
             color={disabledColor}
           />
-          <Text className='post-detail__actions__action__number at-row'>{`收藏 ${stars}`}</Text>
+          <Text className='post-detail__actions__action__number'>{`收藏 ${stars}`}</Text>
         </View>
       </View>
       <View className='post-detail__divider' />
