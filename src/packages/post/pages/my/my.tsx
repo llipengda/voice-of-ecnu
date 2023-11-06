@@ -54,7 +54,7 @@ export default function my() {
 
   const handleScrollToLower = async () => {
     if (type === 'post') {
-      const data = await getPostByUserId(++index.current, 5, user.id)
+      const data = await getPostByUserId(++index.current, 5, user.id) || []
       const newData = data.map(post => addUserInfo(post))
       setPosts([...posts, ...newData])
       setHasMore(data.length === 5)
@@ -64,13 +64,13 @@ export default function my() {
   const handlePullDownRefresh = async () => {
     index.current = 1
     if (type === 'post') {
-      const data = await getPostByUserId(1, 5, user.id)
+      const data = await getPostByUserId(1, 5, user.id) || []
       const newData = data.map(post => addUserInfo(post))
       setPosts(newData)
       setIsLoaded(true)
       setHasMore(data.length === 5)
     } else {
-      const data = await getStarList()
+      const data = await getStarList() || []
       setPosts(data)
       setIsLoaded(true)
       setHasMore(false)
