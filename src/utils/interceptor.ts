@@ -109,7 +109,7 @@ const interceptor: Taro.interceptor = chain => {
   return chain
     .proceed(requestParams)
     .then(async (res: Taro.request.SuccessCallbackResult<Result<any>>) => {
-      if (res.statusCode !== 200) {
+      if (res.statusCode !== 200 || !res.data.msg) {
         console.error(
           'ERROR',
           chain.requestParams.method,
