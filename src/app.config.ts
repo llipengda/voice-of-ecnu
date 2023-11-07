@@ -63,4 +63,7 @@ export default defineAppConfig({
       pages: ['pages/noticeList/noticeList'],
     },
   ],
+  enableShareAppMessage: true,
+  enableShareTimeline: true,
+  lazyCodeLoading: 'requiredComponents',
 })
