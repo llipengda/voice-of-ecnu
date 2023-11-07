@@ -4,7 +4,7 @@ import { AtButton, AtIcon } from 'taro-ui'
 import Taro, { useLoad } from '@tarojs/taro'
 import { uploadImage } from '@/api/Image'
 import { useAppSelector } from '@/redux/hooks'
-import { updateUser } from '@/api/User'
+import { checkName, updateUser } from '@/api/User'
 import { useDispatch } from 'react-redux'
 import {
   genderRange,
@@ -16,6 +16,8 @@ import '@/custom-theme.scss'
 import './UpdateUserForm.scss'
 import { setUser } from '@/redux/slice/userSlice'
 import showPrivacyPolicy from '@/utils/privacy'
+import sleep from '@/utils/sleep'
+import { User } from '@/types/user'
 
 export default function UpdateUserForm() {
   const user = useAppSelector(state => state.user)
@@ -26,7 +28,7 @@ export default function UpdateUserForm() {
 
   const dispatch = useDispatch()
 
-  const [userState, setUserState] = useState(user)
+  const [userState, setUserState] = useState<Partial<User>>(user)
 
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
 
@@ -69,18 +71,29 @@ export default function UpdateUserForm() {
 
   const handleSubmit = async () => {
     setSubmitButtonLoading(true)
-    const data = await updateUser(userState)
-    setUserState(data!)
-    dispatch(setUser(data!))
+    const isNameSame = user.name === userState.name?.trim()
+    if (!isNameSame && !(await checkName(userState.name!))) {
+      await Taro.showToast({
+        title: '昵称已被使用',
+        icon: 'error',
+        duration: 1000,
+      })
+      setSubmitButtonLoading(false)
+      return
+    }
+    const data = await updateUser(
+      isNameSame ? { ...userState, name: undefined } : userState
+    )
+    setUserState(data || user)
+    dispatch(setUser(data || user))
     setSubmitButtonLoading(false)
-    Taro.showToast({
+    await Taro.showToast({
       title: '提交成功',
       icon: 'success',
       duration: 1000,
     })
-    setTimeout(() => {
-      Taro.navigateBack()
-    }, 1000)
+    await sleep(1000)
+    Taro.navigateBack()
   }
 
   const handleReset = () => {
@@ -94,7 +107,7 @@ export default function UpdateUserForm() {
 
   const handleShowAvatar = () => {
     Taro.previewImage({
-      urls: [userState.avatar],
+      urls: [userState.avatar!],
       current: userState.avatar,
     })
   }
@@ -106,7 +119,7 @@ export default function UpdateUserForm() {
           fadeIn
           lazyLoad
           className='avatar'
-          src={userState.avatar}
+          src={userState.avatar!}
           onClick={handleShowAvatar}
         />
         <AtIcon
