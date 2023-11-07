@@ -27,6 +27,8 @@ export default function VerifyForm() {
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true)
 
   const [email, setEmail] = useState('')
+  const [emailFirst, setEmailFirst] = useState('')
+  const [emailLast, setEmailLast] = useState('')
   const [emailErr, setEmailErr] = useState('')
 
   const [code, setCode] = useState('')
@@ -92,6 +94,8 @@ export default function VerifyForm() {
 
   const handleReset = () => {
     setEmail('')
+    setEmailFirst('')
+    setEmailLast('')
     setCode('')
     setEmailErr('')
     setCodeErr('')
@@ -148,13 +152,25 @@ export default function VerifyForm() {
           <View className='form-label'>邮箱</View>
           <Input
             className='form-input first'
-            value={email}
+            value={emailFirst}
             onInput={e => {
-              setEmail(e.detail.value)
-              checkEmail(e.detail.value)
+              setEmailFirst(e.detail.value)
+              setEmail(e.detail.value + '@' + emailLast + '.ecnu.edu.cn')
+              checkEmail(e.detail.value + '@' + emailLast + '.ecnu.edu.cn')
             }}
-            placeholder='请使用华东师范大学邮箱认证'
+            placeholder='请输入邮箱'
           />
+          @
+          <Input
+            className='form-input form-input__last'
+            value={emailLast}
+            onInput={e => {
+              setEmailLast(e.detail.value)
+              setEmail(emailFirst + '@' + e.detail.value + '.ecnu.edu.cn')
+              checkEmail(emailFirst + '@' + e.detail.value + '.ecnu.edu.cn')
+            }}
+          />
+          .ecnu.edu.cn
         </View>
         <View className='error'>{emailErr ? '⚠️' + emailErr : ''}</View>
         <View className='form-item'>

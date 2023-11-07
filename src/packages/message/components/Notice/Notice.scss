@@ -7,6 +7,14 @@
   padding-top: 40px;  
   padding-bottom: 30px;
 
+  &__system {
+    background: #fff;
+    margin: 30px;
+    border-radius: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
   &__header {
     display: flex;
     align-items: center;
@@ -49,6 +57,10 @@
     font-style: 26px;
     margin-top: 20px;
     margin-left: 10px;
+
+    &__system {
+      margin-top: 40px;
+    }
   }
 
   &__link {

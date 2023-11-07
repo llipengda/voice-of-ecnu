@@ -152,7 +152,11 @@ export default function Post({
             </Text>
           </View>
           <View className='at-row'>
-            <Text className='post__header__create-at'>{convertDate(post.createAt)}</Text>
+            <Text className='post__header__create-at'>
+              {`发布于${convertDate(post.createAt)} ${
+                post.comments > 0 ? '回复于' + convertDate(post.updateAt) : ''
+              }`}
+            </Text>
           </View>
         </View>
         <View className='at-col post__header__delete'>

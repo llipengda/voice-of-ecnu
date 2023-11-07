@@ -59,6 +59,28 @@ export const getCommentListWithUserInfo = async (
   return data.data.data
 }
 
+/**
+ * @param order 0正序 1倒序 2热门
+ */
+export const getCommentListWithUserInfoWithDeleted = async (
+  postId: number,
+  page: number,
+  pageSize: number,
+  order: 0 | 1 | 2 = 0
+) => {
+  const data = await Taro.request<Result<WithUserInfo<Comment>[]>>({
+    url: `${serverUrl}/comment/allComments`,
+    method: 'GET',
+    data: {
+      postId,
+      page,
+      pageSize,
+      order,
+    },
+  })
+  return data.data.data
+}
+
 export const getCommentById = async (commentId: number) => {
   const data = await Taro.request<Result<WithUserInfo<Comment>>>({
     url: `${serverUrl}/comment/getById`,

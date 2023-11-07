@@ -11,7 +11,10 @@ import { disabledColor, primaryColor } from '@/common/constants'
 import ListView from 'taro-listview'
 import { Comment } from '@/types/comment'
 import CComment from '@/packages/post/components/Comment/Comment'
-import { createComment, getCommentListWithUserInfo } from '@/api/Comment'
+import {
+  createComment,
+  getCommentListWithUserInfoWithDeleted,
+} from '@/api/Comment'
 import { uploadImages } from '@/api/Image'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import CommentMenu from '@/packages/post/components/CommentMenu/CommentMenu'
@@ -44,6 +47,7 @@ export default function detail() {
   const [content, setContent] = useState<string | null>(null)
   const [images, setImages] = useState<string[]>([])
   const [createAt, setCreateAt] = useState('')
+  const [updateAt, setUpdateAt] = useState('')
   const [views, setViews] = useState(0)
   const [commentsCnt, setCommentsCnt] = useState(0)
   const [likes, setLikes] = useState(0)
@@ -63,8 +67,8 @@ export default function detail() {
 
   const [comments, setComments] = useState<WithUserInfo<Comment>[]>([])
 
-  const [tabIndex, setTabIndex] = useState(0)
-  const tabList = [{ title: '正序' }, { title: '倒序' }]
+  const [tabIndex, setTabIndex] = useState<0 | 1 | 2>(0)
+  const tabList = [{ title: '正序' }, { title: '倒序' }, { title: '热门' }]
 
   const [selectedImages, setSelectedImages] = useState<string[]>([])
   const [keyboardHeight, setKeyboardHeight] = useState(0)
@@ -201,6 +205,7 @@ export default function detail() {
     setContent(data.content)
     setImages(data.images)
     setCreateAt(data.createAt)
+    setUpdateAt(data.updateAt)
     setViews(data.views)
     setCommentsCnt(data.comments)
     setLikes(data.likes)
@@ -255,11 +260,11 @@ export default function detail() {
   }
 
   const handleScrollToLower = async () => {
-    const data = await getCommentListWithUserInfo(
+    const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       ++index.current,
       10,
-      tabIndex === 1
+      tabIndex
     )
     setComments([...comments, ...data])
     setHasMore(data.length === 10)
@@ -267,11 +272,11 @@ export default function detail() {
 
   const getData = async () => {
     index.current = 1
-    const data = await getCommentListWithUserInfo(
+    const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       index.current,
       10,
-      tabIndex === 1
+      tabIndex
     )
     setComments(data || [])
     setIsLoaded(true)
@@ -283,16 +288,16 @@ export default function detail() {
     await getData()
   }
 
-  const handleClickTab = async (i: number) => {
+  const handleClickTab = async (i: 0 | 1 | 2) => {
     setTabIndex(i)
     setComments([])
     setIsEmpty(false)
     index.current = 1
-    const data = await getCommentListWithUserInfo(
+    const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       index.current,
       10,
-      i === 1
+      i
     )
     setComments(data || [])
     setHasMore(data.length === 10)
@@ -517,7 +522,11 @@ export default function detail() {
           <View className='post-detail__author at-row'>
             {authorName || '加载中...'}
           </View>
-          <View className='post-detail__create-at at-row'>{convertDate(createAt)}</View>
+          <View className='post-detail__create-at at-row'>
+            {`发布于${convertDate(createAt)} ${
+              commentsCnt > 0 ? '回复于' + convertDate(updateAt) : ''
+            }`}
+          </View>
         </View>
         <View className='at-col post-detail__delete'>
           {user.role <= 1 && (
@@ -558,10 +567,7 @@ export default function detail() {
           <AtIcon value='message' size='20' color={disabledColor} />
           <Text className='post-detail__actions__action__number'>{`评论 ${commentsCnt}`}</Text>
         </View>
-        <View
-          className='post-detail__actions__action'
-          onClick={handleLikePost}
-        >
+        <View className='post-detail__actions__action' onClick={handleLikePost}>
           <AtIcon
             value={liked ? 'heart-2' : 'heart'}
             size='20'
@@ -569,10 +575,7 @@ export default function detail() {
           />
           <Text className='post-detail__actions__action__number'>{`点赞 ${likes}`}</Text>
         </View>
-        <View
-          className='post-detail__actions__action'
-          onClick={handleStarPost}
-        >
+        <View className='post-detail__actions__action' onClick={handleStarPost}>
           <AtIcon
             value={stared ? 'star-2' : 'star'}
             size='20'
@@ -585,7 +588,7 @@ export default function detail() {
       <AtTabs
         current={tabIndex}
         tabList={tabList}
-        onClick={i => handleClickTab(i)}
+        onClick={i => handleClickTab(i as 0 | 1 | 2)}
         className='post-detail__tabs'
       />
       {!isLoaded && <View className='tip'>努力加载中...</View>}

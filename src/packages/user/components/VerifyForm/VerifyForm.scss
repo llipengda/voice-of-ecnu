@@ -78,7 +78,7 @@
       }
 
       .form-input {
-        font-size: 32px;
+        font-size: 28px;
         width: 100%;
         font-weight: 400;
         border: none;
@@ -88,9 +88,10 @@
         margin-top: 10px;
         color: #000;
         white-space: pre-wrap;
+        border-bottom: 2px solid $primary-color;
 
-        &:hover {
-          border-bottom: 2px solid $primary-color;
+        &__last {
+          width: 30%;
         }
       }
 

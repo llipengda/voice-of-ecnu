@@ -136,7 +136,7 @@ export default function Notice({ notice }: IProps) {
   }
 
   return (
-    <View className='notice'>
+    <View className={`notice ${notice.type === 0 ? 'notice__system' : ''}`}>
       {notice.type === 0 ? (
         <View>
           <View className='notice__header'>
@@ -149,11 +149,15 @@ export default function Notice({ notice }: IProps) {
             <View className='notice__header__info'>
               <View className='notice__header__info__name'>系统消息</View>
               <View className='notice__header__info__message'>
-                <Text className='notice__header__info__time'>{` ${convertDate(notice.sendAt)}`}</Text>
+                <Text className='notice__header__info__time'>{` ${convertDate(
+                  notice.sendAt
+                )}`}</Text>
               </View>
             </View>
           </View>
-          <View className='notice__content'>{notice.content}</View>
+          <View className='notice__content notice__content__system'>
+            {notice.content}
+          </View>
         </View>
       ) : (
         <View>
@@ -170,7 +174,9 @@ export default function Notice({ notice }: IProps) {
               </View>
               <View className='notice__header__info__message'>
                 {generateMessageByType(notice.type)}
-                <Text className='notice__header__info__time'>{` ${convertDate(notice.sendAt)}`}</Text>
+                <Text className='notice__header__info__time'>{` ${convertDate(
+                  notice.sendAt
+                )}`}</Text>
               </View>
             </View>
           </View>

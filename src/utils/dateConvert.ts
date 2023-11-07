@@ -10,19 +10,19 @@ export const convertDate = (dateString: string) => {
   const day = date.getDate().toFixed().padStart(2, '0')
 
   let interval = Math.floor(seconds / 31536000)
-  if (interval > 1) {
+  if (interval >= 1) {
     return `${year}-${month}-${day}`
   }
   interval = Math.floor(seconds / 86400)
-  if (interval > 1) {
+  if (interval >= 1) {
     return `${month}-${day}`
   }
   interval = Math.floor(seconds / 3600)
-  if (interval > 1) {
+  if (interval >= 1) {
     return interval + '小时前'
   }
   interval = Math.floor(seconds / 60)
-  if (interval > 1) {
+  if (interval >= 1) {
     return interval + '分钟前'
   }
   return '刚刚'
