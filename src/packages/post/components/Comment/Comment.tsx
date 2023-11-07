@@ -1,8 +1,8 @@
 import Taro from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Comment as TComment } from '@/types/comment'
-import { checkLike, like, unlike } from '@/api/Like'
+import { like, unlike } from '@/api/Like'
 import './Comment.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
@@ -40,15 +40,11 @@ export default function Comment({
   const avatar = comment.userAvatar
   const username = comment.userName
 
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(comment.isLike)
 
   const [likes, setLikes] = useState(comment.likes)
 
   const [likeDisabled, setLikeDisabled] = useState(false)
-
-  useEffect(() => {
-    checkLike(comment.id, 1).then(data => setLiked(data))
-  }, [])
 
   const handleLikeComment = async () => {
     if (likeDisabled) {

@@ -3,7 +3,7 @@ import { serverUrl } from '@/common/constants'
 import { Result } from '@/types/result'
 
 /**
- *
+ * @deprecated
  * @param type 0 帖子 1 评论 2 回复
  */
 export const checkLike = async (id: number, type: 0 | 1 | 2 = 0) => {

@@ -1,7 +1,7 @@
 import { View, Image, Text } from '@tarojs/components'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Reply as OTReply } from '@/types/reply'
-import { checkLike, like, unlike } from '@/api/Like'
+import { like, unlike } from '@/api/Like'
 import './Reply.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
@@ -28,13 +28,9 @@ interface IProps {
 }
 
 export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(reply.isLike)
   const [likes, setLikes] = useState(reply.likes)
   const [likeDisabled, setLikeDisabled] = useState(false)
-
-  useEffect(() => {
-    checkLike(reply.id, 2).then(data => setLiked(data))
-  }, [])
 
   const handleLikeReply = async () => {
     if (likeDisabled) {

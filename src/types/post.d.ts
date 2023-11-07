@@ -11,6 +11,8 @@ export type Post = {
   updateAt: string
   userId: string
   views: number
+  isLike: boolean
+  isStar: boolean
 }
 
 export type CreatePostParams = {
