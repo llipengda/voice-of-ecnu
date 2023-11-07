@@ -4,6 +4,9 @@ import { Result } from '@/types/result'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { Post } from '@/types/post'
 
+/**
+ * @deprecated
+ */
 export const checkStar = async (postId: number) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/star/check`,
