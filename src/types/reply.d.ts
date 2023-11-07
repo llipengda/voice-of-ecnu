@@ -11,6 +11,7 @@ export type Reply = {
   replyUserName?: string
   userId: string
   userName: string
+  isLike: boolean
 }
 
 export type CreateReplyParams = {

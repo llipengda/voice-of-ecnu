@@ -3,8 +3,8 @@ import { View, Image, Text } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Post as OTPost } from '@/types/post'
 import { AtIcon } from 'taro-ui'
-import { checkStar, starPost, unstarPost } from '@/api/Star'
-import { checkLike, like, unlike } from '@/api/Like'
+import { starPost, unstarPost } from '@/api/Star'
+import { like, unlike } from '@/api/Like'
 import { deletePost } from '@/api/Post'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
@@ -40,8 +40,8 @@ export default function Post({
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
 
-  const [liked, setLiked] = useState(false)
-  const [stared, setStared] = useState(false)
+  const [liked, setLiked] = useState(post.isLike)
+  const [stared, setStared] = useState(post.isStar)
 
   const [likes, setLikes] = useState(post.likes)
   const [stars, setStars] = useState(post.stars)
@@ -52,11 +52,6 @@ export default function Post({
   const dispatch = useAppDispatch()
 
   const showComponent = useAppSelector(state => state.review.showComponent)
-
-  useEffect(() => {
-    checkStar(post.id).then(data => setStared(data))
-    checkLike(post.id).then(data => setLiked(data))
-  }, [])
 
   useEffect(() => {
     if (isTPost(post)) {
