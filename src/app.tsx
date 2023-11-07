@@ -86,6 +86,22 @@ function MyApp({ children }: PropsWithChildren<any>) {
 }
 
 function App({ children }: PropsWithChildren<any>) {
+  Taro.showShareMenu({
+    withShareTicket: true,
+    // @ts-ignore
+    menus: ['shareAppMessage', 'shareTimeline'],
+    showShareItems: ['shareAppMessage', 'shareTimeline'],
+  })
+
+  const page = Taro.getCurrentInstance().page
+  if (page && !page.onShareAppMessage) {
+    page.onShareAppMessage = () => {
+      return {
+        title: '花狮喵',
+      }
+    }
+  }
+
   return (
     <Provider store={store}>
       <MyApp children={children} />

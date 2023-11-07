@@ -35,8 +35,8 @@ export default function detail() {
   const params = Taro.getCurrentInstance().router?.params
 
   const [postId] = useState(Number(params?.postId))
-  const [authorName] = useState(params?.authorName!)
-  const [authorAvatar] = useState(params?.authorAvatar!)
+  const [authorName, setAuthorName] = useState(params?.authorName!)
+  const [authorAvatar, setAuthorAvatar] = useState(params?.authorAvatar!)
   const [scrollTo] = useState(params?.scrollTo || null)
   const [sendCommentFocus, setSendCommentFocus] = useState(
     params?.sendCommentFocus === 'true' || false
@@ -192,9 +192,8 @@ export default function detail() {
         icon: 'success',
         duration: 1000,
       })
-      setTimeout(() => {
-        Taro.navigateBack()
-      }, 1000)
+      await sleep(1000)
+      Taro.navigateBack()
     }
   }
 
@@ -212,6 +211,8 @@ export default function detail() {
     setStars(data.stars)
     setLiked(data.isLike)
     setStared(data.isStar)
+    setAuthorName(data.userName)
+    setAuthorAvatar(data.userAvatar)
   })
 
   const handleLikePost = async () => {
