@@ -6,6 +6,7 @@ import './Reply.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
 import { WithUserInfo } from '@/types/withUserInfo'
+import { convertDate } from '@/utils/dateConvert'
 
 type TReply = WithUserInfo<OTReply>
 
@@ -70,7 +71,7 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
               </View>
               <View className='at-row'>
                 <Text className='reply__header__create-at'>
-                  {reply.createAt}
+                  {convertDate(reply.createAt)}
                 </Text>
               </View>
             </View>
