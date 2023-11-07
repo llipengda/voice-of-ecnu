@@ -105,3 +105,11 @@ export const deleteUser = async () => {
   })
   return data.data.data
 }
+
+export const checkName = async (name: string) => {
+  const data = await Taro.request<Result<boolean>>({ 
+    url: `${serverUrl}/user/checkName?name=${name}`,
+    method: 'GET',
+  })
+  return data.data.data
+}
