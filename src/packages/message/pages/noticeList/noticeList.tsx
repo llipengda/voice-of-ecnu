@@ -68,7 +68,10 @@ export default function list() {
           autoHeight
         >
           {notices.map(notice => (
-            <View className='notice-list-item' key={notice.id}>
+            <View
+              className={`${notice.type ? 'notice-list-item' : ''}`}
+              key={notice.id}
+            >
               <CNotice notice={notice} />
             </View>
           ))}
