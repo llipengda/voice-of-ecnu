@@ -24,6 +24,7 @@ import { WithUserInfo } from '@/types/withUserInfo'
 import { addUserInfo } from '@/utils/addUserInfo'
 import './detail.scss'
 import sleep from '@/utils/sleep'
+import { convertDate } from '@/utils/dateConvert'
 
 type Reply = WithUserInfo<OReply>
 
@@ -516,7 +517,7 @@ export default function detail() {
           <View className='post-detail__author at-row'>
             {authorName || '加载中...'}
           </View>
-          <View className='post-detail__create-at at-row'>{createAt}</View>
+          <View className='post-detail__create-at at-row'>{convertDate(createAt)}</View>
         </View>
         <View className='at-col post-detail__delete'>
           {user.role <= 1 && (

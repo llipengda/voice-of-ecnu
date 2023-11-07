@@ -13,6 +13,7 @@ import './Post.scss'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { getUserById } from '@/api/User'
 import { ErrorCode } from '@/types/commonErrorCode'
+import { convertDate } from '@/utils/dateConvert'
 
 type TPost = WithUserInfo<OTPost>
 
@@ -151,7 +152,7 @@ export default function Post({
             </Text>
           </View>
           <View className='at-row'>
-            <Text className='post__header__create-at'>{post.createAt}</Text>
+            <Text className='post__header__create-at'>{convertDate(post.createAt)}</Text>
           </View>
         </View>
         <View className='at-col post__header__delete'>

@@ -8,6 +8,7 @@ import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
 import ReplyBlock from '../ReplyBlock/ReplyBlock'
 import { WithUserInfo } from '@/types/withUserInfo'
+import { convertDate } from '@/utils/dateConvert'
 
 interface IProps {
   comment: WithUserInfo<TComment>
@@ -91,7 +92,7 @@ export default function Comment({
               </View>
               <View className='at-row'>
                 <Text className='comment__header__create-at'>
-                  {comment.createAt}
+                  {convertDate(comment.createAt)}
                 </Text>
               </View>
             </View>

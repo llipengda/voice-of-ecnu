@@ -13,6 +13,7 @@ import { getPostByIdWithUserInfo } from '@/api/Post'
 import { getCommentById } from '@/api/Comment'
 import { getReplyById } from '@/api/Reply'
 import { defaultAvatar } from '@/common/constants'
+import { convertDate } from '@/utils/dateConvert'
 
 type Notice = WithUserInfo<ONotice>
 type Post = WithUserInfo<OPost>
@@ -148,7 +149,7 @@ export default function Notice({ notice }: IProps) {
             <View className='notice__header__info'>
               <View className='notice__header__info__name'>系统消息</View>
               <View className='notice__header__info__message'>
-                <Text className='notice__header__info__time'>{` ${notice.sendAt}`}</Text>
+                <Text className='notice__header__info__time'>{` ${convertDate(notice.sendAt)}`}</Text>
               </View>
             </View>
           </View>
@@ -169,7 +170,7 @@ export default function Notice({ notice }: IProps) {
               </View>
               <View className='notice__header__info__message'>
                 {generateMessageByType(notice.type)}
-                <Text className='notice__header__info__time'>{` ${notice.sendAt}`}</Text>
+                <Text className='notice__header__info__time'>{` ${convertDate(notice.sendAt)}`}</Text>
               </View>
             </View>
           </View>
