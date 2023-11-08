@@ -6,17 +6,17 @@ import { deleteUser, getUserById, login } from '@/api/User'
 import { sendNotice } from '@/api/Notice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setUser } from '@/redux/slice/userSlice'
-import './settings.scss'
 import sleep from '@/utils/sleep'
+import './settings.scss'
 
-export default function settings() {
+export default function Settings() {
   const dispatch = useAppDispatch()
   const user = useAppSelector(state => state.user)
 
   const handleDeleteUser = async () => {
     const res = await Taro.showModal({
       title: '警告',
-      content: '确定要注销用户吗？如果您点击确定，我们将彻底删除您的用户信息。',
+      content: '确定要注销用户吗？如果您点击确定，我们将彻底删除您的用户信息。'
     })
     if (res.confirm) {
       await Taro.showLoading({ title: '正在注销用户...' })
@@ -30,7 +30,7 @@ export default function settings() {
       await Taro.showToast({
         title: '注销成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
       await sleep(1000)
       await Taro.navigateBack()

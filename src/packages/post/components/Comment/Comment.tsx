@@ -3,12 +3,12 @@ import { View, Image, Text } from '@tarojs/components'
 import { useState } from 'react'
 import { Comment as TComment } from '@/types/comment'
 import { like, unlike } from '@/api/Like'
-import './Comment.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
 import ReplyBlock from '../ReplyBlock/ReplyBlock'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { convertDate } from '@/utils/dateConvert'
+import './Comment.scss'
 
 interface IProps {
   comment: WithUserInfo<TComment>
@@ -35,7 +35,7 @@ export default function Comment({
   showBorder = true,
   showDetail = true,
   onshowReplyDetail,
-  onCustomClickBody,
+  onCustomClickBody
 }: IProps) {
   const avatar = comment.userAvatar
   const username = comment.userName
@@ -65,7 +65,7 @@ export default function Comment({
   const showImages = (url: string) => {
     Taro.previewImage({
       current: url,
-      urls: comment.images,
+      urls: comment.images
     })
   }
 
@@ -109,13 +109,7 @@ export default function Comment({
                   value='menu'
                   size={15}
                   color={disabledColor}
-                  onClick={() =>
-                    onShowMenu(
-                      comment,
-                      liked,
-                      handleLikeComment
-                    )
-                  }
+                  onClick={() => onShowMenu(comment, liked, handleLikeComment)}
                 />
               </View>
             )}

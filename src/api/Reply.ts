@@ -17,8 +17,8 @@ export const getReplyList = async (
       commentId,
       page,
       pageSize,
-      orderByDesc,
-    },
+      orderByDesc
+    }
   })
   return data.data.data
 }
@@ -27,7 +27,7 @@ export const createReply = async (params: CreateReplyParams) => {
   const data = await Taro.request<Result<Reply>>({
     url: `${serverUrl}/reply/createReply`,
     method: 'POST',
-    data: params,
+    data: params
   })
   return data.data.data
 }
@@ -35,7 +35,7 @@ export const createReply = async (params: CreateReplyParams) => {
 export const deleteReply = async (replyId: number) => {
   const data = await Taro.request<Result<Reply>>({
     url: `${serverUrl}/reply/deleteReply?replyId=${replyId}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -45,8 +45,8 @@ export const getReplyById = async (replyId: number) => {
     url: `${serverUrl}/reply/getById`,
     method: 'GET',
     data: {
-      replyId,
-    },
+      replyId
+    }
   })
   return data.data.data
 }

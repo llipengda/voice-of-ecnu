@@ -1,10 +1,10 @@
 import { View, Image, Text } from '@tarojs/components'
 import { Post as OPost } from '@/types/post'
 import { WithUserInfo } from '@/types/withUserInfo'
-import './SimplePost.scss'
 import Taro from '@tarojs/taro'
 import { ErrorCode } from '@/types/commonErrorCode'
 import { useAppSelector } from '@/redux/hooks'
+import './SimplePost.scss'
 
 type Post = WithUserInfo<OPost>
 
@@ -17,8 +17,10 @@ interface IProps {
 export default function SimplePost({
   post,
   bgColor = '#eee',
-  isLoaded,
+  isLoaded
 }: IProps) {
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   if (isLoaded && !post) {
     return (
       <View className='simple-post' style={{ backgroundColor: bgColor }}>
@@ -43,11 +45,9 @@ export default function SimplePost({
       userName: '',
       userAvatar: '',
       isLike: false,
-      isStar: false,
+      isStar: false
     }
   }
-
-  const showComponent = useAppSelector(state => state.review.showComponent)
 
   return (
     <View
@@ -58,7 +58,7 @@ export default function SimplePost({
         if (post && isLoaded) {
           if (!showComponent) {
             Taro.navigateTo({
-              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`,
+              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
             })
             return
           }
@@ -69,7 +69,7 @@ export default function SimplePost({
                   post.id
                 }&authorName=${post.userName}&authorAvatar=${
                   post.userAvatar
-                }&sendCommentFocus=${false}`,
+                }&sendCommentFocus=${false}`
           })
         }
       }}

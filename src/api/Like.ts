@@ -12,8 +12,8 @@ export const checkLike = async (id: number, type: 0 | 1 | 2 = 0) => {
     method: 'GET',
     data: {
       id,
-      type,
-    },
+      type
+    }
   })
   return data.data.data
 }
@@ -25,7 +25,7 @@ export const checkLike = async (id: number, type: 0 | 1 | 2 = 0) => {
 export const like = async (id: number, type: 0 | 1 | 2 = 0) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/like/like?id=${id}&type=${type}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -37,7 +37,7 @@ export const like = async (id: number, type: 0 | 1 | 2 = 0) => {
 export const unlike = async (id: number, type: 0 | 1 | 2 = 0) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/like/unlike?id=${id}&type=${type}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }

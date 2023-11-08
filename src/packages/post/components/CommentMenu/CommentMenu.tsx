@@ -1,12 +1,12 @@
 import { disabledColor } from '@/common/constants'
 import { View } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
-import '@/custom-theme.scss'
-import './CommentMenu.scss'
 import { useAppSelector } from '@/redux/hooks'
 import Taro from '@tarojs/taro'
 import { deleteComment } from '@/api/Comment'
 import { banUser } from '@/api/User'
+import '@/custom-theme.scss'
+import './CommentMenu.scss'
 
 interface IProps {
   commentId: number
@@ -25,14 +25,14 @@ export default function CommentMenu({
   onLikeComment,
   onRemoveComment,
   onClose,
-  onClickReply,
+  onClickReply
 }: IProps) {
   const user = useAppSelector(state => state.user)
 
   const handelBanUser = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定要封禁用户？',
+      content: '确定要封禁用户？'
     })
     if (res.confirm) {
       onClose()
@@ -40,7 +40,7 @@ export default function CommentMenu({
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
   }
@@ -48,7 +48,7 @@ export default function CommentMenu({
   const handleDeleteComment = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定将评论删除？',
+      content: '确定将评论删除？'
     })
     if (res.confirm) {
       onClose()
@@ -57,7 +57,7 @@ export default function CommentMenu({
       Taro.showToast({
         title: '删除成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
   }

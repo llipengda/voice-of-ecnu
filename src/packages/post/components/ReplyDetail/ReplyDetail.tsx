@@ -6,9 +6,9 @@ import { Reply as OReply } from '@/types/reply'
 import CComment from '../Comment/Comment'
 import CReply from '../Reply/Reply'
 import { getReplyList } from '@/api/Reply'
-import './ReplyDetail.scss'
 import { AtDivider } from 'taro-ui'
 import { WithUserInfo } from '@/types/withUserInfo'
+import './ReplyDetail.scss'
 
 type Reply = WithUserInfo<OReply>
 
@@ -39,7 +39,7 @@ export default function ReplyDetail({
   onClickReply,
   newReply,
   onShowMenu,
-  onRemoveReply,
+  onRemoveReply
 }: IProps) {
   const [replies, setReplies] = useState<Reply[]>([])
   const [hasMore, setHasMore] = useState(true)
@@ -117,7 +117,7 @@ export default function ReplyDetail({
           style={{
             height: '70vh',
             width: '100%',
-            overflowX: 'hidden',
+            overflowX: 'hidden'
           }}
           onPullDownRefresh={handlePullDownRefresh}
           onScrollToLower={handleScrollToLower}

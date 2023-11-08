@@ -8,14 +8,14 @@ const initialState: NoticeCnt = {
     total: 0,
     comment: 0,
     post: 0,
-    reply: 0,
+    reply: 0
   },
   like: {
     total: 0,
     comment: 0,
     post: 0,
-    reply: 0,
-  },
+    reply: 0
+  }
 }
 
 const noticeSlice = createSlice({
@@ -29,7 +29,7 @@ const noticeSlice = createSlice({
       return {
         ...state,
         total: state.total - state.system,
-        system: 0,
+        system: 0
       }
     },
     clearReplyNoticeCnt(state) {
@@ -40,8 +40,8 @@ const noticeSlice = createSlice({
           total: 0,
           comment: 0,
           post: 0,
-          reply: 0,
-        },
+          reply: 0
+        }
       }
     },
     clearLikeNoticeCnt(state) {
@@ -52,11 +52,11 @@ const noticeSlice = createSlice({
           total: 0,
           comment: 0,
           post: 0,
-          reply: 0,
-        },
+          reply: 0
+        }
       }
-    },
-  },
+    }
+  }
 })
 
 export default noticeSlice.reducer
@@ -64,5 +64,5 @@ export const {
   setNoticeCnt,
   clearSystemNoticeCnt,
   clearReplyNoticeCnt,
-  clearLikeNoticeCnt,
+  clearLikeNoticeCnt
 } = noticeSlice.actions

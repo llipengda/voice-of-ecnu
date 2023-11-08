@@ -9,11 +9,11 @@ import { deletePost } from '@/api/Post'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
 import { disabledColor } from '@/common/constants'
-import './Post.scss'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { getUserById } from '@/api/User'
 import { ErrorCode } from '@/types/commonErrorCode'
 import { convertDate } from '@/utils/dateConvert'
+import './Post.scss'
 
 type TPost = WithUserInfo<OTPost>
 
@@ -23,7 +23,7 @@ function isTPost(post: TPost | OTPost): post is TPost {
 
 export default function Post({
   post,
-  onShowMenu,
+  onShowMenu
 }: {
   post: TPost | OTPost
   onShowMenu: (
@@ -100,7 +100,7 @@ export default function Post({
   const handleDeletePost = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定将帖子删除？',
+      content: '确定将帖子删除？'
     })
     if (res.confirm) {
       await deletePost(post.id)
@@ -108,7 +108,7 @@ export default function Post({
       Taro.showToast({
         title: '删除成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
   }
@@ -116,17 +116,17 @@ export default function Post({
   const navigateToDetail = (focus: boolean = false) => {
     if (!showComponent) {
       Taro.navigateTo({
-        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`,
+        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
       })
       return
     }
     if (!post.deleteAt) {
       Taro.navigateTo({
-        url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`,
+        url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`
       })
     } else {
       Taro.navigateTo({
-        url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_FOUND}&showErrorCode=false`,
+        url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_FOUND}&showErrorCode=false`
       })
     }
   }

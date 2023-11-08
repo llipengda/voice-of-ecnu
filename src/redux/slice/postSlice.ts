@@ -9,7 +9,7 @@ const initialState: {
   selectedIndex: number
 } = {
   posts: [],
-  selectedIndex: 0,
+  selectedIndex: 0
 }
 
 const postSlice = createSlice({
@@ -19,7 +19,7 @@ const postSlice = createSlice({
     setPosts(state, action: PayloadAction<Post[]>) {
       return {
         ...state,
-        posts: action.payload,
+        posts: action.payload
       }
     },
     addPost(state, action: PayloadAction<Post>) {
@@ -28,22 +28,22 @@ const postSlice = createSlice({
       }
       return {
         ...state,
-        posts: [action.payload, ...state.posts],
+        posts: [action.payload, ...state.posts]
       }
     },
     removePost(state, action: PayloadAction<number>) {
       return {
         ...state,
-        posts: state.posts.filter(post => post.id !== action.payload),
+        posts: state.posts.filter(post => post.id !== action.payload)
       }
     },
     changeSelectedIndex(state, action: PayloadAction<number>) {
       return {
         ...state,
-        selectedIndex: action.payload,
+        selectedIndex: action.payload
       }
-    },
-  },
+    }
+  }
 })
 
 export default postSlice.reducer

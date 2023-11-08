@@ -17,7 +17,7 @@ const switchErrorCode = async (
     case ErrorCode.LOGIN_HAS_OVERDUE:
       console.error('errorCode is', errorCode)
       await Taro.showLoading({
-        title: '重新登陆中...',
+        title: '重新登陆中...'
       })
       const { code } = await Taro.login()
       const info = await login(code)
@@ -28,17 +28,17 @@ const switchErrorCode = async (
       await Taro.showToast({
         title: '登陆成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
       await sleep(1000)
       await Taro.showLoading({
-        title: '重新请求中...',
+        title: '重新请求中...'
       })
       const requestParams = chain.requestParams
       console.log(requestParams)
       requestParams.header = {
         ...requestParams.header,
-        session: info.token,
+        session: info.token
       }
       const data = await Taro.request(requestParams)
       Taro.hideLoading()
@@ -48,13 +48,13 @@ const switchErrorCode = async (
       await Taro.showModal({
         title: '提示',
         content: '您还未进行身份认证，是否前往认证？',
-        success: async res => {
-          if (res.confirm) {
+        success: async _res => {
+          if (_res.confirm) {
             await Taro.navigateTo({
-              url: '/packages/user/pages/verify/verify',
+              url: '/packages/user/pages/verify/verify'
             })
           }
-        },
+        }
       })
       return res
 
@@ -65,7 +65,7 @@ const switchErrorCode = async (
         content: `您已被封禁${
           bannedBefore ? '至 ' + bannedBefore : ''
         }，暂时不能执行此操作。`,
-        showCancel: false,
+        showCancel: false
       })
       return res
 
@@ -81,7 +81,7 @@ const showError = async (
     case ErrorCode.POST_NOT_EXIST:
     case ErrorCode.POST_NOT_FOUND:
       await Taro.navigateTo({
-        url: `/pages/error/error?errorCode=${res.data.commonErrorCode?.errorCode}`,
+        url: `/pages/error/error?errorCode=${res.data.commonErrorCode?.errorCode}`
       })
       break
     case ErrorCode.USER_NOT_VERIFIED:
@@ -90,7 +90,7 @@ const showError = async (
       await Taro.showToast({
         title: res.data.msg,
         icon: 'error',
-        duration: 1000,
+        duration: 1000
       })
       await sleep(1000)
       break
@@ -103,7 +103,7 @@ const interceptor: Taro.interceptor = chain => {
   if (token) {
     requestParams.header = {
       ...requestParams.header,
-      session: token,
+      session: token
     }
   }
   return chain
@@ -119,7 +119,7 @@ const interceptor: Taro.interceptor = chain => {
           res
         )
         await Taro.navigateTo({
-          url: `/pages/error/error?errorCode=${res.statusCode}`,
+          url: `/pages/error/error?errorCode=${res.statusCode}`
         })
       } else if (res.data.code !== 0) {
         console.error(

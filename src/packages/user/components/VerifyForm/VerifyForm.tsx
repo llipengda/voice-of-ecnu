@@ -5,12 +5,12 @@ import verifyFailed from '@/packages/user/assets/verify_failed.drawio.svg'
 import { AtButton } from 'taro-ui'
 import { useState } from 'react'
 import * as USERAPI from '@/api/User'
-import './VerifyForm.scss'
-import '@/custom-theme.scss'
 import { setUser } from '@/redux/slice/userSlice'
 import Taro, { useLoad } from '@tarojs/taro'
 import showPrivacyPolicy from '@/utils/privacy'
 import { setLoginInfo } from '@/redux/slice/loginSlice'
+import '@/custom-theme.scss'
+import './VerifyForm.scss'
 
 export default function VerifyForm() {
   const user = useAppSelector(state => state.user)
@@ -39,14 +39,14 @@ export default function VerifyForm() {
   const [canSendCode, setCanSendCode] = useState(false)
   const [sendCodeLoading, setSendCodeLoading] = useState(false)
 
-  const checkEmail = (email: string) => {
+  const checkEmail = (_email: string) => {
     const regex =
       /^[A-Za-z0-9\u4e00-\u9fa5\.]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+\.ecnu\.edu\.cn$/i
-    if (regex.test(email)) {
+    if (regex.test(_email)) {
       setEmailErr('')
       setCanSendCode(true)
       return true
-    } else if (!email) {
+    } else if (!_email) {
       setEmailErr('请输入邮箱')
     } else {
       setEmailErr('邮箱地址不满足要求')
@@ -55,16 +55,16 @@ export default function VerifyForm() {
     return false
   }
 
-  const checkCode = async (code: string) => {
-    if (!code) {
+  const checkCode = async (_code: string) => {
+    if (!_code) {
       setCodeErr('请输入验证码')
       return false
     }
-    if (code.length !== 6) {
+    if (_code.length !== 6) {
       setCodeErr('验证码错误')
       return false
     }
-    const ok = await USERAPI.verifyCode(email, code)
+    const ok = await USERAPI.verifyCode(email, _code)
     if (ok) {
       setCodeErr('')
       setSubmitButtonDisabled(false)
@@ -116,7 +116,7 @@ export default function VerifyForm() {
     Taro.showToast({
       title: '认证成功',
       icon: 'success',
-      duration: 1000,
+      duration: 1000
     })
     setTimeout(() => {
       Taro.navigateBack()

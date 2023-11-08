@@ -9,7 +9,7 @@ import '@/custom-theme.scss'
 import './UserCard.scss'
 
 export default function UserCard({
-  userStatistics,
+  userStatistics
 }: {
   userStatistics: UserStatistics
 }) {
@@ -88,7 +88,7 @@ export default function UserCard({
           className='at-col grid-text'
           onClick={() => {
             Taro.navigateTo({
-              url: '/packages/post/pages/my/my?type=post',
+              url: '/packages/post/pages/my/my?type=post'
             })
           }}
         >
@@ -99,7 +99,7 @@ export default function UserCard({
           className='at-col grid-text'
           onClick={() => {
             Taro.navigateTo({
-              url: '/packages/post/pages/my/my?type=star',
+              url: '/packages/post/pages/my/my?type=star'
             })
           }}
         >

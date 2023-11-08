@@ -7,7 +7,7 @@ const initialState: User = {
   name: '未登录',
   avatar: '',
   createTime: '',
-  gender: 0,
+  gender: 0
 }
 
 const userSlice = createSlice({
@@ -19,8 +19,8 @@ const userSlice = createSlice({
     },
     clearUser() {
       return initialState
-    },
-  },
+    }
+  }
 })
 
 export default userSlice.reducer

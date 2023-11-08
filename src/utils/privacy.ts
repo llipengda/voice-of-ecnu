@@ -21,7 +21,7 @@ const showPrivacyPolicy = (user: User) => {
       } else {
         Taro.navigateBack()
       }
-    },
+    }
   })
 }
 

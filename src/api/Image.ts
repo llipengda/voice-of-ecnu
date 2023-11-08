@@ -8,7 +8,7 @@ export const uploadImage = async (filePath: string) => {
       return
     }
     await Taro.showLoading({
-      title: '上传中...',
+      title: '上传中...'
     })
     console.log('尝试上传图片', filePath)
     const data = await Taro.uploadFile({
@@ -18,9 +18,9 @@ export const uploadImage = async (filePath: string) => {
       header: {
         'content-type': 'multipart/form-data',
         header: {
-          session: (await Taro.getStorage<string>({ key: 'token' })).data,
-        },
-      },
+          session: (await Taro.getStorage<string>({ key: 'token' })).data
+        }
+      }
     })
     const newData: Result<string> = JSON.parse(data.data)
     if (newData.code !== 0) {
@@ -34,7 +34,7 @@ export const uploadImage = async (filePath: string) => {
     await Taro.showToast({
       title: err.message,
       icon: 'error',
-      duration: 1000,
+      duration: 1000
     })
   }
 }
@@ -45,7 +45,7 @@ export const uploadImages = async (files: string[]) => {
       return
     }
     await Taro.showLoading({
-      title: '上传图片中...',
+      title: '上传图片中...'
     })
     console.log('尝试上传多张图片', files)
     const res: string[] = []
@@ -57,9 +57,9 @@ export const uploadImages = async (files: string[]) => {
         header: {
           'content-type': 'multipart/form-data',
           header: {
-            session: (await Taro.getStorage<string>({ key: 'token' })).data,
-          },
-        },
+            session: (await Taro.getStorage<string>({ key: 'token' })).data
+          }
+        }
       })
     })
     const datas = await Promise.all(tasks)
@@ -79,7 +79,7 @@ export const uploadImages = async (files: string[]) => {
     await Taro.showToast({
       title: err.message,
       icon: 'error',
-      duration: 1000,
+      duration: 1000
     })
   }
 }

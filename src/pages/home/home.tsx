@@ -3,20 +3,20 @@ import { View } from '@tarojs/components'
 import { useRef, useState } from 'react'
 import { AtFab, AtSearchBar } from 'taro-ui'
 import CPost from '@/packages/post/components/Post/Post'
-import ListView from 'taro-listview'
+import { ListView } from 'taro-listview'
 import { getPostListWithUserInfo } from '@/api/Post'
 import { Post as OPost } from '@/types/post'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import {
   setPosts as RSetPosts,
-  changeSelectedIndex,
+  changeSelectedIndex
 } from '@/redux/slice/postSlice'
-import './home.scss'
 import CustomNavBar from '@/components/CustomNavBar/CustomNavBar'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import PostMenu from '@/components/PostMenu/PostMenu'
 import { WithUserInfo } from '@/types/withUserInfo'
+import './home.scss'
 
 type Post = WithUserInfo<OPost>
 
@@ -32,7 +32,7 @@ export default function Home() {
   const loginInfo = useAppSelector(state => state.login)
 
   const dispatch = useAppDispatch()
-  const setPosts = (posts: Post[]) => dispatch(RSetPosts(posts))
+  const setPosts = (_posts: Post[]) => dispatch(RSetPosts(_posts))
   const setSelected = (index: number) => dispatch(changeSelectedIndex(index))
 
   const [showMenu, setShowMenu] = useState(false)
@@ -44,14 +44,14 @@ export default function Home() {
     onLikePost: () => {},
     onStarPost: () => {},
     onRemovePost: () => {},
-    onNavigateToPost: (_: boolean) => {},
+    onNavigateToPost: (_: boolean) => {}
   })
 
   const showCompent = useAppSelector(state => state.review.showComponent)
 
   const handleSearchClick = () => {
     Taro.navigateTo({
-      url: `/packages/post/pages/search/search?key=${searchText}`,
+      url: `/packages/post/pages/search/search?key=${searchText}`
     })
   }
 
@@ -111,7 +111,7 @@ export default function Home() {
       onLikePost,
       onStarPost,
       onRemovePost,
-      onNavigateToPost,
+      onNavigateToPost
     })
   }
 
@@ -143,7 +143,7 @@ export default function Home() {
         customStyle={{
           background: backgroundColor,
           color: '#fff',
-          border: 'none',
+          border: 'none'
         }}
       />
       {!isLoaded && <View className='tip'>努力加载中...</View>}
@@ -170,7 +170,7 @@ export default function Home() {
           <AtFab
             onClick={() => {
               Taro.navigateTo({
-                url: '/packages/post/pages/add/add',
+                url: '/packages/post/pages/add/add'
               })
             }}
           >

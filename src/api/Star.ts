@@ -12,8 +12,8 @@ export const checkStar = async (postId: number) => {
     url: `${serverUrl}/star/check`,
     method: 'GET',
     data: {
-      postId,
-    },
+      postId
+    }
   })
   return data.data.data
 }
@@ -21,7 +21,7 @@ export const checkStar = async (postId: number) => {
 export const starPost = async (postId: number) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/star/starPost?postId=${postId}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -29,7 +29,7 @@ export const starPost = async (postId: number) => {
 export const unstarPost = async (postId: number) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/star/unstarPost?postId=${postId}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -37,7 +37,7 @@ export const unstarPost = async (postId: number) => {
 export const getStarList = async () => {
   const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
     url: `${serverUrl}/star/getStarListByUserId`,
-    method: 'GET',
+    method: 'GET'
   })
   return data.data.data
 }
@@ -48,8 +48,8 @@ export const getStarListPage = async (page: number, pageSize: number) => {
     method: 'GET',
     data: {
       page,
-      pageSize,
-    },
+      pageSize
+    }
   })
   return data.data.data
 }

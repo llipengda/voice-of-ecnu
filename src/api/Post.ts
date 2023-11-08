@@ -15,8 +15,8 @@ export const getPostList = async (
     data: {
       page,
       pageSize,
-      orderByPopularity,
-    },
+      orderByPopularity
+    }
   })
   return data.data.data
 }
@@ -25,7 +25,7 @@ export const createPost = async (post: CreatePostParams) => {
   const data = await Taro.request<Result<Post>>({
     url: `${serverUrl}/post/createPost`,
     method: 'POST',
-    data: post,
+    data: post
   })
   return data.data.data
 }
@@ -43,8 +43,8 @@ export const searchByPostOrCommentOrReply = async (
       postOrCommentOrReply,
       page,
       pageSize,
-      orderByPopularity,
-    },
+      orderByPopularity
+    }
   })
   return data.data.data
 }
@@ -52,7 +52,7 @@ export const searchByPostOrCommentOrReply = async (
 export const deletePost = async (postId: number) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/post/deletePost?postId=${postId}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -61,7 +61,7 @@ export const getPostById = async (postId: number) => {
   const data = await Taro.request<Result<Post>>({
     url: `${serverUrl}/post/getPostById`,
     method: 'GET',
-    data: { postId },
+    data: { postId }
   })
   return data.data.data
 }
@@ -77,8 +77,8 @@ export const getPostListWithUserInfo = async (
     data: {
       page,
       pageSize,
-      orderByPopularity,
-    },
+      orderByPopularity
+    }
   })
   return data.data.data
 }
@@ -96,8 +96,8 @@ export const searchByPostOrCommentOrReplyWithUserInfo = async (
       postOrCommentOrReply,
       page,
       pageSize,
-      orderByPopularity,
-    },
+      orderByPopularity
+    }
   })
   return data.data.data
 }
@@ -106,7 +106,7 @@ export const getPostByIdWithUserInfo = async (postId: number) => {
   const data = await Taro.request<Result<WithUserInfo<Post>>>({
     url: `${serverUrl}/post/get`,
     method: 'GET',
-    data: { postId },
+    data: { postId }
   })
   return data.data.data
 }
@@ -119,7 +119,7 @@ export const getPostByUserId = async (
   const data = await Taro.request<Result<Post[]>>({
     url: `${serverUrl}/post/getPostByUserId`,
     method: 'GET',
-    data: { page, pageSize, userId },
+    data: { page, pageSize, userId }
   })
   return data.data.data
 }

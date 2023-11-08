@@ -13,7 +13,7 @@ import { addUserInfo } from '@/utils/addUserInfo'
 import { getStarListPage } from '@/api/Star'
 import './my.scss'
 
-export default function my() {
+export default function My() {
   const params = Taro.getCurrentInstance().router?.params
   const [type] = useState<'post' | 'star'>(
     (params?.type as 'post' | 'star') || 'post'
@@ -27,7 +27,7 @@ export default function my() {
       Taro.setNavigationBarTitle({ title: '我的收藏' })
     } else {
       Taro.setNavigationBarTitle({
-        title: `我的${showComponent ? '帖子' : ''}`,
+        title: `我的${showComponent ? '帖子' : ''}`
       })
     }
   }, [type])
@@ -49,7 +49,7 @@ export default function my() {
     onLikePost: () => {},
     onStarPost: () => {},
     onRemovePost: () => {},
-    onNavigateToPost: (_: boolean) => {},
+    onNavigateToPost: (_: boolean) => {}
   })
 
   const handleScrollToLower = async () => {
@@ -100,7 +100,7 @@ export default function my() {
       onLikePost,
       onStarPost,
       onRemovePost,
-      onNavigateToPost,
+      onNavigateToPost
     })
   }
 
