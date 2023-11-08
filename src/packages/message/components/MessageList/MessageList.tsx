@@ -6,6 +6,7 @@ import Taro from '@tarojs/taro'
 
 export default function MessageList() {
   const noticeCnt = useAppSelector(state => state.notice)
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   const navigateTo = (type: 0 | 1 | 2) => {
     Taro.navigateTo({
@@ -29,13 +30,15 @@ export default function MessageList() {
         number={noticeCnt.like.total}
         onClick={() => navigateTo(1)}
       />
-      <MessageListItem
-        icon='message'
-        title='回复'
-        describe='你收到了新的回复'
-        number={noticeCnt.reply.total}
-        onClick={() => navigateTo(2)}
-      />
+      {showComponent && (
+        <MessageListItem
+          icon='message'
+          title='回复'
+          describe='你收到了新的回复'
+          number={noticeCnt.reply.total}
+          onClick={() => navigateTo(2)}
+        />
+      )}
     </View>
   )
 }

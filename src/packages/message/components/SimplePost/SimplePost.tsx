@@ -42,6 +42,8 @@ export default function SimplePost({
       views: -1,
       userName: '',
       userAvatar: '',
+      isLike: false,
+      isStar: false,
     }
   }
 

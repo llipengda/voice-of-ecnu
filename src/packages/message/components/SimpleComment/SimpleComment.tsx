@@ -50,6 +50,7 @@ export default function SimpleComment({
       userId: '',
       userName: '',
       userAvatar: '',
+      isLike: false
     }
   }
 

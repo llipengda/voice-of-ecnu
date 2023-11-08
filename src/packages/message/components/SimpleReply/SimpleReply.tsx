@@ -50,6 +50,7 @@ export default function SimpleReply({
       content: '',
       createAt: '',
       likes: -1,
+      isLike: false,
     }
   }
 

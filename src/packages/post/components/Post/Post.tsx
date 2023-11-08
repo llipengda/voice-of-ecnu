@@ -149,7 +149,9 @@ export default function Post({
           <View className='at-row'>
             <Text className='post__header__create-at'>
               {`发布于${convertDate(post.createAt)} ${
-                post.comments > 0 ? '回复于' + convertDate(post.updateAt) : ''
+                showComponent && post.comments > 0
+                  ? '回复于' + convertDate(post.updateAt)
+                  : ''
               }`}
             </Text>
           </View>
@@ -202,10 +204,12 @@ export default function Post({
           <AtIcon value='eye' size='20' color={disabledColor} />
           <Text className='post__footer__number'>{post.views}</Text>
         </View>
-        <View className='at-col-3' onClick={() => navigateToDetail(true)}>
-          <AtIcon value='message' size='20' color={disabledColor} />
-          <Text className='post__footer__number'>{post.comments}</Text>
-        </View>
+        {showComponent && (
+          <View className='at-col-3' onClick={() => navigateToDetail(true)}>
+            <AtIcon value='message' size='20' color={disabledColor} />
+            <Text className='post__footer__number'>{post.comments}</Text>
+          </View>
+        )}
         <View className='at-col-3' onClick={handleLikePost}>
           <AtIcon
             value={liked ? 'heart-2' : 'heart'}
