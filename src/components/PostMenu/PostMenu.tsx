@@ -31,6 +31,7 @@ export default function CommentMenu({
   onNavigateToPost,
 }: IProps) {
   const user = useAppSelector(state => state.user)
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   const handelBanUser = async () => {
     const res = await Taro.showModal({
@@ -85,10 +86,12 @@ export default function CommentMenu({
           {staredPost && '取消'}收藏
         </View>
       </View>
-      <View className='post-menu__item' onClick={handleClickComment}>
-        <AtIcon value='message' size='35' color={disabledColor} />
-        <View className='post-menu__item__text'>评论</View>
-      </View>
+      {showComponent && (
+        <View className='post-menu__item' onClick={handleClickComment}>
+          <AtIcon value='message' size='35' color={disabledColor} />
+          <View className='post-menu__item__text'>评论</View>
+        </View>
+      )}
       {(user.id === postUserId || user.role <= 1) && (
         <View
           className='post-menu__item'

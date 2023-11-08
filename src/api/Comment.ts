@@ -4,6 +4,9 @@ import { Result } from '@/types/result'
 import { Comment, CreateCommentParams } from '@/types/comment'
 import { WithUserInfo } from '@/types/withUserInfo'
 
+/**
+ * @deprecated
+ */
 export const getCommentList = async (
   postId: number,
   page: number,
@@ -40,6 +43,9 @@ export const createComment = async (params: CreateCommentParams) => {
   return data.data.data
 }
 
+/**
+ * @deprecated
+ */
 export const getCommentListWithUserInfo = async (
   postId: number,
   page: number,
@@ -78,7 +84,9 @@ export const getCommentListWithUserInfoWithDeleted = async (
       order,
     },
   })
-  return data.data.data
+  return data.data.data.filter(
+    p => p.deleteAt === null || p.deleteAt === undefined
+  )
 }
 
 export const getCommentById = async (commentId: number) => {
