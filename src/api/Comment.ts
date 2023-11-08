@@ -20,8 +20,8 @@ export const getCommentList = async (
       postId,
       page,
       pageSize,
-      orderByDesc,
-    },
+      orderByDesc
+    }
   })
   return data.data.data
 }
@@ -29,7 +29,7 @@ export const getCommentList = async (
 export const deleteComment = async (commentId: number) => {
   const data = await Taro.request<Result<string>>({
     url: `${serverUrl}/comment/deleteComment?commentId=${commentId}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -38,7 +38,7 @@ export const createComment = async (params: CreateCommentParams) => {
   const data = await Taro.request<Result<Comment>>({
     url: `${serverUrl}/comment/createComment`,
     method: 'POST',
-    data: params,
+    data: params
   })
   return data.data.data
 }
@@ -59,8 +59,8 @@ export const getCommentListWithUserInfo = async (
       postId,
       page,
       pageSize,
-      orderByDesc,
-    },
+      orderByDesc
+    }
   })
   return data.data.data
 }
@@ -81,8 +81,8 @@ export const getCommentListWithUserInfoWithDeleted = async (
       postId,
       page,
       pageSize,
-      order,
-    },
+      order
+    }
   })
   return data.data.data.filter(
     p => p.deleteAt === null || p.deleteAt === undefined
@@ -94,8 +94,8 @@ export const getCommentById = async (commentId: number) => {
     url: `${serverUrl}/comment/getById`,
     method: 'GET',
     data: {
-      commentId,
-    },
+      commentId
+    }
   })
   return data.data.data
 }

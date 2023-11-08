@@ -28,7 +28,7 @@ export default function CommentMenu({
   onStarPost,
   onRemovePost,
   onClose,
-  onNavigateToPost,
+  onNavigateToPost
 }: IProps) {
   const user = useAppSelector(state => state.user)
   const showComponent = useAppSelector(state => state.review.showComponent)
@@ -36,7 +36,7 @@ export default function CommentMenu({
   const handelBanUser = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定要封禁用户？',
+      content: '确定要封禁用户？'
     })
     if (res.confirm) {
       onClose()
@@ -44,7 +44,7 @@ export default function CommentMenu({
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
   }

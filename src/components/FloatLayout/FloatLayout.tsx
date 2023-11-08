@@ -14,7 +14,7 @@ export default function FloatLayout({
   onClose,
   title,
   children,
-  zIndex = 8000,
+  zIndex = 8000
 }: IProps) {
   return (
     <View
@@ -22,7 +22,7 @@ export default function FloatLayout({
       catchMove
       onTouchMove={e => e.stopPropagation()}
       style={{
-        zIndex: zIndex,
+        zIndex: zIndex
       }}
     >
       <View className='float-layout__overlay' onClick={onClose} />

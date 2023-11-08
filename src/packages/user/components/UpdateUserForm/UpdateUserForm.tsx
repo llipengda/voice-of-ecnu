@@ -10,14 +10,14 @@ import {
   genderRange,
   gradeRange,
   majorRange,
-  primaryColor,
+  primaryColor
 } from '@/common/constants'
-import '@/custom-theme.scss'
-import './UpdateUserForm.scss'
 import { setUser } from '@/redux/slice/userSlice'
 import showPrivacyPolicy from '@/utils/privacy'
 import sleep from '@/utils/sleep'
 import { User } from '@/types/user'
+import '@/custom-theme.scss'
+import './UpdateUserForm.scss'
 
 export default function UpdateUserForm() {
   const user = useAppSelector(state => state.user)
@@ -45,9 +45,9 @@ export default function UpdateUserForm() {
             const newPath = await uploadImage(res.tempFilePath)
             setUserState({ ...userState, avatar: newPath as string })
             await updateUser({ avatar: newPath })
-          },
+          }
         })
-      },
+      }
     })
   }
 
@@ -76,7 +76,7 @@ export default function UpdateUserForm() {
       await Taro.showToast({
         title: '昵称已被使用',
         icon: 'error',
-        duration: 1000,
+        duration: 1000
       })
       setSubmitButtonLoading(false)
       return
@@ -90,7 +90,7 @@ export default function UpdateUserForm() {
     await Taro.showToast({
       title: '提交成功',
       icon: 'success',
-      duration: 1000,
+      duration: 1000
     })
     await sleep(1000)
     Taro.navigateBack()
@@ -108,7 +108,7 @@ export default function UpdateUserForm() {
   const handleShowAvatar = () => {
     Taro.previewImage({
       urls: [userState.avatar!],
-      current: userState.avatar,
+      current: userState.avatar
     })
   }
 
@@ -177,7 +177,7 @@ export default function UpdateUserForm() {
             onChange={e =>
               setUserState({
                 ...userState,
-                gender: e.detail.value as 0 | 1 | 2 | 3,
+                gender: e.detail.value as 0 | 1 | 2 | 3
               })
             }
           >
@@ -213,7 +213,7 @@ export default function UpdateUserForm() {
                   ...userState,
                   major: `${Object.keys(majorRange)[e.detail.value[0]]}-${
                     detailMajorRange[e.detail.value[1]]
-                  }`,
+                  }`
                 })
               }
               setSelectedMajor(e.detail.value)

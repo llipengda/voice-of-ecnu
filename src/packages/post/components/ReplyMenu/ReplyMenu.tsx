@@ -17,7 +17,11 @@ interface IProps {
   onLikeReply: () => void
   onRemoveReply: (replyId: number) => void
   onClose: () => void
-  onClickReply: (replyId: number, replyUserName: string, replyContent: string) => void
+  onClickReply: (
+    replyId: number,
+    replyUserName: string,
+    replyContent: string
+  ) => void
 }
 
 export default function CommentMenu({
@@ -36,7 +40,7 @@ export default function CommentMenu({
   const handelBanUser = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定要封禁用户？',
+      content: '确定要封禁用户？'
     })
     if (res.confirm) {
       onClose()
@@ -44,7 +48,7 @@ export default function CommentMenu({
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
   }
@@ -52,7 +56,7 @@ export default function CommentMenu({
   const handleDeleteReply = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定将回复删除？',
+      content: '确定将回复删除？'
     })
     if (res.confirm) {
       onClose()
@@ -61,7 +65,7 @@ export default function CommentMenu({
       Taro.showToast({
         title: '删除成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
   }
@@ -90,7 +94,12 @@ export default function CommentMenu({
         </View>
       </View>
       <View className='reply-menu__item'>
-        <AtIcon value='message' size='35' color={disabledColor} onClick={handleClickReply}/>
+        <AtIcon
+          value='message'
+          size='35'
+          color={disabledColor}
+          onClick={handleClickReply}
+        />
         <View className='reply-menu__item__text'>回复</View>
       </View>
       {(user.id === replyUserId || user.role <= 1) && (

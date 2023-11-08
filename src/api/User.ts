@@ -7,7 +7,7 @@ import { sendNotice } from './Notice'
 export const login = async (code: string) => {
   const data = await Taro.request<Result<LoginInfo>>({
     url: `${serverUrl}/user/login?code=${code}`,
-    method: 'POST',
+    method: 'POST'
   })
   await Taro.setStorage({ key: 'token', data: data.data.data.token })
   await Taro.setStorage({ key: 'userId', data: data.data.data.userId })
@@ -17,7 +17,7 @@ export const login = async (code: string) => {
 export const checkLogin = async () => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/user/check`,
-    method: 'GET',
+    method: 'GET'
   })
   return data.data.data
 }
@@ -25,7 +25,7 @@ export const checkLogin = async () => {
 export const getUserById = async (id: string) => {
   const data = await Taro.request<Result<User>>({
     url: `${serverUrl}/user/getUserById?userId=${id}`,
-    method: 'GET',
+    method: 'GET'
   })
   return data.data.data
 }
@@ -33,7 +33,7 @@ export const getUserById = async (id: string) => {
 export const getUserList = async (page: number, pageSize: number) => {
   const data = await Taro.request<Result<User[]>>({
     url: `${serverUrl}/user/getUserList?page=${page}&pageSize=${pageSize}`,
-    method: 'GET',
+    method: 'GET'
   })
   return data.data.data
 }
@@ -42,7 +42,7 @@ export const updateUser = async (user: UpdateUserParams) => {
   const data = await Taro.request<Result<User>>({
     url: `${serverUrl}/user/updateUser`,
     method: 'POST',
-    data: user,
+    data: user
   })
   return data.data.data
 }
@@ -50,7 +50,7 @@ export const updateUser = async (user: UpdateUserParams) => {
 export const sendCode = async (email: string) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/user/sendCode?email=${email}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -58,7 +58,7 @@ export const sendCode = async (email: string) => {
 export const verifyCode = async (email: string, code: string) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/user/verifyCode?email=${email}&code=${code}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -66,7 +66,7 @@ export const verifyCode = async (email: string, code: string) => {
 export const verifyUser = async (userId: string) => {
   const data = await Taro.request<Result<User>>({
     url: `${serverUrl}/user/verifyUser?userId=${userId}`,
-    method: 'POST',
+    method: 'POST'
   })
   await sendNotice('您已成功完成认证', userId)
   return data.data.data
@@ -75,7 +75,7 @@ export const verifyUser = async (userId: string) => {
 export const confirmPrivacyPolicy = async (userId: string) => {
   const data = await Taro.request<Result<User>>({
     url: `${serverUrl}/user/confirmPrivacyPolicy?userId=${userId}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
@@ -84,7 +84,7 @@ export const banUser = async (days: number, userId: string) => {
   const bannedBefore = new Date(Date.now() + 86400000 * days)
   const data = await Taro.request<Result<User>>({
     url: `${serverUrl}/user/banUser?bannedBefore=${bannedBefore.toDateString()}&userId=${userId}`,
-    method: 'POST',
+    method: 'POST'
   })
   await sendNotice(`您被被管理员封禁${days}天`, userId)
   return data.data.data
@@ -93,7 +93,7 @@ export const banUser = async (days: number, userId: string) => {
 export const getUserStatistics = async () => {
   const data = await Taro.request<Result<UserStatistics>>({
     url: `${serverUrl}/user/getInfos`,
-    method: 'GET',
+    method: 'GET'
   })
   return data.data.data
 }
@@ -101,15 +101,15 @@ export const getUserStatistics = async () => {
 export const deleteUser = async () => {
   const data = await Taro.request<Result<string>>({
     url: `${serverUrl}/user/delete`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }
 
 export const checkName = async (name: string) => {
-  const data = await Taro.request<Result<boolean>>({ 
+  const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/user/checkName?name=${name}`,
-    method: 'GET',
+    method: 'GET'
   })
   return data.data.data
 }

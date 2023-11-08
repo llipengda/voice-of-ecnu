@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro'
 import { useRef, useState } from 'react'
 import { Notice as ONotice } from '@/types/notice'
 import { WithUserInfo } from '@/types/withUserInfo'
-import ListView from 'taro-listview'
+import { ListView } from 'taro-listview'
 import { getNoticeListWithUserInfo } from '@/api/Notice'
 import CNotice from '@/packages/message/components/Notice/Notice'
 import './noticeList.scss'
@@ -11,7 +11,7 @@ import './noticeList.scss'
 type NoticeType = 0 | 1 | 2
 type Notice = WithUserInfo<ONotice>
 
-export default function list() {
+export default function NoticeList() {
   const params = Taro.getCurrentInstance().router?.params
 
   const [noticeType] = useState<NoticeType>(
@@ -60,7 +60,7 @@ export default function list() {
           style={{
             width: '100%',
             overflowX: 'hidden',
-            marginBottom: '55px',
+            marginBottom: '55px'
           }}
           onPullDownRefresh={handlePullDownRefresh}
           onScrollToLower={handleScrollToLower}

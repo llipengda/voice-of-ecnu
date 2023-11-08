@@ -3,13 +3,13 @@ import { Input, View } from '@tarojs/components'
 import { useState } from 'react'
 import { AtButton, AtImagePicker, AtTextarea } from 'taro-ui'
 import { uploadImages } from '@/api/Image'
-import '@/custom-theme.scss'
-import './add.scss'
 import { createPost } from '@/api/Post'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { addPost } from '@/redux/slice/postSlice'
 import sleep from '@/utils/sleep'
 import { addUserInfo } from '@/utils/addUserInfo'
+import '@/custom-theme.scss'
+import './add.scss'
 
 interface FileItem {
   path: string
@@ -21,7 +21,7 @@ interface File {
   file?: FileItem
 }
 
-export default function add() {
+export default function Add() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [images, setImages] = useState<File[]>([])
@@ -42,14 +42,14 @@ export default function add() {
       Taro.showToast({
         title: '标题不能为空',
         icon: 'error',
-        duration: 1000,
+        duration: 1000
       })
     } else {
       const imgs = await uploadImages(images.map(image => image.url))
       const data = await createPost({
         title,
         content,
-        images: imgs || [],
+        images: imgs || []
       })
       if (data) {
         const newData = addUserInfo(data)
@@ -58,7 +58,7 @@ export default function add() {
         await Taro.showToast({
           title: '发帖成功',
           icon: 'success',
-          duration: 1000,
+          duration: 1000
         })
         await sleep(1000)
         Taro.navigateBack()
@@ -70,7 +70,7 @@ export default function add() {
   const showImage = (url: string) => {
     Taro.previewImage({
       current: url,
-      urls: images.map(image => image.url),
+      urls: images.map(image => image.url)
     })
   }
 

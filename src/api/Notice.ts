@@ -8,7 +8,7 @@ import { WithUserInfo } from '@/types/withUserInfo'
 export const checkNotice = async () => {
   const data = await Taro.request<Result<NoticeMap>>({
     url: `${serverUrl}/notice/check`,
-    method: 'GET',
+    method: 'GET'
   })
   return mapToNoticeCnt(data.data.data)
 }
@@ -25,8 +25,8 @@ export const getNoticeList = async (
     data: {
       page,
       pageSize,
-      type,
-    },
+      type
+    }
   })
   return data.data.data
 }
@@ -43,8 +43,8 @@ export const getNoticeListWithUserInfo = async (
     data: {
       page,
       pageSize,
-      type,
-    },
+      type
+    }
   })
   return data.data.data
 }
@@ -52,7 +52,7 @@ export const getNoticeListWithUserInfo = async (
 export const sendNotice = async (msg: string, userId: string) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/notice/send?msg=${msg}&userId=${userId}`,
-    method: 'POST',
+    method: 'POST'
   })
   return data.data.data
 }

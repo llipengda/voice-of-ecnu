@@ -6,7 +6,7 @@ import './ReplyBlock.scss'
 
 export default function ReplyBlock({
   commentId,
-  replyCount,
+  replyCount
 }: {
   commentId: number
   replyCount: number

@@ -11,7 +11,7 @@ export const mapToNoticeCnt = (noticeMap: NoticeMap): NoticeCnt => {
         noticeMap['评论收到了回复'],
       post: noticeMap['帖子收到了回复'],
       comment: noticeMap['评论收到了回复'],
-      reply: noticeMap['回复收到了回复'],
+      reply: noticeMap['回复收到了回复']
     },
     like: {
       total:
@@ -20,7 +20,7 @@ export const mapToNoticeCnt = (noticeMap: NoticeMap): NoticeCnt => {
         noticeMap['评论收到了点赞'],
       post: noticeMap['帖子收到了点赞'],
       comment: noticeMap['评论收到了点赞'],
-      reply: noticeMap['回复收到了点赞'],
-    },
+      reply: noticeMap['回复收到了点赞']
+    }
   }
 }

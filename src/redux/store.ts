@@ -11,8 +11,8 @@ const store = configureStore({
     login: loginSlice,
     post: postSlice,
     notice: noticeSlice,
-    review: reviewSlice,
-  },
+    review: reviewSlice
+  }
 })
 
 export type RootState = ReturnType<typeof store.getState>

@@ -1,8 +1,8 @@
 import { View } from '@tarojs/components'
 import MessageListItem from '../MessageListItem/MessageListItem'
-import './MessageList.scss'
 import { useAppSelector } from '@/redux/hooks'
 import Taro from '@tarojs/taro'
+import './MessageList.scss'
 
 export default function MessageList() {
   const noticeCnt = useAppSelector(state => state.notice)
@@ -10,7 +10,7 @@ export default function MessageList() {
 
   const navigateTo = (type: 0 | 1 | 2) => {
     Taro.navigateTo({
-      url: `/packages/message/pages/noticeList/noticeList?type=${type}`,
+      url: `/packages/message/pages/noticeList/noticeList?type=${type}`
     })
   }
 

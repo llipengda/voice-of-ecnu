@@ -12,7 +12,7 @@ export type Comment = {
 }
 
 export type CreateCommentParams = {
-  postId: number,
-  images: string[],
+  postId: number
+  images: string[]
   content: string
 }

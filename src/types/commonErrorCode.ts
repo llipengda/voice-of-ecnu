@@ -141,11 +141,14 @@ export enum ErrorCode {
   GATEWAY_TIMEOUT = 504,
 
   /** 没有更多内容 */
-  NO_MORE_CONTENT = 10001,
+  NO_MORE_CONTENT = 10001
 }
 
-export type CommonErrorCode = {
-  errorCode: ErrorCode
-  errorReason: string
-  errorSuggestion: string
-} | null | undefined
+export type CommonErrorCode =
+  | {
+      errorCode: ErrorCode
+      errorReason: string
+      errorSuggestion: string
+    }
+  | null
+  | undefined

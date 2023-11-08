@@ -10,7 +10,7 @@ export default function User() {
   const [userStatistics, setUserStatistics] = useState<UserStatistics>({
     posts: 0,
     likes: 0,
-    stars: 0,
+    stars: 0
   })
 
   useDidShow(async () => {

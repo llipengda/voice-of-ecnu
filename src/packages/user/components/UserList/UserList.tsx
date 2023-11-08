@@ -1,8 +1,8 @@
 import { AtList, AtListItem } from 'taro-ui'
-import './UserList.scss'
-import '@/custom-theme.scss'
 import { primaryColor } from '@/common/constants'
 import Taro from '@tarojs/taro'
+import '@/custom-theme.scss'
+import './UserList.scss'
 
 export default function UserList() {
   const navigateTo = (name: string) => {

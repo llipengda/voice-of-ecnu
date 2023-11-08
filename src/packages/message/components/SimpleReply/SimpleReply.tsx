@@ -4,10 +4,10 @@ import { Post as OPost } from '@/types/post'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { Comment as OComment } from '@/types/comment'
 import SimpleComment from '../SimpleComment/SimpleComment'
-import './SimpleReply.scss'
 import Taro from '@tarojs/taro'
 import { ErrorCode } from '@/types/commonErrorCode'
 import { useAppSelector } from '@/redux/hooks'
+import './SimpleReply.scss'
 
 type Post = WithUserInfo<OPost>
 type Comment = WithUserInfo<OComment>
@@ -29,8 +29,10 @@ export default function SimpleReply({
   bgColor = '#eee',
   isLoaded,
   isCommentLoaded,
-  isPostLoaded,
+  isPostLoaded
 }: IProps) {
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   if (isLoaded && !reply) {
     return (
       <View className='simple-reply' style={{ backgroundColor: bgColor }}>
@@ -50,11 +52,9 @@ export default function SimpleReply({
       content: '',
       createAt: '',
       likes: -1,
-      isLike: false,
+      isLike: false
     }
   }
-
-  const showComponent = useAppSelector(state => state.review.showComponent)
 
   return (
     <View
@@ -65,7 +65,7 @@ export default function SimpleReply({
         if (post && comment && reply && isLoaded) {
           if (!showComponent) {
             Taro.navigateTo({
-              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`,
+              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
             })
             return
           }
@@ -76,7 +76,7 @@ export default function SimpleReply({
                   post.id
                 }&authorName=${post.userName}&authorAvatar=${
                   post.userAvatar
-                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
+                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`
           })
         }
       }}

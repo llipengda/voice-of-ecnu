@@ -4,7 +4,7 @@ export const convertDate = (dateString: string) => {
   const now = new Date()
   const date = new Date(dateString)
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-  
+
   const year = date.getFullYear()
   const month = (date.getMonth() + 1).toFixed().padStart(2, '0')
   const day = date.getDate().toFixed().padStart(2, '0')

@@ -7,6 +7,6 @@ export const addUserInfo: <T>(data: T) => WithUserInfo<T> = data => {
   return {
     ...data,
     userName,
-    userAvatar,
+    userAvatar
   }
 }

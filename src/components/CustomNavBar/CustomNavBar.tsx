@@ -11,13 +11,19 @@ interface CustomNavBarProps {
   onSwitchTab?: (index: number) => void
 }
 
-export default function CustomNavBar({ title, showTabs, tabList, tabIndex, onSwitchTab }: CustomNavBarProps) {
+export default function CustomNavBar({
+  title,
+  showTabs,
+  tabList,
+  tabIndex,
+  onSwitchTab
+}: CustomNavBarProps) {
   const _onSwitchTab = onSwitchTab || ((_: number) => {})
 
   return (
     <View
       style={{
-        height: `${getNavHeight()}Px`,
+        height: `${getNavHeight()}Px`
       }}
       className='custom-nav-bar'
     >

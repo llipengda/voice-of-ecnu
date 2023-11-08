@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { searchByPostOrCommentOrReplyWithUserInfo } from '@/api/Post'
 import { View } from '@tarojs/components'
 import { useState, useRef } from 'react'
-import ListView from 'taro-listview'
+import { ListView } from 'taro-listview'
 import { Post } from '@/types/post'
 import CPost from '@/packages/post/components/Post/Post'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
@@ -12,7 +12,7 @@ import { WithUserInfo } from '@/types/withUserInfo'
 import { useAppDispatch } from '@/redux/hooks'
 import { setReview } from '@/redux/slice/reviewSlice'
 
-export default function search() {
+export default function Search() {
   const params = Taro.getCurrentInstance().router?.params
 
   const dispatch = useAppDispatch()
@@ -38,7 +38,7 @@ export default function search() {
     onLikePost: () => {},
     onStarPost: () => {},
     onRemovePost: () => {},
-    onNavigateToPost: (_: boolean) => {},
+    onNavigateToPost: (_: boolean) => {}
   })
 
   const handleScrollToLower = async () => {
@@ -53,7 +53,11 @@ export default function search() {
 
   const handlePullDownRefresh = async () => {
     index.current = 1
-    const data = await searchByPostOrCommentOrReplyWithUserInfo(1, 5, params?.key || '')
+    const data = await searchByPostOrCommentOrReplyWithUserInfo(
+      1,
+      5,
+      params?.key || ''
+    )
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length === 5)
@@ -78,7 +82,7 @@ export default function search() {
       onLikePost,
       onStarPost,
       onRemovePost,
-      onNavigateToPost,
+      onNavigateToPost
     })
   }
 

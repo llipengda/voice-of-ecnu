@@ -2,11 +2,11 @@ import { View, Image, Text } from '@tarojs/components'
 import { useState } from 'react'
 import { Reply as OTReply } from '@/types/reply'
 import { like, unlike } from '@/api/Like'
-import './Reply.scss'
 import { AtIcon } from 'taro-ui'
 import { disabledColor } from '@/common/constants'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { convertDate } from '@/utils/dateConvert'
+import './Reply.scss'
 
 type TReply = WithUserInfo<OTReply>
 

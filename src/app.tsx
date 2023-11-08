@@ -34,13 +34,13 @@ function MyApp({ children }: PropsWithChildren<any>) {
       Taro.hideLoading()
       await Taro.showToast({
         title: '登录成功',
-        icon: 'success',
+        icon: 'success'
       })
     } catch (err) {
       console.error(err)
       await Taro.showToast({
         title: '登录失败',
-        icon: 'error',
+        icon: 'error'
       })
     }
   }
@@ -51,7 +51,7 @@ function MyApp({ children }: PropsWithChildren<any>) {
     if (data.total === 0) {
       try {
         await Taro.hideTabBarRedDot({
-          index: 1,
+          index: 1
         })
       } catch (err) {
         console.error(err)
@@ -60,7 +60,7 @@ function MyApp({ children }: PropsWithChildren<any>) {
     }
     Taro.setTabBarBadge({
       index: 1,
-      text: data.total > 99 ? '99+' : data.total.toString(),
+      text: data.total > 99 ? '99+' : data.total.toString()
     })
   }
 
@@ -90,14 +90,14 @@ function App({ children }: PropsWithChildren<any>) {
     withShareTicket: true,
     // @ts-ignore
     menus: ['shareAppMessage', 'shareTimeline'],
-    showShareItems: ['shareAppMessage', 'shareTimeline'],
+    showShareItems: ['shareAppMessage', 'shareTimeline']
   })
 
   const page = Taro.getCurrentInstance().page
   if (page && !page.onShareAppMessage) {
     page.onShareAppMessage = () => {
       return {
-        title: '花狮喵',
+        title: '花狮喵'
       }
     }
   }

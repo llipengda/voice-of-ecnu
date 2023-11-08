@@ -4,7 +4,7 @@ import { LoginInfo } from '@/types/user'
 const initialState: LoginInfo = {
   userId: '',
   token: '',
-  role: 4,
+  role: 4
 }
 
 const loginSlice = createSlice({
@@ -20,22 +20,22 @@ const loginSlice = createSlice({
     setRole(state, action: PayloadAction<0 | 1 | 2 | 3>) {
       return {
         ...state,
-        role: action.payload,
+        role: action.payload
       }
     },
     setToken(state, action: PayloadAction<string>) {
       return {
         ...state,
-        token: action.payload,
+        token: action.payload
       }
     },
     setUserId(state, action: PayloadAction<string>) {
       return {
         ...state,
-        userId: action.payload,
+        userId: action.payload
       }
-    },
-  },
+    }
+  }
 })
 
 export default loginSlice.reducer

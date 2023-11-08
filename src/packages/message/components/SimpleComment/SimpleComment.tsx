@@ -2,11 +2,11 @@ import { View, Text } from '@tarojs/components'
 import SimplePost from '../SimplePost/SimplePost'
 import { Post as OPost } from '@/types/post'
 import { WithUserInfo } from '@/types/withUserInfo'
-import './SimpleComment.scss'
 import { Comment as OComment } from '@/types/comment'
 import Taro from '@tarojs/taro'
 import { useAppSelector } from '@/redux/hooks'
 import { ErrorCode } from '@/types/commonErrorCode'
+import './SimpleComment.scss'
 
 type Post = WithUserInfo<OPost>
 type Comment = WithUserInfo<OComment>
@@ -28,8 +28,10 @@ export default function SimpleComment({
   bgColor = isTop ? '#eee' : '#f6f6f6',
   postBgColor = isTop ? '#f6f6f6' : '#eee',
   isLoaded,
-  isPostLoaded,
+  isPostLoaded
 }: IProps) {
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   if (isLoaded && !comment) {
     return (
       <View className='simple-comment' style={{ backgroundColor: bgColor }}>
@@ -54,8 +56,6 @@ export default function SimpleComment({
     }
   }
 
-  const showComponent = useAppSelector(state => state.review.showComponent)
-
   return (
     <View
       className='simple-comment'
@@ -65,7 +65,7 @@ export default function SimpleComment({
         if (post && comment && isLoaded) {
           if (!showComponent) {
             Taro.navigateTo({
-              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`,
+              url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
             })
             return
           }
@@ -76,7 +76,7 @@ export default function SimpleComment({
                   post.id
                 }&authorName=${post.userName}&authorAvatar=${
                   post.userAvatar
-                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`,
+                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`
           })
         }
       }}

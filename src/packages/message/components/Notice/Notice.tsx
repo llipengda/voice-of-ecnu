@@ -5,7 +5,6 @@ import SimplePost from '../SimplePost/SimplePost'
 import { useEffect, useState } from 'react'
 import { Post as OPost } from '@/types/post'
 import { Comment as OComment } from '@/types/comment'
-import './Notice.scss'
 import { Reply } from '@/types/reply'
 import SimpleComment from '../SimpleComment/SimpleComment'
 import SimpleReply from '../SimpleReply/SimpleReply'
@@ -14,6 +13,7 @@ import { getCommentById } from '@/api/Comment'
 import { getReplyById } from '@/api/Reply'
 import { defaultAvatar } from '@/common/constants'
 import { convertDate } from '@/utils/dateConvert'
+import './Notice.scss'
 
 type Notice = WithUserInfo<ONotice>
 type Post = WithUserInfo<OPost>

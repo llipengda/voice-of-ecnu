@@ -8,12 +8,12 @@ import { removePost } from '@/redux/slice/postSlice'
 import { like, unlike } from '@/api/Like'
 import { starPost, unstarPost } from '@/api/Star'
 import { disabledColor, primaryColor } from '@/common/constants'
-import ListView from 'taro-listview'
+import { ListView } from 'taro-listview'
 import { Comment } from '@/types/comment'
 import CComment from '@/packages/post/components/Comment/Comment'
 import {
   createComment,
-  getCommentListWithUserInfoWithDeleted,
+  getCommentListWithUserInfoWithDeleted
 } from '@/api/Comment'
 import { uploadImages } from '@/api/Image'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
@@ -25,13 +25,13 @@ import ReplyMenu from '@/packages/post/components/ReplyMenu/ReplyMenu'
 import { banUser } from '@/api/User'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { addUserInfo } from '@/utils/addUserInfo'
-import './detail.scss'
 import sleep from '@/utils/sleep'
 import { convertDate } from '@/utils/dateConvert'
+import './detail.scss'
 
 type Reply = WithUserInfo<OReply>
 
-export default function detail() {
+export default function Detail() {
   const params = Taro.getCurrentInstance().router?.params
 
   const [postId] = useState(Number(params?.postId))
@@ -93,7 +93,7 @@ export default function detail() {
     commentId: -1,
     commentUserId: '',
     likedComment: false,
-    onLikeComment: () => {},
+    onLikeComment: () => {}
   })
 
   const [showReplyDetail, setShowReplyDetail] = useState(false)
@@ -110,7 +110,7 @@ export default function detail() {
     replyContent: '',
     replyUserName: '',
     onLikeReply: () => {},
-    onRemoveReply: (_: number) => {},
+    onRemoveReply: (_: number) => {}
   })
 
   const user = useAppSelector(state => state.user)
@@ -127,7 +127,7 @@ export default function detail() {
       console.log('try scroll', scrollTo)
       await Taro.pageScrollTo({
         selector: scrollTo,
-        duration: 200,
+        duration: 200
       })
     } catch (err) {
       console.log('scroll failed')
@@ -141,22 +141,22 @@ export default function detail() {
     if (commentContent.trim() === '' && selectedImages.length === 0) {
       await Taro.showToast({
         title: '评论不能为空',
-        icon: 'error',
+        icon: 'error'
       })
       return
     }
     setSendCommentDisabled(true)
     await Taro.showLoading({
-      title: '上传图片中...',
+      title: '上传图片中...'
     })
     const imgs = await uploadImages(selectedImages)
     await Taro.showLoading({
-      title: '发送中...',
+      title: '发送中...'
     })
     const data = await createComment({
       content: commentContent,
       images: imgs || [],
-      postId,
+      postId
     })
     setSendCommentDisabled(false)
     setSelectedImages([])
@@ -168,7 +168,7 @@ export default function detail() {
     await Taro.showToast({
       title: '发送成功',
       icon: 'success',
-      duration: 1000,
+      duration: 1000
     })
     const dataWithUserInfo = addUserInfo(data)
     setCommentsCnt(commentsCnt + 1)
@@ -182,7 +182,7 @@ export default function detail() {
   const handleDeletePost = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定要删除该帖子吗？',
+      content: '确定要删除该帖子吗？'
     })
     if (res.confirm) {
       await deletePost(postId)
@@ -190,7 +190,7 @@ export default function detail() {
       Taro.showToast({
         title: '删除成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
       await sleep(1000)
       Taro.navigateBack()
@@ -250,7 +250,7 @@ export default function detail() {
   const showImages = (image: string) => {
     Taro.previewImage({
       urls: images,
-      current: image,
+      current: image
     })
   }
 
@@ -307,7 +307,7 @@ export default function detail() {
     const res = await Taro.chooseImage({
       count: 9,
       sizeType: ['original', 'compressed'],
-      sourceType: ['album', 'camera'],
+      sourceType: ['album', 'camera']
     })
     if (res.errMsg === 'chooseImage:ok') {
       setSelectedImages(res.tempFilePaths)
@@ -334,7 +334,7 @@ export default function detail() {
       commentId: comment.id,
       commentUserId: comment.userId,
       likedComment,
-      onLikeComment,
+      onLikeComment
     })
   }
 
@@ -355,12 +355,12 @@ export default function detail() {
 
   const handleClickReply = (
     replyId: number,
-    replyUserName: string,
-    replyContent: string
+    _replyUserName: string,
+    _replyContent: string
   ) => {
     setReplyReplyId(replyId)
-    setReplyUserName(replyUserName)
-    setReplyContent(replyContent)
+    setReplyUserName(_replyUserName)
+    setReplyContent(_replyContent)
     setSendReplyFocus(true)
   }
 
@@ -382,18 +382,18 @@ export default function detail() {
     if (sendReplyContent.trim() === '') {
       await Taro.showToast({
         title: '回复不能为空',
-        icon: 'error',
+        icon: 'error'
       })
       return
     }
     setSendReplyDisabled(true)
     await Taro.showLoading({
-      title: '发送中...',
+      title: '发送中...'
     })
     const data = await createReply({
       content: sendReplyContent,
       replyId: replyReplyId === -1 ? undefined : replyReplyId,
-      commentId: replyCommentId,
+      commentId: replyCommentId
     })
     if (data) {
       const newData = addUserInfo(data)
@@ -407,7 +407,7 @@ export default function detail() {
       await Taro.showToast({
         title: '发送成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
     setReplyReplyId(-1)
@@ -427,8 +427,8 @@ export default function detail() {
   const handelShowReplyMenu = (
     replyId: number,
     replyUserId: string,
-    replyContent: string,
-    replyUserName: string,
+    _replyContent: string,
+    _replyUserName: string,
     likedReply: boolean,
     onLikeReply: () => void,
     onRemoveReply: (replyId: number) => void
@@ -438,24 +438,24 @@ export default function detail() {
       replyId,
       replyUserId,
       likedReply,
-      replyContent,
-      replyUserName,
+      replyContent: _replyContent,
+      replyUserName: _replyUserName,
       onLikeReply,
-      onRemoveReply,
+      onRemoveReply
     })
   }
 
   const handelBanUser = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定要封禁用户？',
+      content: '确定要封禁用户？'
     })
     if (res.confirm) {
       await banUser(1, authorId)
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
-        duration: 1000,
+        duration: 1000
       })
     }
   }
@@ -599,7 +599,7 @@ export default function detail() {
           style={{
             width: '100%',
             overflowX: 'hidden',
-            marginBottom: '55px',
+            marginBottom: '55px'
           }}
           onPullDownRefresh={handlePullDownRefresh}
           onScrollToLower={handleScrollToLower}
@@ -612,7 +612,7 @@ export default function detail() {
               key={c.id}
               id={`comment-${c.id}`}
               onShowMenu={handleShowCommentMenu}
-              onshowReplyDetail={c => handleShowReplyDetail(c)}
+              onshowReplyDetail={co => handleShowReplyDetail(co)}
             />
           ))}
           {isEmpty && <View className='tip2'>留下第一条评论吧~</View>}
@@ -624,7 +624,7 @@ export default function detail() {
           className='post-detail__send'
           style={{
             bottom: `${keyboardHeight}Px`,
-            zIndex: sendReplyMode ? 8080 : 3000,
+            zIndex: sendReplyMode ? 8080 : 3000
           }}
         >
           {sendReplyMode && replyReplyId !== -1 && replyUserName.length > 0 && (
@@ -695,7 +695,7 @@ export default function detail() {
               style={{
                 color: (sendReplyMode ? sendReplyDisabled : sendCommentDisabled)
                   ? disabledColor
-                  : primaryColor,
+                  : primaryColor
               }}
               onClick={sendReplyMode ? handleSendReply : handleSendComment}
             >

@@ -5,7 +5,7 @@ import Taro from '@tarojs/taro'
 import { useState } from 'react'
 import './error.scss'
 
-export default function error() {
+export default function Error() {
   const params = Taro.getCurrentInstance().router?.params
   const [errorCode] = useState<ErrorCode>(
     (Number(params?.errorCode) as ErrorCode) || ErrorCode.NOT_FOUND
