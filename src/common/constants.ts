@@ -91,4 +91,4 @@ export const serverUrl = 'https://www.xiaowu.fun'
 
 export const defaultAvatar = 'https://www.xiaowu.fun/static/voecnu.png'
 
-export const expectedReviewDate = new Date('2023-11-09T22:00:00+08:00')
+export const expectedReviewDate = new Date('2023-11-10T22:00:00+08:00')
