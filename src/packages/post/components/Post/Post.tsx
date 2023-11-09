@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { View, Image, Text } from '@tarojs/components'
+import { View, Image, Text, Picker } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Post as OTPost } from '@/types/post'
 import { AtIcon } from 'taro-ui'
@@ -8,12 +8,14 @@ import { like, unlike } from '@/api/Like'
 import { deletePost } from '@/api/Post'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
-import { disabledColor } from '@/common/constants'
+import { disabledColor, primaryColor } from '@/common/constants'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { getUserById } from '@/api/User'
 import { ErrorCode } from '@/types/commonErrorCode'
 import { convertDate } from '@/utils/dateConvert'
 import './Post.scss'
+import { ICustomModalProps } from '@/components/CustomModal/CustomModal'
+import { sendNotice } from '@/api/Notice'
 
 type TPost = WithUserInfo<OTPost>
 
@@ -23,7 +25,8 @@ function isTPost(post: TPost | OTPost): post is TPost {
 
 export default function Post({
   post,
-  onShowMenu
+  onShowMenu,
+  onShowModal
 }: {
   post: TPost | OTPost
   onShowMenu: (
@@ -36,6 +39,7 @@ export default function Post({
     onRemovePost: () => void,
     onNavigateToPost: (focus: boolean) => void
   ) => void
+  onShowModal: (props: Partial<ICustomModalProps>) => Promise<boolean>
 }) {
   const [avatar, setAvatar] = useState('')
   const [username, setUsername] = useState('')
@@ -52,6 +56,7 @@ export default function Post({
   const dispatch = useAppDispatch()
 
   const showComponent = useAppSelector(state => state.review.showComponent)
+  const user = useAppSelector(state => state.user)
 
   useEffect(() => {
     if (isTPost(post)) {
@@ -63,7 +68,7 @@ export default function Post({
         setUsername(data.name)
       })
     }
-  }, [])
+  }, [post])
 
   const handleLikePost = async () => {
     if (likeDisabled) {
@@ -98,18 +103,91 @@ export default function Post({
   }
 
   const handleDeletePost = async () => {
-    const res = await Taro.showModal({
-      title: '提示',
-      content: '确定将帖子删除？'
-    })
-    if (res.confirm) {
-      await deletePost(post.id)
-      dispatch(removePost(post.id))
-      Taro.showToast({
-        title: '删除成功',
-        icon: 'success',
-        duration: 1000
+    const DelPost = ({ onChange }: { onChange: (e: string) => void }) => {
+      const [selected, setSelected] = useState(0)
+      const reasons = [
+        '其他',
+        '色情低俗',
+        '垃圾广告',
+        '辱骂攻击',
+        '违法犯罪',
+        '时政不实信息',
+        '青少年不宜',
+        '侵犯权益'
+      ]
+      return (
+        <View>
+          <View>确定要删除该帖子吗？</View>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '5px'
+            }}
+          >
+            <View>删除原因：</View>
+            <Picker
+              range={reasons}
+              value={selected}
+              onChange={e => {
+                setSelected(e.detail.value as number)
+                onChange(reasons[e.detail.value])
+              }}
+              style={{
+                marginRight: '10px',
+                color: primaryColor,
+                fontWeight: 900,
+                background: '#eee',
+                borderRadius: '5px',
+                padding: '5px'
+              }}
+            >
+              {reasons[selected]}
+            </Picker>
+          </View>
+        </View>
+      )
+    }
+
+    let delReason = '其他'
+
+    if (user.id === post.userId) {
+      const res = await Taro.showModal({
+        title: '提示',
+        content: '确定将帖子删除？'
       })
+      if (res.confirm) {
+        await deletePost(post.id)
+        dispatch(removePost(post.id))
+        Taro.showToast({
+          title: '删除成功',
+          icon: 'success',
+          duration: 1000
+        })
+      }
+    } else if (user.role <= 1) {
+      const res = await onShowModal({
+        title: '警告',
+        children: <DelPost onChange={e => (delReason = e)} />
+      })
+      if (res) {
+        await deletePost(post.id)
+        dispatch(removePost(post.id))
+        await sendNotice(
+          `您于 ${post.createAt} 发布的帖子 \"${post.title.substring(
+            0,
+            10
+          )}...\" 因「${delReason}」被管理员删除`,
+          post.userId
+        )
+        Taro.showToast({
+          title: '删除成功',
+          icon: 'success',
+          duration: 1000
+        })
+      }
     }
   }
 

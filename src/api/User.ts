@@ -86,7 +86,7 @@ export const banUser = async (days: number, userId: string) => {
     url: `${serverUrl}/user/banUser?bannedBefore=${bannedBefore.toDateString()}&userId=${userId}`,
     method: 'POST'
   })
-  await sendNotice(`您被被管理员封禁${days}天`, userId)
+  await sendNotice(`您因「违反社区秩序」被管理员封禁${days}天`, userId)
   return data.data.data
 }
 

@@ -14,10 +14,11 @@ const switchErrorCode = async (
   const errorCode = res.data.commonErrorCode?.errorCode
   console.error('errorCode is', errorCode)
   switch (errorCode) {
+    case ErrorCode.NEED_SESSION_ID:
     case ErrorCode.LOGIN_HAS_OVERDUE:
       console.error('errorCode is', errorCode)
       await Taro.showLoading({
-        title: '重新登陆中...'
+        title: '登录中...'
       })
       const { code } = await Taro.login()
       const info = await login(code)
@@ -26,13 +27,9 @@ const switchErrorCode = async (
       store.dispatch(setUser(user))
       Taro.hideLoading()
       await Taro.showToast({
-        title: '登陆成功',
+        title: '登录成功',
         icon: 'success',
         duration: 1000
-      })
-      await sleep(1000)
-      await Taro.showLoading({
-        title: '重新请求中...'
       })
       const requestParams = chain.requestParams
       console.log(requestParams)
@@ -84,6 +81,8 @@ const showError = async (
         url: `/pages/error/error?errorCode=${res.data.commonErrorCode?.errorCode}`
       })
       break
+    case ErrorCode.LOGIN_HAS_OVERDUE:
+    case ErrorCode.NEED_SESSION_ID:
     case ErrorCode.USER_NOT_VERIFIED:
       break
     default:
