@@ -12,6 +12,9 @@ import { getPostByUserId } from '@/api/Post'
 import { addUserInfo } from '@/utils/addUserInfo'
 import { getStarListPage } from '@/api/Star'
 import './my.scss'
+import CustomModal, {
+  ICustomModalProps
+} from '@/components/CustomModal/CustomModal'
 
 export default function My() {
   const params = Taro.getCurrentInstance().router?.params
@@ -51,6 +54,35 @@ export default function My() {
     onRemovePost: () => {},
     onNavigateToPost: (_: boolean) => {}
   })
+
+  const [showModal, setShowModal] = useState(false)
+  const [modalProps, setModalProps] = useState<ICustomModalProps>({
+    isOpen: showModal,
+    onCancle: () => setShowModal(false),
+    onConfirm: () => setShowModal(false),
+    title: '提示',
+    children: <View />
+  })
+
+  const handleShowModal = (
+    props: Partial<ICustomModalProps>
+  ): Promise<boolean> => {
+    return new Promise(resolve => {
+      setShowModal(true)
+      setModalProps({
+        ...modalProps,
+        ...props,
+        onConfirm: () => {
+          setShowModal(false)
+          resolve(true)
+        },
+        onCancle: () => {
+          setShowModal(false)
+          resolve(false)
+        }
+      })
+    })
+  }
 
   const handleScrollToLower = async () => {
     if (type === 'post') {
@@ -106,12 +138,17 @@ export default function My() {
 
   return (
     <View className='me'>
+      <CustomModal {...modalProps} isOpen={showModal} />
       <FloatLayout
         title='操作'
         isOpened={showMenu}
         onClose={() => setShowMenu(false)}
       >
-        <PostMenu onClose={() => setShowMenu(false)} {...postMenuProps} />
+        <PostMenu
+          onShowModal={handleShowModal}
+          onClose={() => setShowMenu(false)}
+          {...postMenuProps}
+        />
       </FloatLayout>
       <View className='skeleton'>
         {!isLoaded && <View className='tip'>努力加载中...</View>}
@@ -125,7 +162,12 @@ export default function My() {
           needInit
         >
           {posts.map(p => (
-            <CPost post={p} key={p.id} onShowMenu={handelShowMenu} />
+            <CPost
+              onShowModal={handleShowModal}
+              post={p}
+              key={p.id}
+              onShowMenu={handelShowMenu}
+            />
           ))}
           {posts.length === 0 && <View className='tip'>没有更多内容</View>}
         </ListView>
