@@ -163,6 +163,7 @@ export default function VerifyForm() {
           @
           <Input
             className='form-input form-input__last'
+            placeholder='stu'
             value={emailLast}
             onInput={e => {
               setEmailLast(e.detail.value)

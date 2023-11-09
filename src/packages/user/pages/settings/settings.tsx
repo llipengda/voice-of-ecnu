@@ -37,6 +37,13 @@ export default function Settings() {
     }
   }
 
+  const handleRestart = async () => {
+    await Taro.clearStorage()
+    await Taro.reLaunch({
+      url: '/pages/home/home'
+    })
+  }
+
   return (
     <View className='settings'>
       <AtList className='settings-list' hasBorder={false}>
@@ -47,6 +54,14 @@ export default function Settings() {
           hasBorder={false}
           iconInfo={{ value: 'close-circle', color: primaryColor }}
           onClick={handleDeleteUser}
+        />
+        <AtListItem
+          className='item'
+          title='清除缓存并重启小程序'
+          arrow='right'
+          hasBorder={false}
+          iconInfo={{ value: 'reload', color: primaryColor }}
+          onClick={handleRestart}
         />
       </AtList>
     </View>
