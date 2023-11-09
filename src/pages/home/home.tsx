@@ -117,7 +117,7 @@ export default function Home() {
 
   useDidShow(async () => {
     if (isLoaded) {
-      handlePullDownRefresh()
+      await handlePullDownRefresh()
     }
   })
 
