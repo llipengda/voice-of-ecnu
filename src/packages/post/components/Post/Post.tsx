@@ -63,7 +63,7 @@ export default function Post({
         setUsername(data.name)
       })
     }
-  }, [])
+  }, [post])
 
   const handleLikePost = async () => {
     if (likeDisabled) {
