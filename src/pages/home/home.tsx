@@ -16,6 +16,9 @@ import CustomNavBar from '@/components/CustomNavBar/CustomNavBar'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import PostMenu from '@/components/PostMenu/PostMenu'
 import { WithUserInfo } from '@/types/withUserInfo'
+import CustomModal, {
+  ICustomModalProps
+} from '@/components/CustomModal/CustomModal'
 import './home.scss'
 
 type Post = WithUserInfo<OPost>
@@ -48,6 +51,35 @@ export default function Home() {
   })
 
   const showCompent = useAppSelector(state => state.review.showComponent)
+
+  const [showModal, setShowModal] = useState(false)
+  const [modalProps, setModalProps] = useState<ICustomModalProps>({
+    isOpen: showModal,
+    onCancle: () => setShowModal(false),
+    onConfirm: () => setShowModal(false),
+    title: '提示',
+    children: <View />
+  })
+
+  const handleShowModal = (
+    props: Partial<ICustomModalProps>
+  ): Promise<boolean> => {
+    return new Promise(resolve => {
+      setShowModal(true)
+      setModalProps({
+        ...modalProps,
+        ...props,
+        onConfirm: () => {
+          setShowModal(false)
+          resolve(true)
+        },
+        onCancle: () => {
+          setShowModal(false)
+          resolve(false)
+        }
+      })
+    })
+  }
 
   const handleSearchClick = () => {
     Taro.navigateTo({
@@ -122,62 +154,74 @@ export default function Home() {
   })
 
   return (
-    <View style={{ width: '100%' }}>
-      <CustomNavBar
-        showTabs
-        tabList={[{ title: '最新' }, { title: '热门' }]}
-        tabIndex={selected}
-        onSwitchTab={i => handleSwitchTab(i)}
-      />
-      <FloatLayout
-        title='操作'
-        isOpened={showMenu}
-        onClose={() => setShowMenu(false)}
-      >
-        <PostMenu onClose={() => setShowMenu(false)} {...postMenuProps} />
-      </FloatLayout>
-      <AtSearchBar
-        value={searchText}
-        onChange={e => setSearchText(e)}
-        onActionClick={handleSearchClick}
-        customStyle={{
-          background: backgroundColor,
-          color: '#fff',
-          border: 'none'
-        }}
-      />
-      {!isLoaded && <View className='tip'>努力加载中...</View>}
-      {loginInfo.token && (
-        <View className='skeleton'>
-          {/* @ts-ignore */}
-          <ListView
-            isLoaded={isLoaded}
-            hasMore={hasMore}
-            style={{ height: '84vh', width: '100%', overflowX: 'hidden' }}
-            onPullDownRefresh={handlePullDownRefresh}
-            onScrollToLower={handleScrollToLower}
-            needInit
-          >
-            {posts.map(p => (
-              <CPost post={p} key={p.id} onShowMenu={handelShowMenu} />
-            ))}
-            {isEmpty && <View className='tip2'>没有更多内容</View>}
-          </ListView>
-        </View>
-      )}
-      {showCompent && (
-        <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
-          <AtFab
-            onClick={() => {
-              Taro.navigateTo({
-                url: '/packages/post/pages/add/add'
-              })
-            }}
-          >
-            <View className='at-fab__icon at-icon at-icon-add' />
-          </AtFab>
-        </View>
-      )}
-    </View>
+    <>
+      <CustomModal {...modalProps} isOpen={showModal} />
+      <View style={{ width: '100%' }}>
+        <CustomNavBar
+          showTabs
+          tabList={[{ title: '最新' }, { title: '热门' }]}
+          tabIndex={selected}
+          onSwitchTab={i => handleSwitchTab(i)}
+        />
+        <FloatLayout
+          title='操作'
+          isOpened={showMenu}
+          onClose={() => setShowMenu(false)}
+        >
+          <PostMenu
+            onClose={() => setShowMenu(false)}
+            {...postMenuProps}
+            onShowModal={handleShowModal}
+          />
+        </FloatLayout>
+        <AtSearchBar
+          value={searchText}
+          onChange={e => setSearchText(e)}
+          onActionClick={handleSearchClick}
+          customStyle={{
+            background: backgroundColor,
+            color: '#fff',
+            border: 'none'
+          }}
+        />
+        {!isLoaded && <View className='tip'>努力加载中...</View>}
+        {loginInfo.token && (
+          <View className='skeleton'>
+            {/* @ts-ignore */}
+            <ListView
+              isLoaded={isLoaded}
+              hasMore={hasMore}
+              style={{ height: '84vh', width: '100%', overflowX: 'hidden' }}
+              onPullDownRefresh={handlePullDownRefresh}
+              onScrollToLower={handleScrollToLower}
+              needInit
+            >
+              {posts.map(p => (
+                <CPost
+                  onShowModal={handleShowModal}
+                  post={p}
+                  key={p.id}
+                  onShowMenu={handelShowMenu}
+                />
+              ))}
+              {isEmpty && <View className='tip2'>没有更多内容</View>}
+            </ListView>
+          </View>
+        )}
+        {showCompent && (
+          <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
+            <AtFab
+              onClick={() => {
+                Taro.navigateTo({
+                  url: '/packages/post/pages/add/add'
+                })
+              }}
+            >
+              <View className='at-fab__icon at-icon at-icon-add' />
+            </AtFab>
+          </View>
+        )}
+      </View>
+    </>
   )
 }

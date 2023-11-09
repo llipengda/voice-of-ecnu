@@ -2,7 +2,7 @@ import { View, Text } from '@tarojs/components'
 import React from 'react'
 import './CustomModal.scss'
 
-interface ICustomModalProps {
+export interface ICustomModalProps {
   isOpen: boolean
   onCancle: () => void
   onConfirm: () => void

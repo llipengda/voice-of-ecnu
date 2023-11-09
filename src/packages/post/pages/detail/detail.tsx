@@ -1,6 +1,6 @@
 import Taro, { useLoad, useReachBottom } from '@tarojs/taro'
 import { deletePost, getPostByIdWithUserInfo } from '@/api/Post'
-import { View, Image, Text, Textarea } from '@tarojs/components'
+import { View, Image, Text, Textarea, Picker } from '@tarojs/components'
 import { useRef, useState } from 'react'
 import { AtAvatar, AtIcon, AtTabs } from 'taro-ui'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
@@ -28,6 +28,10 @@ import { addUserInfo } from '@/utils/addUserInfo'
 import sleep from '@/utils/sleep'
 import { convertDate } from '@/utils/dateConvert'
 import './detail.scss'
+import CustomModal, {
+  ICustomModalProps
+} from '@/components/CustomModal/CustomModal'
+import { sendNotice } from '@/api/Notice'
 
 type Reply = WithUserInfo<OReply>
 
@@ -118,6 +122,35 @@ export default function Detail() {
 
   const showComponent = useAppSelector(state => state.review.showComponent)
 
+  const [showModal, setShowModal] = useState(false)
+  const [modalProps, setModalProps] = useState<ICustomModalProps>({
+    isOpen: showModal,
+    onCancle: () => setShowModal(false),
+    onConfirm: () => setShowModal(false),
+    title: '提示',
+    children: <View />
+  })
+
+  const handleShowModal = (
+    props: Partial<ICustomModalProps>
+  ): Promise<boolean> => {
+    return new Promise(resolve => {
+      setShowModal(true)
+      setModalProps({
+        ...modalProps,
+        ...props,
+        onConfirm: () => {
+          setShowModal(false)
+          resolve(true)
+        },
+        onCancle: () => {
+          setShowModal(false)
+          resolve(false)
+        }
+      })
+    })
+  }
+
   useLoad(async () => {
     try {
       if (!scrollTo) {
@@ -180,20 +213,94 @@ export default function Detail() {
   }
 
   const handleDeletePost = async () => {
-    const res = await Taro.showModal({
-      title: '提示',
-      content: '确定要删除该帖子吗？'
-    })
-    if (res.confirm) {
-      await deletePost(postId)
-      dispatch(removePost(postId))
-      Taro.showToast({
-        title: '删除成功',
-        icon: 'success',
-        duration: 1000
+    const DelPost = ({ onChange }: { onChange: (e: string) => void }) => {
+      const [selected, setSelected] = useState(0)
+      const reasons = [
+        '其他',
+        '色情低俗',
+        '垃圾广告',
+        '辱骂攻击',
+        '违法犯罪',
+        '时政不实信息',
+        '青少年不宜',
+        '侵犯权益'
+      ]
+      return (
+        <View>
+          <View>确定要删除该帖子吗？</View>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '5px'
+            }}
+          >
+            <View>删除原因：</View>
+            <Picker
+              range={reasons}
+              value={selected}
+              onChange={e => {
+                setSelected(e.detail.value as number)
+                onChange(reasons[e.detail.value])
+              }}
+              style={{
+                marginRight: '10px',
+                color: primaryColor,
+                fontWeight: 900,
+                background: '#eee',
+                borderRadius: '5px',
+                padding: '5px'
+              }}
+            >
+              {reasons[selected]}
+            </Picker>
+          </View>
+        </View>
+      )
+    }
+
+    let delReason = '其他'
+
+    if (user.id === authorId) {
+      const res = await Taro.showModal({
+        title: '提示',
+        content: '确定将帖子删除？'
       })
-      await sleep(1000)
-      Taro.navigateBack()
+      if (res.confirm) {
+        await Taro.navigateBack()
+        await deletePost(postId)
+        dispatch(removePost(postId))
+        Taro.showToast({
+          title: '删除成功',
+          icon: 'success',
+          duration: 1000
+        })
+      }
+    } else
+      if (user.role <= 1) {
+      const res = await handleShowModal({
+        title: '警告',
+        children: <DelPost onChange={e => (delReason = e)} />
+      })
+      if (res) {
+        await Taro.navigateBack()
+        await deletePost(postId)
+        dispatch(removePost(postId))
+        await sendNotice(
+          `您于 ${createAt} 发布的帖子 \"${title.substring(
+            0,
+            10
+          )}...\" 因「${delReason}」被管理员删除`,
+          authorId
+        )
+        Taro.showToast({
+          title: '删除成功',
+          icon: 'success',
+          duration: 1000
+        })
+      }
     }
   }
 
@@ -446,12 +553,54 @@ export default function Detail() {
   }
 
   const handelBanUser = async () => {
-    const res = await Taro.showModal({
+    const BanUser = ({ onChange }: { onChange: (e: number) => void }) => {
+      const [selected, setSelected] = useState(0)
+      const days = [1, 3, 7, 30]
+      return (
+        <View>
+          <View>确定要封禁该用户吗？</View>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '5px'
+            }}
+          >
+            <View>封禁时间：</View>
+            <Picker
+              range={days}
+              value={selected}
+              onChange={e => {
+                setSelected(e.detail.value as number)
+                onChange(days[e.detail.value])
+              }}
+              style={{
+                marginRight: '10px',
+                color: primaryColor,
+                fontWeight: 900,
+                background: '#eee',
+                borderRadius: '5px',
+                padding: '5px'
+              }}
+            >
+              {days[selected]}
+            </Picker>
+            <View>天</View>
+          </View>
+        </View>
+      )
+    }
+
+    let bannedDays = 1
+
+    const res = await handleShowModal({
       title: '提示',
-      content: '确定要封禁用户？'
+      children: <BanUser onChange={e => (bannedDays = e)} />
     })
-    if (res.confirm) {
-      await banUser(1, authorId)
+    if (res) {
+      await banUser(bannedDays, user.id)
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
@@ -471,12 +620,14 @@ export default function Detail() {
 
   return (
     <View className='post-detail'>
+      <CustomModal {...modalProps} isOpen={showModal} />
       <FloatLayout
         isOpened={showCommentMenu}
         onClose={() => setShowCommentMenu(false)}
         title='操作'
       >
         <CommentMenu
+          onShowModal={handleShowModal}
           onRemoveComment={handleRemoveComment}
           onClickReply={handelClickCommentReply}
           onClose={() => setShowCommentMenu(false)}
@@ -504,6 +655,7 @@ export default function Detail() {
         zIndex={9000}
       >
         <ReplyMenu
+          onShowModal={handleShowModal}
           onClose={() => setShowReplyMenu(false)}
           onClickReply={handleClickReply}
           {...replyMenuProps}

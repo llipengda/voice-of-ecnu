@@ -33,6 +33,8 @@ $modal-content-padding: 20px;
   }
 
   &__content {
+    margin-top: 20px;
+    margin-bottom: 20px;
     background-color: $modal-content-background-color;
     padding: $modal-content-padding;
     border-radius: 5px;
