@@ -1,7 +1,6 @@
 import { ErrorCode } from '@/types/commonErrorCode'
 import { Result } from '@/types/result'
 import Taro from '@tarojs/taro'
-import sleep from './sleep'
 import { getUserById, login } from '@/api/User'
 import store from '@/redux/store'
 import { setLoginInfo } from '@/redux/slice/loginSlice'
@@ -75,23 +74,23 @@ const showError = async (
   res: Taro.request.SuccessCallbackResult<Result<any>>
 ) => {
   switch (res.data.commonErrorCode?.errorCode) {
-    case ErrorCode.POST_NOT_EXIST:
-    case ErrorCode.POST_NOT_FOUND:
-      await Taro.navigateTo({
-        url: `/pages/error/error?errorCode=${res.data.commonErrorCode?.errorCode}`
-      })
-      break
     case ErrorCode.LOGIN_HAS_OVERDUE:
     case ErrorCode.NEED_SESSION_ID:
     case ErrorCode.USER_NOT_VERIFIED:
       break
-    default:
-      await Taro.showToast({
-        title: res.data.msg,
-        icon: 'error',
-        duration: 1000
+    case ErrorCode.PERMISSION_DENIED:
+      await Taro.showModal({
+        title: '提示',
+        content: '您没有权限执行此操作',
+        showCancel: false
       })
-      await sleep(1000)
+      break
+    default:
+      await Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${
+          res.data.commonErrorCode?.errorCode
+        }&errorMessage=${res.data.msg || res.data}`
+      })
       break
   }
 }

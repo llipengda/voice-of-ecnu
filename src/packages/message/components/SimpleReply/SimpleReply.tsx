@@ -8,6 +8,7 @@ import Taro from '@tarojs/taro'
 import { ErrorCode } from '@/types/commonErrorCode'
 import { useAppSelector } from '@/redux/hooks'
 import './SimpleReply.scss'
+import { commentPerPage } from '@/common/constants'
 
 type Post = WithUserInfo<OPost>
 type Comment = WithUserInfo<OComment>
@@ -76,7 +77,9 @@ export default function SimpleReply({
                   post.id
                 }&authorName=${post.userName}&authorAvatar=${
                   post.userAvatar
-                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`
+                }&sendCommentFocus=${false}&commentId=${
+                  comment.id
+                }&page=${Math.ceil(comment.floor / commentPerPage)}`
           })
         }
       }}

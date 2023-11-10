@@ -1,13 +1,13 @@
 import Taro, { useLoad, useReachBottom } from '@tarojs/taro'
 import { deletePost, getPostByIdWithUserInfo } from '@/api/Post'
 import { View, Image, Text, Textarea, Picker } from '@tarojs/components'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AtAvatar, AtIcon, AtTabs } from 'taro-ui'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
 import { like, unlike } from '@/api/Like'
 import { starPost, unstarPost } from '@/api/Star'
-import { disabledColor, primaryColor } from '@/common/constants'
+import { commentPerPage, disabledColor, primaryColor } from '@/common/constants'
 import { ListView } from 'taro-listview'
 import { Comment } from '@/types/comment'
 import CComment from '@/packages/post/components/Comment/Comment'
@@ -25,7 +25,6 @@ import ReplyMenu from '@/packages/post/components/ReplyMenu/ReplyMenu'
 import { banUser } from '@/api/User'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { addUserInfo } from '@/utils/addUserInfo'
-import sleep from '@/utils/sleep'
 import { convertDate } from '@/utils/dateConvert'
 import './detail.scss'
 import CustomModal, {
@@ -41,7 +40,9 @@ export default function Detail() {
   const [postId] = useState(Number(params?.postId))
   const [authorName, setAuthorName] = useState(params?.authorName!)
   const [authorAvatar, setAuthorAvatar] = useState(params?.authorAvatar!)
-  const [scrollTo] = useState(params?.scrollTo || null)
+  const [highlightId] = useState(Number(params?.commentId))
+  const [scrollTo] = useState(`#comment-${params?.commentId}` || null)
+  const [initPage] = useState(Number(params?.page) || 1)
   const [sendCommentFocus, setSendCommentFocus] = useState(
     params?.sendCommentFocus === 'true' || false
   )
@@ -66,8 +67,9 @@ export default function Detail() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isEmpty, setIsEmpty] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [isFirst, setIsFirst] = useState(true)
 
-  const index = useRef(1)
+  const index = useRef(initPage)
 
   const [comments, setComments] = useState<WithUserInfo<Comment>[]>([])
 
@@ -151,21 +153,23 @@ export default function Detail() {
     })
   }
 
-  useLoad(async () => {
-    try {
-      if (!scrollTo) {
-        return
+  useEffect(() => {
+    ;(async () => {
+      try {
+        if (!scrollTo || !isLoaded) {
+          return
+        }
+        console.log('try scroll', scrollTo)
+        await Taro.pageScrollTo({
+          selector: scrollTo,
+          offsetTop: -200,
+          duration: 500
+        })
+      } catch (err) {
+        console.log('scroll failed')
       }
-      await sleep(1000)
-      console.log('try scroll', scrollTo)
-      await Taro.pageScrollTo({
-        selector: scrollTo,
-        duration: 200
-      })
-    } catch (err) {
-      console.log('scroll failed')
-    }
-  })
+    })()
+  }, [scrollTo, isLoaded])
 
   const handleSendComment = async () => {
     if (sendCommentDisabled) {
@@ -278,8 +282,7 @@ export default function Detail() {
           duration: 1000
         })
       }
-    } else
-      if (user.role <= 1) {
+    } else if (user.role <= 1) {
       const res = await handleShowModal({
         title: '警告',
         children: <DelPost onChange={e => (delReason = e)} />
@@ -369,24 +372,28 @@ export default function Detail() {
     const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       ++index.current,
-      10,
+      commentPerPage,
       tabIndex
     )
     setComments([...comments, ...data])
-    setHasMore(data.length === 10)
+    setHasMore(data.length === commentPerPage)
   }
 
   const getData = async () => {
-    index.current = 1
+    if (isFirst) {
+      setIsFirst(false)
+    } else {
+      index.current = 1
+    }
     const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       index.current,
-      10,
+      commentPerPage,
       tabIndex
     )
     setComments(data || [])
     setIsLoaded(true)
-    setHasMore(data.length === 10)
+    setHasMore(data.length === commentPerPage)
     setIsEmpty(data.length === 0)
   }
 
@@ -402,11 +409,11 @@ export default function Detail() {
     const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       index.current,
-      10,
+      commentPerPage,
       i
     )
     setComments(data || [])
-    setHasMore(data.length === 10)
+    setHasMore(data.length === commentPerPage)
     setIsEmpty(data.length === 0)
   }
 
@@ -521,7 +528,7 @@ export default function Detail() {
     setReplyUserName('')
   }
 
-  const handelDecreaseReplies = (removeReplyCommentId: number) => {
+  const handleDecreaseReplies = (removeReplyCommentId: number) => {
     const newComments = comments.map(c => {
       if (c.id === removeReplyCommentId) {
         c.replies--
@@ -531,7 +538,7 @@ export default function Detail() {
     setComments(newComments)
   }
 
-  const handelShowReplyMenu = (
+  const handleShowReplyMenu = (
     replyId: number,
     replyUserId: string,
     _replyContent: string,
@@ -552,7 +559,7 @@ export default function Detail() {
     })
   }
 
-  const handelBanUser = async () => {
+  const handleBanUser = async () => {
     const BanUser = ({ onChange }: { onChange: (e: number) => void }) => {
       const [selected, setSelected] = useState(0)
       const days = [1, 3, 7, 30]
@@ -600,7 +607,10 @@ export default function Detail() {
       children: <BanUser onChange={e => (bannedDays = e)} />
     })
     if (res) {
-      await banUser(bannedDays, user.id)
+      const data = await banUser(bannedDays, user.id)
+      if (!data) {
+        return
+      }
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
@@ -609,9 +619,15 @@ export default function Detail() {
     }
   }
 
-  const handelClickCommentReply = () => {
+  const handleClickCommentReply = () => {
     handleShowReplyDetail(showDetailComment)
     handleClickReply(-1, '', '')
+  }
+
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${authorId}`
+    })
   }
 
   if (!showComponent) {
@@ -629,7 +645,7 @@ export default function Detail() {
         <CommentMenu
           onShowModal={handleShowModal}
           onRemoveComment={handleRemoveComment}
-          onClickReply={handelClickCommentReply}
+          onClickReply={handleClickCommentReply}
           onClose={() => setShowCommentMenu(false)}
           {...commentMenuProps}
         />
@@ -644,8 +660,8 @@ export default function Detail() {
           isShow={showReplyDetail}
           onClickReply={handleClickReply}
           newReply={newReply}
-          onRemoveReply={handelDecreaseReplies}
-          onShowMenu={handelShowReplyMenu}
+          onRemoveReply={handleDecreaseReplies}
+          onShowMenu={handleShowReplyMenu}
         />
       </FloatLayout>
       <FloatLayout
@@ -663,14 +679,19 @@ export default function Detail() {
       </FloatLayout>
       <View className='post-detail__title'>{title || '加载中...'}</View>
       <View className='at-row'>
-        <AtAvatar
-          circle
-          image={authorAvatar}
-          className='post-detail__avatar'
-          size='small'
-        />
+        <View onClick={handleNavigateToUserInfo}>
+          <AtAvatar
+            circle
+            image={authorAvatar}
+            className='post-detail__avatar'
+            size='small'
+          />
+        </View>
         <View className='at-col'>
-          <View className='post-detail__author at-row'>
+          <View
+            className='post-detail__author at-row'
+            onClick={handleNavigateToUserInfo}
+          >
             {authorName || '加载中...'}
           </View>
           <View className='post-detail__create-at at-row'>
@@ -681,7 +702,7 @@ export default function Detail() {
         </View>
         <View className='at-col post-detail__delete'>
           {user.role <= 1 && (
-            <Text onClick={handelBanUser} className='post-detail__delete__ban'>
+            <Text onClick={handleBanUser} className='post-detail__delete__ban'>
               封禁用户
             </Text>
           )}
@@ -743,7 +764,7 @@ export default function Detail() {
         className='post-detail__tabs'
       />
       {!isLoaded && <View className='tip'>努力加载中...</View>}
-      <View className='skeleton'>
+      <View className='skeleton post-detail__list'>
         {/* @ts-ignore */}
         <ListView
           isLoaded={isLoaded}
@@ -763,6 +784,7 @@ export default function Detail() {
               comment={c}
               key={c.id}
               id={`comment-${c.id}`}
+              highlight={c.id === highlightId}
               onShowMenu={handleShowCommentMenu}
               onshowReplyDetail={co => handleShowReplyDetail(co)}
             />

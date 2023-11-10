@@ -3,6 +3,10 @@
 $size: 60px;
 
 .comment {
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 15px;
+
   &__header {
     &__avatar {
       min-width: $size !important;
@@ -56,7 +60,6 @@ $size: 60px;
     margin-top: 10px;
     margin-left: $size + 20px;
     border-bottom: 1px solid #ddd;
-    margin-bottom: 15px;
     padding-bottom: 15px;
 
     &__content {

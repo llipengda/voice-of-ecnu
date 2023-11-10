@@ -37,7 +37,7 @@ export default function PostMenu({
   const user = useAppSelector(state => state.user)
   const showComponent = useAppSelector(state => state.review.showComponent)
 
-  const handelBanUser = async () => {
+  const handleBanUser = async () => {
     const BanUser = ({ onChange }: { onChange: (e: number) => void }) => {
       const [selected, setSelected] = useState(0)
       const days = [1, 3, 7, 30]
@@ -86,7 +86,10 @@ export default function PostMenu({
     })
     if (res) {
       onClose()
-      await banUser(bannedDays, postUserId)
+      const data = await banUser(bannedDays, postUserId)
+      if (!data) {
+        return
+      }
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
@@ -154,7 +157,7 @@ export default function PostMenu({
           </View>
         )}
         {user.role <= 1 && (
-          <View className='post-menu__item' onClick={handelBanUser}>
+          <View className='post-menu__item' onClick={handleBanUser}>
             <AtIcon value='blocked' size='35' color={disabledColor} />
             <View className='post-menu__item__text'>封禁用户</View>
           </View>

@@ -79,12 +79,12 @@ export default function ReplyDetail({
     }
   }, [newReply])
 
-  const handelRemoveReply = (replyId: number) => {
+  const handleRemoveReply = (replyId: number) => {
     onRemoveReply(replies.find(reply => reply.id === replyId)?.commentId || -1)
     setReplies(replies.filter(reply => reply.id !== replyId))
   }
 
-  const handelShowMenu = (
+  const handleShowMenu = (
     replyId: number,
     replyUserId: string,
     replyContent: string,
@@ -99,7 +99,7 @@ export default function ReplyDetail({
       replyUserName,
       likedReply,
       onLikeReply,
-      handelRemoveReply
+      handleRemoveReply
     )
   }
 
@@ -145,7 +145,7 @@ export default function ReplyDetail({
             <CReply
               key={reply.id}
               reply={reply}
-              onShowMenu={handelShowMenu}
+              onShowMenu={handleShowMenu}
               onClickReply={onClickReply}
             />
           ))}

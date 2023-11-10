@@ -7,6 +7,7 @@ import Taro from '@tarojs/taro'
 import { useAppSelector } from '@/redux/hooks'
 import { ErrorCode } from '@/types/commonErrorCode'
 import './SimpleComment.scss'
+import { commentPerPage } from '@/common/constants'
 
 type Post = WithUserInfo<OPost>
 type Comment = WithUserInfo<OComment>
@@ -52,7 +53,8 @@ export default function SimpleComment({
       userId: '',
       userName: '',
       userAvatar: '',
-      isLike: false
+      isLike: false,
+      floor: -1
     }
   }
 
@@ -76,7 +78,9 @@ export default function SimpleComment({
                   post.id
                 }&authorName=${post.userName}&authorAvatar=${
                   post.userAvatar
-                }&sendCommentFocus=${false}&scrollTo=#comment-${comment.id}`
+                }&sendCommentFocus=${false}&commentId=${
+                  comment.id
+                }&page=${Math.ceil(comment.floor / commentPerPage)}`
           })
         }
       }}

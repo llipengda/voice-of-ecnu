@@ -11,9 +11,11 @@ import SimpleReply from '../SimpleReply/SimpleReply'
 import { getPostByIdWithUserInfo } from '@/api/Post'
 import { getCommentById } from '@/api/Comment'
 import { getReplyById } from '@/api/Reply'
-import { defaultAvatar } from '@/common/constants'
+import { commentPerPage, defaultAvatar } from '@/common/constants'
 import { convertDate } from '@/utils/dateConvert'
 import './Notice.scss'
+import Taro from '@tarojs/taro'
+import { ErrorCode } from '@/types/commonErrorCode'
 
 type Notice = WithUserInfo<ONotice>
 type Post = WithUserInfo<OPost>
@@ -135,6 +137,63 @@ export default function Notice({ notice }: IProps) {
     }
   }
 
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${notice.senderId}`
+    })
+  }
+
+  const handleNavigateToContent = async () => {
+    switch (notice.type) {
+      case 0:
+        break
+      case 1:
+      case 2:
+        if (!post) {
+          return
+        }
+        if (post.deleteAt) {
+          await Taro.navigateTo({
+            url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_EXIST}&showErrorCode=false`
+          })
+          return
+        }
+        await Taro.navigateTo({
+          url: `/packages/post/pages/detail/detail?postId=${
+            post.id
+          }&authorName=${post.userName}&authorAvatar=${
+            post.userAvatar
+          }&sendCommentFocus=${false}`
+        })
+        break
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+        if (!comment || !post) {
+          return
+        }
+        if (post.deleteAt) {
+          await Taro.navigateTo({
+            url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_EXIST}&showErrorCode=false`
+          })
+          return
+        }
+        await Taro.navigateTo({
+          url: `/packages/post/pages/detail/detail?postId=${
+            post.id
+          }&authorName=${post.userName}&authorAvatar=${
+            post.userAvatar
+          }&sendCommentFocus=${false}&commentId=${comment.id}&page=${Math.ceil(
+            comment.floor / commentPerPage
+          )}`
+        })
+        break
+      default:
+        break
+    }
+  }
+
   return (
     <View className={`notice ${notice.type === 0 ? 'notice__system' : ''}`}>
       {notice.type === 0 ? (
@@ -167,9 +226,13 @@ export default function Notice({ notice }: IProps) {
               src={notice.userAvatar}
               fadeIn
               lazyLoad
+              onClick={handleNavigateToUserInfo}
             />
             <View className='notice__header__info'>
-              <View className='notice__header__info__name'>
+              <View
+                className='notice__header__info__name'
+                onClick={handleNavigateToUserInfo}
+              >
                 {notice.userName}
               </View>
               <View className='notice__header__info__message'>
@@ -180,7 +243,9 @@ export default function Notice({ notice }: IProps) {
               </View>
             </View>
           </View>
-          <View className='notice__content'>{notice.content}</View>
+          <View className='notice__content' onClick={handleNavigateToContent}>
+            {notice.content}
+          </View>
           <View className='notice__link'>
             <DetailLink noticeType={notice.type} />
           </View>

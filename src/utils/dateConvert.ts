@@ -27,3 +27,18 @@ export const convertDate = (dateString: string) => {
   }
   return '刚刚'
 }
+
+/**
+ * 检查用户是否被封禁
+ * @param {string?} dateString 时间
+ * @returns {boolean} 用户是否被封禁
+ */
+export const checkBan = (dateString: string | null): boolean => {
+  if (!dateString) {
+    return false
+  }
+  dateString = dateString.replace(/-/g, '/') // fix iOS bug (https://stackoverflow.com/questions/4310953/invalid-date-in-safari
+  const now = new Date()
+  const date = new Date(dateString)
+  return now.getTime() < date.getTime()
+}

@@ -86,7 +86,13 @@ export const banUser = async (days: number, userId: string) => {
     url: `${serverUrl}/user/banUser?bannedBefore=${bannedBefore.toDateString()}&userId=${userId}`,
     method: 'POST'
   })
-  await sendNotice(`您因「违反社区秩序」被管理员封禁${days}天`, userId)
+  if (data.data.code !== -1 && data.data.data) {
+    if (days < 0) {
+      await sendNotice('您已被管理员解除封禁', userId)
+    } else {
+      await sendNotice(`您因「违反社区秩序」被管理员封禁${days}天`, userId)
+    }
+  }
   return data.data.data
 }
 
@@ -94,6 +100,15 @@ export const getUserStatistics = async () => {
   const data = await Taro.request<Result<UserStatistics>>({
     url: `${serverUrl}/user/getInfos`,
     method: 'GET'
+  })
+  return data.data.data
+}
+
+export const getUserStatisticsById = async (userId: string) => {
+  const data = await Taro.request<Result<UserStatistics>>({
+    url: `${serverUrl}/user/getInfoById`,
+    method: 'GET',
+    data: { userId }
   })
   return data.data.data
 }

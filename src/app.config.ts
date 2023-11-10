@@ -46,7 +46,8 @@ export default defineAppConfig({
       pages: [
         'pages/update/update',
         'pages/verify/verify',
-        'pages/settings/settings'
+        'pages/settings/settings',
+        'pages/detail/detail'
       ]
     },
     {

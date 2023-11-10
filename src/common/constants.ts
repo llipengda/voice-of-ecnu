@@ -91,4 +91,8 @@ export const serverUrl = 'https://www.xiaowu.fun'
 
 export const defaultAvatar = 'https://www.xiaowu.fun/static/voecnu.png'
 
-export const expectedReviewDate = new Date('2023-11-10T22:00:00+08:00')
+export const postPerPage = 10
+export const commentPerPage = 15
+export const replyPerPage = 15
+
+export const expectedReviewDate = new Date('2023-11-11T22:00:00+08:00')

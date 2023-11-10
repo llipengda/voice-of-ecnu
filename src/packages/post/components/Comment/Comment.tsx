@@ -24,6 +24,7 @@ interface IProps {
   showDetail?: boolean
   onshowReplyDetail: (comment: WithUserInfo<TComment>) => void
   onCustomClickBody?: () => void
+  highlight?: boolean
 }
 
 export default function Comment({
@@ -35,7 +36,8 @@ export default function Comment({
   showBorder = true,
   showDetail = true,
   onshowReplyDetail,
-  onCustomClickBody
+  onCustomClickBody,
+  highlight = false
 }: IProps) {
   const avatar = comment.userAvatar
   const username = comment.userName
@@ -69,25 +71,40 @@ export default function Comment({
     })
   }
 
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${comment.userId}`
+    })
+  }
+
   return (
-    <View className='comment skeleton-bg' id={id}>
+    <View
+      className='comment skeleton-bg'
+      id={id}
+      style={{ backgroundColor: highlight ? '#fffaea' : 'inherit' }}
+    >
       <View className='comment__header at-row'>
         <Image
           className='comment__header__avatar skeleton-redius at-col at-col-1 at-col--auto'
           src={avatar}
           fadeIn
           lazyLoad
+          onClick={handleNavigateToUserInfo}
         />
         <View className='at-col'>
           <View className='at-row'>
             <View className={`at-col at-col-${showMenuBtn ? 10 : 11}`}>
               <View className='at-row'>
-                <Text className='comment__header__username'>
+                <Text
+                  className='comment__header__username'
+                  onClick={handleNavigateToUserInfo}
+                >
                   {username || '加载中...'}
                 </Text>
               </View>
               <View className='at-row'>
                 <Text className='comment__header__create-at'>
+                  {comment.floor ? `第${comment.floor}楼 · ` : ''}
                   {convertDate(comment.createAt)}
                 </Text>
               </View>

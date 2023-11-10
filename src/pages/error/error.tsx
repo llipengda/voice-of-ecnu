@@ -10,9 +10,17 @@ export default function Error() {
   const [errorCode] = useState<ErrorCode>(
     (Number(params?.errorCode) as ErrorCode) || ErrorCode.NOT_FOUND
   )
+  const [errorMessage] = useState<string>(params?.errorMessage || '')
   const [showErrorCode] = useState<boolean>(
     (params?.showErrorCode || 'true') === 'true'
   )
+
+  const handleRestart = async () => {
+    await Taro.clearStorage()
+    await Taro.reLaunch({
+      url: '/pages/home/home'
+    })
+  }
 
   return (
     <View className='error'>
@@ -23,11 +31,23 @@ export default function Error() {
             <View className='error__code'>错误代码：{errorCode}</View>
           )}
           <View className='error__message'>
-            {generateErrorMessage(errorCode)}
+            {generateErrorMessage(errorCode) || errorMessage}
           </View>
         </View>
-        <Button className='error__button' onClick={() => Taro.navigateBack()}>
+        <Button
+          className='error__button error__button__first'
+          onClick={() => Taro.navigateBack()}
+        >
           返回上一页面
+        </Button>
+        <Button
+          className='error__button'
+          onClick={async () => await Taro.reLaunch({ url: '/pages/home/home' })}
+        >
+          返回首页
+        </Button>
+        <Button className='error__button' onClick={handleRestart}>
+          清除缓存并重启
         </Button>
       </View>
     </View>
