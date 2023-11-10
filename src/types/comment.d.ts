@@ -9,6 +9,7 @@ export type Comment = {
   replies: number
   userId: string
   isLike: boolean
+  floor: number
 }
 
 export type CreateCommentParams = {
