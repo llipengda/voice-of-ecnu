@@ -8,6 +8,8 @@ import { WithUserInfo } from '@/types/withUserInfo'
 import { convertDate } from '@/utils/dateConvert'
 import './Reply.scss'
 import Taro from '@tarojs/taro'
+import { useAppSelector } from '@/redux/hooks'
+import { ErrorCode } from '@/types/commonErrorCode'
 
 type TReply = WithUserInfo<OTReply>
 
@@ -49,7 +51,15 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
     setLikeDisabled(false)
   }
 
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   const handleNavigateToUserInfo = async () => {
+    if (!showComponent) {
+      Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
+      })
+      return
+    }
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${reply.userId}`
     })

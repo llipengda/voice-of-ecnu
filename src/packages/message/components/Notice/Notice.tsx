@@ -16,6 +16,7 @@ import { convertDate } from '@/utils/dateConvert'
 import './Notice.scss'
 import Taro from '@tarojs/taro'
 import { ErrorCode } from '@/types/commonErrorCode'
+import { useAppSelector } from '@/redux/hooks'
 
 type Notice = WithUserInfo<ONotice>
 type Post = WithUserInfo<OPost>
@@ -137,7 +138,15 @@ export default function Notice({ notice }: IProps) {
     }
   }
 
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   const handleNavigateToUserInfo = async () => {
+    if (!showComponent) {
+      Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
+      })
+      return
+    }
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${notice.senderId}`
     })

@@ -210,6 +210,12 @@ export default function Post({
   }
 
   const handleNavigateToUserInfo = async () => {
+    if (!showComponent) {
+      Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
+      })
+      return
+    }
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${post.userId}`
     })
