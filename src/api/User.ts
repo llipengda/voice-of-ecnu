@@ -87,7 +87,11 @@ export const banUser = async (days: number, userId: string) => {
     method: 'POST'
   })
   if (data.data.code !== -1 && data.data.data) {
-    await sendNotice(`您因「违反社区秩序」被管理员封禁${days}天`, userId)
+    if (days < 0) {
+      await sendNotice('您已被管理员解除封禁', userId)
+    } else {
+      await sendNotice(`您因「违反社区秩序」被管理员封禁${days}天`, userId)
+    }
   }
   return data.data.data
 }

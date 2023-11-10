@@ -1,10 +1,10 @@
-import { View } from '@tarojs/components'
+import { Picker, View } from '@tarojs/components'
 import UserCard from '../../components/UserCard/UserCard'
 import { useAppSelector } from '@/redux/hooks'
 import { useEffect, useRef, useState } from 'react'
 import { User, UserStatistics } from '@/types/user'
 import Taro, { useReachBottom } from '@tarojs/taro'
-import { getUserById, getUserStatisticsById } from '@/api/User'
+import { banUser, getUserById, getUserStatisticsById } from '@/api/User'
 import { getPostByUserId } from '@/api/Post'
 import CustomModal, {
   ICustomModalProps
@@ -17,6 +17,8 @@ import CPost from '@/components/Post/Post'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import { AtDivider } from 'taro-ui'
 import './detail.scss'
+import { checkBan } from '@/utils/dateConvert'
+import { primaryColor } from '@/common/constants'
 
 export default function Detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -27,6 +29,8 @@ export default function Detail() {
   const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(
     null
   )
+
+  const [banned, setBanned] = useState(checkBan(user?.bannedBefore || null))
 
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasMore, setHasMore] = useState(true)
@@ -121,10 +125,11 @@ export default function Detail() {
     ;(async () => {
       const data = await getUserById(userId)
       setUser(data)
+      setBanned(checkBan(data.bannedBefore || null))
       const userStatistics = await getUserStatisticsById(userId)
       setUserStatistics(userStatistics)
     })()
-  }, [userId])
+  }, [userId, banned])
 
   useReachBottom(async () => {
     if (!hasMore || reachBottomLoadingDisabled) {
@@ -135,8 +140,93 @@ export default function Detail() {
     setReachBottomLoadingDisabled(false)
   })
 
+  const handleBanUser = async () => {
+    if (banned) {
+      const res = await handleShowModal({
+        title: '提示',
+        children: <View>确定要解封该用户吗？</View>
+      })
+      if (res) {
+        const data = await banUser(-1, user?.id || '')
+        if (!data) {
+          return
+        }
+        Taro.showToast({
+          title: '解封成功',
+          icon: 'success',
+          duration: 1000
+        })
+        setBanned(false)
+      }
+    } else {
+      const BanUser = ({ onChange }: { onChange: (e: number) => void }) => {
+        const [selected, setSelected] = useState(0)
+        const days = [1, 3, 7, 30]
+        return (
+          <View>
+            <View>确定要封禁该用户吗？</View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: '5px'
+              }}
+            >
+              <View>封禁时间：</View>
+              <Picker
+                range={days}
+                value={selected}
+                onChange={e => {
+                  setSelected(e.detail.value as number)
+                  onChange(days[e.detail.value])
+                }}
+                style={{
+                  marginRight: '10px',
+                  color: primaryColor,
+                  fontWeight: 900,
+                  background: '#eee',
+                  borderRadius: '5px',
+                  padding: '5px'
+                }}
+              >
+                {days[selected]}
+              </Picker>
+              <View>天</View>
+            </View>
+          </View>
+        )
+      }
+
+      let bannedDays = 1
+
+      const res = await handleShowModal({
+        title: '提示',
+        children: <BanUser onChange={e => (bannedDays = e)} />
+      })
+      if (res) {
+        const data = await banUser(bannedDays, user?.id || '')
+        if (!data) {
+          return
+        }
+        Taro.showToast({
+          title: '封禁成功',
+          icon: 'success',
+          duration: 1000
+        })
+        setBanned(true)
+      }
+    }
+  }
+
   return (
     <View className='user-detail'>
+      {self.role <= 1 && (
+        <View className='user-detail__ban' onClick={handleBanUser}>
+          {banned ? '解除封禁' : '封禁用户'}
+        </View>
+      )}
       <View className='user-detail__card'>
         {user !== null && userStatistics !== null && (
           <UserCard
@@ -146,7 +236,7 @@ export default function Detail() {
           />
         )}
       </View>
-      <AtDivider content='TA的帖子' />
+      <AtDivider content={user?.id === self.id ? '我的帖子' : 'TA的帖子'} />
       <View className='user-detail__list'>
         <CustomModal {...modalProps} isOpen={showModal} />
         <FloatLayout
