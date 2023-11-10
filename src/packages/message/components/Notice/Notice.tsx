@@ -14,6 +14,7 @@ import { getReplyById } from '@/api/Reply'
 import { defaultAvatar } from '@/common/constants'
 import { convertDate } from '@/utils/dateConvert'
 import './Notice.scss'
+import Taro from '@tarojs/taro'
 
 type Notice = WithUserInfo<ONotice>
 type Post = WithUserInfo<OPost>
@@ -135,6 +136,12 @@ export default function Notice({ notice }: IProps) {
     }
   }
 
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${notice.senderId}`
+    })
+  }
+
   return (
     <View className={`notice ${notice.type === 0 ? 'notice__system' : ''}`}>
       {notice.type === 0 ? (
@@ -167,9 +174,13 @@ export default function Notice({ notice }: IProps) {
               src={notice.userAvatar}
               fadeIn
               lazyLoad
+              onClick={handleNavigateToUserInfo}
             />
             <View className='notice__header__info'>
-              <View className='notice__header__info__name'>
+              <View
+                className='notice__header__info__name'
+                onClick={handleNavigateToUserInfo}
+              >
                 {notice.userName}
               </View>
               <View className='notice__header__info__message'>

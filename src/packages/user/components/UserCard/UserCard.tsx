@@ -4,16 +4,19 @@ import Taro from '@tarojs/taro'
 import { defaultAvatar } from '@/common/constants'
 import male from '@/assets/male.drawio.svg'
 import famale from '@/assets/famale.drawio.svg'
-import { UserStatistics } from '@/types/user'
+import { User, UserStatistics } from '@/types/user'
 import '@/custom-theme.scss'
 import './UserCard.scss'
 
 export default function UserCard({
-  userStatistics
+  userStatistics,
+  user,
+  isSelf
 }: {
   userStatistics: UserStatistics
+  user: User
+  isSelf: boolean
 }) {
-  const user = useAppSelector(state => state.user)
   const showComponent = useAppSelector(state => state.review.showComponent)
 
   const displayGender = () => {
@@ -33,13 +36,26 @@ export default function UserCard({
     }
   }
 
+  const handleClickAvatar = async () => {
+    if (isSelf) {
+      return
+    }
+    await Taro.previewImage({
+      current: user.avatar || defaultAvatar,
+      urls: [user.avatar || defaultAvatar]
+    })
+  }
+
   return (
     <View className='user-card'>
       <View
         className='at-row'
-        onClick={() =>
+        onClick={() => {
+          if (!isSelf) {
+            return
+          }
           Taro.navigateTo({ url: '/packages/user/pages/update/update' })
-        }
+        }}
       >
         <View className='at-col at-col-5'>
           <Image
@@ -47,6 +63,7 @@ export default function UserCard({
             lazyLoad
             src={user.avatar || defaultAvatar}
             className='avatar'
+            onClick={handleClickAvatar}
           />
         </View>
         <View className='at-col at-col-7 at-col__align--center'>
@@ -60,11 +77,12 @@ export default function UserCard({
                 : user.name.substring(0, 5) + '...'}
             </Text>
             {displayGender()}
-            {user.role <= 2 ? (
-              <Text className='verify-ok'>已认证</Text>
-            ) : (
-              <Text className='verify-fault'>未认证</Text>
-            )}
+            {isSelf &&
+              (user.role <= 2 ? (
+                <Text className='verify-ok'>已认证</Text>
+              ) : (
+                <Text className='verify-fault'>未认证</Text>
+              ))}
           </View>
           <View className='at-row'>
             <Text className='user-major' style={{ whiteSpace: 'pre-wrap' }}>
@@ -80,32 +98,50 @@ export default function UserCard({
         </View>
       </View>
       <View className='at-row grid'>
-        <View className='at-col grid-text'>
+        <View
+          className='at-col grid-text'
+          onClick={() => {
+            if (!isSelf) {
+              return
+            }
+            Taro.navigateTo({
+              url: '/packages/message/pages/noticeList/noticeList?type=1'
+            })
+          }}
+        >
           <View className='count'>{userStatistics.likes}</View>
           <View>获赞</View>
         </View>
         <View
           className='at-col grid-text'
           onClick={() => {
+            if (!isSelf) {
+              return
+            }
             Taro.navigateTo({
               url: '/packages/post/pages/my/my?type=post'
             })
           }}
         >
           <View className='count'>{userStatistics.posts}</View>
-          <View>我的{showComponent && '贴子'}</View>
+          <View>
+            {isSelf ? '我的' : 'TA的'}
+            {showComponent && '贴子'}
+          </View>
         </View>
-        <View
-          className='at-col grid-text'
-          onClick={() => {
-            Taro.navigateTo({
-              url: '/packages/post/pages/my/my?type=star'
-            })
-          }}
-        >
-          <View className='count'>{userStatistics.stars}</View>
-          <View>我的收藏</View>
-        </View>
+        {isSelf && (
+          <View
+            className='at-col grid-text'
+            onClick={() => {
+              Taro.navigateTo({
+                url: '/packages/post/pages/my/my?type=star'
+              })
+            }}
+          >
+            <View className='count'>{userStatistics.stars}</View>
+            <View>我的收藏</View>
+          </View>
+        )}
       </View>
     </View>
   )

@@ -45,8 +45,12 @@
   }
 
   &__button {
-    margin-top: 80px;
     color: $primary-color;
     background: #eee;
+    margin-top: 20px;
+
+    &__first {
+      margin-top: 100px;
+    }
   }
 }

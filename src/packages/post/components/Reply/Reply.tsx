@@ -7,6 +7,7 @@ import { disabledColor } from '@/common/constants'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { convertDate } from '@/utils/dateConvert'
 import './Reply.scss'
+import Taro from '@tarojs/taro'
 
 type TReply = WithUserInfo<OTReply>
 
@@ -48,6 +49,12 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
     setLikeDisabled(false)
   }
 
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${reply.userId}`
+    })
+  }
+
   return (
     <View className='reply skeleton-bg'>
       <View className='reply__header at-row'>
@@ -56,12 +63,16 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
           src={reply.userAvatar}
           fadeIn
           lazyLoad
+          onClick={handleNavigateToUserInfo}
         />
         <View className='at-col'>
           <View className='at-row'>
             <View className='at-col at-col-10'>
               <View className='at-row'>
-                <Text className='reply__header__username'>
+                <Text
+                  className='reply__header__username'
+                  onClick={handleNavigateToUserInfo}
+                >
                   {reply.userName}
                 </Text>
               </View>

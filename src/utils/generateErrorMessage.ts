@@ -5,6 +5,8 @@ export const generateErrorMessage = (errorCode: ErrorCode) => {
     case ErrorCode.POST_NOT_EXIST:
     case ErrorCode.POST_NOT_FOUND:
       return '帖子不存在，可能已被删除'
+    case ErrorCode.CAN_NOT_DELETE:
+      return '不能执行此操作'
     case ErrorCode.USER_BANNED:
       return '用户被封禁'
     case ErrorCode.COMMENT_NOT_FOUND:
@@ -40,6 +42,6 @@ export const generateErrorMessage = (errorCode: ErrorCode) => {
     case ErrorCode.NO_MORE_CONTENT:
       return '没有更多内容'
     default:
-      return '发生了未知错误'
+      return ''
   }
 }

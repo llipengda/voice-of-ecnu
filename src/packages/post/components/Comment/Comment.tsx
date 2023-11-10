@@ -69,6 +69,12 @@ export default function Comment({
     })
   }
 
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${comment.userId}`
+    })
+  }
+
   return (
     <View className='comment skeleton-bg' id={id}>
       <View className='comment__header at-row'>
@@ -77,12 +83,16 @@ export default function Comment({
           src={avatar}
           fadeIn
           lazyLoad
+          onClick={handleNavigateToUserInfo}
         />
         <View className='at-col'>
           <View className='at-row'>
             <View className={`at-col at-col-${showMenuBtn ? 10 : 11}`}>
               <View className='at-row'>
-                <Text className='comment__header__username'>
+                <Text
+                  className='comment__header__username'
+                  onClick={handleNavigateToUserInfo}
+                >
                   {username || '加载中...'}
                 </Text>
               </View>

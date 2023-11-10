@@ -116,7 +116,7 @@ export const getPostByUserId = async (
   pageSize: number,
   userId: string
 ) => {
-  const data = await Taro.request<Result<Post[]>>({
+  const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
     url: `${serverUrl}/post/getPostByUserId`,
     method: 'GET',
     data: { page, pageSize, userId }

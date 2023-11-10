@@ -2,7 +2,7 @@ import { backgroundColor } from '@/common/constants'
 import { View } from '@tarojs/components'
 import { useRef, useState } from 'react'
 import { AtFab, AtSearchBar } from 'taro-ui'
-import CPost from '@/packages/post/components/Post/Post'
+import CPost from '@/components/Post/Post'
 import { ListView } from 'taro-listview'
 import { getPostListWithUserInfo } from '@/api/Post'
 import { Post as OPost } from '@/types/post'
@@ -124,7 +124,7 @@ export default function Home() {
     setHasMore(data.length === 5)
   }
 
-  const handelShowMenu = (
+  const handleShowMenu = (
     postId: number,
     postUserId: string,
     likedPost: boolean,
@@ -201,10 +201,12 @@ export default function Home() {
                   onShowModal={handleShowModal}
                   post={p}
                   key={p.id}
-                  onShowMenu={handelShowMenu}
+                  onShowMenu={handleShowMenu}
                 />
               ))}
-              {isEmpty && <View className='tip2'>没有更多内容</View>}
+              {(isEmpty || !hasMore) && (
+                <View className='tip2'>没有更多内容</View>
+              )}
             </ListView>
           </View>
         )}
