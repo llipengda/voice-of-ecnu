@@ -49,8 +49,15 @@ export default function Settings() {
     })
   }
 
-  const handleUnlock = () => {
+  const handleUnlock = async () => {
     dispatch(setReview(true))
+    await Taro.showToast({
+      title: '解锁成功',
+      icon: 'success',
+      duration: 1000
+    })
+    await sleep(1000)
+    await Taro.navigateBack()
   }
 
   return (

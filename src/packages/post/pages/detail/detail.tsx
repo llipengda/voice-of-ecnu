@@ -1,13 +1,13 @@
 import Taro, { useLoad, useReachBottom } from '@tarojs/taro'
 import { deletePost, getPostByIdWithUserInfo } from '@/api/Post'
 import { View, Image, Text, Textarea, Picker } from '@tarojs/components'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AtAvatar, AtIcon, AtTabs } from 'taro-ui'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { removePost } from '@/redux/slice/postSlice'
 import { like, unlike } from '@/api/Like'
 import { starPost, unstarPost } from '@/api/Star'
-import { disabledColor, primaryColor } from '@/common/constants'
+import { commentPerPage, disabledColor, primaryColor } from '@/common/constants'
 import { ListView } from 'taro-listview'
 import { Comment } from '@/types/comment'
 import CComment from '@/packages/post/components/Comment/Comment'
@@ -25,7 +25,6 @@ import ReplyMenu from '@/packages/post/components/ReplyMenu/ReplyMenu'
 import { banUser } from '@/api/User'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { addUserInfo } from '@/utils/addUserInfo'
-import sleep from '@/utils/sleep'
 import { convertDate } from '@/utils/dateConvert'
 import './detail.scss'
 import CustomModal, {
@@ -41,7 +40,9 @@ export default function Detail() {
   const [postId] = useState(Number(params?.postId))
   const [authorName, setAuthorName] = useState(params?.authorName!)
   const [authorAvatar, setAuthorAvatar] = useState(params?.authorAvatar!)
-  const [scrollTo] = useState(params?.scrollTo || null)
+  const [highlightId] = useState(Number(params?.commentId))
+  const [scrollTo] = useState(`#comment-${params?.commentId}` || null)
+  const [initPage] = useState(Number(params?.page) || 1)
   const [sendCommentFocus, setSendCommentFocus] = useState(
     params?.sendCommentFocus === 'true' || false
   )
@@ -66,8 +67,9 @@ export default function Detail() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isEmpty, setIsEmpty] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [isFirst, setIsFirst] = useState(true)
 
-  const index = useRef(1)
+  const index = useRef(initPage)
 
   const [comments, setComments] = useState<WithUserInfo<Comment>[]>([])
 
@@ -151,21 +153,23 @@ export default function Detail() {
     })
   }
 
-  useLoad(async () => {
-    try {
-      if (!scrollTo) {
-        return
+  useEffect(() => {
+    ;(async () => {
+      try {
+        if (!scrollTo || !isLoaded) {
+          return
+        }
+        console.log('try scroll', scrollTo)
+        await Taro.pageScrollTo({
+          selector: scrollTo,
+          offsetTop: -200,
+          duration: 500
+        })
+      } catch (err) {
+        console.log('scroll failed')
       }
-      await sleep(1000)
-      console.log('try scroll', scrollTo)
-      await Taro.pageScrollTo({
-        selector: scrollTo,
-        duration: 200
-      })
-    } catch (err) {
-      console.log('scroll failed')
-    }
-  })
+    })()
+  }, [scrollTo, isLoaded])
 
   const handleSendComment = async () => {
     if (sendCommentDisabled) {
@@ -368,24 +372,28 @@ export default function Detail() {
     const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       ++index.current,
-      10,
+      commentPerPage,
       tabIndex
     )
     setComments([...comments, ...data])
-    setHasMore(data.length === 10)
+    setHasMore(data.length === commentPerPage)
   }
 
   const getData = async () => {
-    index.current = 1
+    if (isFirst) {
+      setIsFirst(false)
+    } else {
+      index.current = 1
+    }
     const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       index.current,
-      10,
+      commentPerPage,
       tabIndex
     )
     setComments(data || [])
     setIsLoaded(true)
-    setHasMore(data.length === 10)
+    setHasMore(data.length === commentPerPage)
     setIsEmpty(data.length === 0)
   }
 
@@ -401,11 +409,11 @@ export default function Detail() {
     const data = await getCommentListWithUserInfoWithDeleted(
       postId,
       index.current,
-      10,
+      commentPerPage,
       i
     )
     setComments(data || [])
-    setHasMore(data.length === 10)
+    setHasMore(data.length === commentPerPage)
     setIsEmpty(data.length === 0)
   }
 
@@ -756,7 +764,7 @@ export default function Detail() {
         className='post-detail__tabs'
       />
       {!isLoaded && <View className='tip'>努力加载中...</View>}
-      <View className='skeleton'>
+      <View className='skeleton post-detail__list'>
         {/* @ts-ignore */}
         <ListView
           isLoaded={isLoaded}
@@ -776,6 +784,7 @@ export default function Detail() {
               comment={c}
               key={c.id}
               id={`comment-${c.id}`}
+              highlight={c.id === highlightId}
               onShowMenu={handleShowCommentMenu}
               onshowReplyDetail={co => handleShowReplyDetail(co)}
             />
