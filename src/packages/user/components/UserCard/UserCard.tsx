@@ -7,6 +7,8 @@ import famale from '@/assets/famale.drawio.svg'
 import { User, UserStatistics } from '@/types/user'
 import '@/custom-theme.scss'
 import './UserCard.scss'
+import { AtIcon } from 'taro-ui'
+import { checkBan } from '@/utils/dateConvert'
 
 export default function UserCard({
   userStatistics,
@@ -46,8 +48,36 @@ export default function UserCard({
     })
   }
 
+  const path = Taro.getCurrentInstance().router?.path || ''
+
   return (
     <View className='user-card'>
+      {checkBan(user.bannedBefore || null) && (
+        <View
+          className='at-row'
+          style={{
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#FF4949',
+            background: '#FFE7E7',
+            paddingTop: '5px',
+            paddingBottom: '5px',
+            borderRadius: '10px',
+            fontWeight: 700,
+            marginTop: '-10px'
+          }}
+        >
+          <AtIcon value='blocked' size='20' color='#FF4949' />
+          <Text style={{ marginLeft: '5px' }}>
+            用户封禁中
+            {path === '/pages/user/user' && isSelf
+              ? ` - 您被封禁至 ${user.bannedBefore?.substring(0, 10)}`
+              : ''}
+          </Text>
+        </View>
+      )}
       <View
         className='at-row'
         onClick={() => {
@@ -77,7 +107,8 @@ export default function UserCard({
                 : user.name.substring(0, 5) + '...'}
             </Text>
             {displayGender()}
-            {isSelf &&
+            {path === '/pages/user/user' &&
+              isSelf &&
               (user.role <= 2 ? (
                 <Text className='verify-ok'>已认证</Text>
               ) : (

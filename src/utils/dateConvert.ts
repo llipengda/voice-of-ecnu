@@ -30,10 +30,10 @@ export const convertDate = (dateString: string) => {
 
 /**
  * 检查用户是否被封禁
- * @param {string} dateString 时间
+ * @param {string?} dateString 时间
  * @returns {boolean} 用户是否被封禁
  */
-export const checkBan = (dateString: string): boolean => {
+export const checkBan = (dateString: string | null): boolean => {
   if (!dateString) {
     return false
   }

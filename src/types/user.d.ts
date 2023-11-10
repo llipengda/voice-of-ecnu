@@ -9,7 +9,7 @@ export type User = {
   avatar: string
   createTime: string
   status?: string // 个性签名
-  bannedBefore?: Date
+  bannedBefore?: string
   /**
    * @enum 0: 未知, 1: 男, 2: 女, 3: 其他
    */
