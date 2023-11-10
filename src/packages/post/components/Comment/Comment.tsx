@@ -9,6 +9,8 @@ import ReplyBlock from '../ReplyBlock/ReplyBlock'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { convertDate } from '@/utils/dateConvert'
 import './Comment.scss'
+import { ErrorCode } from '@/types/commonErrorCode'
+import { useAppSelector } from '@/redux/hooks'
 
 interface IProps {
   comment: WithUserInfo<TComment>
@@ -71,7 +73,15 @@ export default function Comment({
     })
   }
 
+  const showComponent = useAppSelector(state => state.review.showComponent)
+
   const handleNavigateToUserInfo = async () => {
+    if (!showComponent) {
+      Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
+      })
+      return
+    }
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${comment.userId}`
     })

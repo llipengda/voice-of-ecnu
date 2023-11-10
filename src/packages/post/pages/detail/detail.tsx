@@ -31,6 +31,7 @@ import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
 import { sendNotice } from '@/api/Notice'
+import { ErrorCode } from '@/types/commonErrorCode'
 
 type Reply = WithUserInfo<OReply>
 
@@ -625,6 +626,12 @@ export default function Detail() {
   }
 
   const handleNavigateToUserInfo = async () => {
+    if (!showComponent) {
+      Taro.navigateTo({
+        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
+      })
+      return
+    }
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${authorId}`
     })

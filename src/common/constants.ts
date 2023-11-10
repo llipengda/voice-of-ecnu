@@ -95,4 +95,4 @@ export const postPerPage = 10
 export const commentPerPage = 15
 export const replyPerPage = 15
 
-export const expectedReviewDate = new Date('2023-11-11T22:00:00+08:00')
+export const expectedReviewDate = new Date('2023-11-12T22:00:00+08:00')
