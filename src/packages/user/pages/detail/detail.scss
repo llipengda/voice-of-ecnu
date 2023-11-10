@@ -26,3 +26,13 @@
 .at-divider__content {
   background-color: $background-color;
 }
+
+.user-detail {
+  &__ban {
+    position: absolute;
+    top: 60px;
+    right: 70px;
+    font-size: 28px;
+    color: $disabled-color;
+  }
+}
