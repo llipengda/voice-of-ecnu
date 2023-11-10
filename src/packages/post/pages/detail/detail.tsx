@@ -278,8 +278,7 @@ export default function Detail() {
           duration: 1000
         })
       }
-    } else
-      if (user.role <= 1) {
+    } else if (user.role <= 1) {
       const res = await handleShowModal({
         title: '警告',
         children: <DelPost onChange={e => (delReason = e)} />
@@ -521,7 +520,7 @@ export default function Detail() {
     setReplyUserName('')
   }
 
-  const handelDecreaseReplies = (removeReplyCommentId: number) => {
+  const handleDecreaseReplies = (removeReplyCommentId: number) => {
     const newComments = comments.map(c => {
       if (c.id === removeReplyCommentId) {
         c.replies--
@@ -531,7 +530,7 @@ export default function Detail() {
     setComments(newComments)
   }
 
-  const handelShowReplyMenu = (
+  const handleShowReplyMenu = (
     replyId: number,
     replyUserId: string,
     _replyContent: string,
@@ -552,7 +551,7 @@ export default function Detail() {
     })
   }
 
-  const handelBanUser = async () => {
+  const handleBanUser = async () => {
     const BanUser = ({ onChange }: { onChange: (e: number) => void }) => {
       const [selected, setSelected] = useState(0)
       const days = [1, 3, 7, 30]
@@ -600,7 +599,10 @@ export default function Detail() {
       children: <BanUser onChange={e => (bannedDays = e)} />
     })
     if (res) {
-      await banUser(bannedDays, user.id)
+      const data = await banUser(bannedDays, user.id)
+      if (!data) {
+        return
+      }
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
@@ -609,9 +611,15 @@ export default function Detail() {
     }
   }
 
-  const handelClickCommentReply = () => {
+  const handleClickCommentReply = () => {
     handleShowReplyDetail(showDetailComment)
     handleClickReply(-1, '', '')
+  }
+
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${authorId}`
+    })
   }
 
   if (!showComponent) {
@@ -629,7 +637,7 @@ export default function Detail() {
         <CommentMenu
           onShowModal={handleShowModal}
           onRemoveComment={handleRemoveComment}
-          onClickReply={handelClickCommentReply}
+          onClickReply={handleClickCommentReply}
           onClose={() => setShowCommentMenu(false)}
           {...commentMenuProps}
         />
@@ -644,8 +652,8 @@ export default function Detail() {
           isShow={showReplyDetail}
           onClickReply={handleClickReply}
           newReply={newReply}
-          onRemoveReply={handelDecreaseReplies}
-          onShowMenu={handelShowReplyMenu}
+          onRemoveReply={handleDecreaseReplies}
+          onShowMenu={handleShowReplyMenu}
         />
       </FloatLayout>
       <FloatLayout
@@ -663,14 +671,19 @@ export default function Detail() {
       </FloatLayout>
       <View className='post-detail__title'>{title || '加载中...'}</View>
       <View className='at-row'>
-        <AtAvatar
-          circle
-          image={authorAvatar}
-          className='post-detail__avatar'
-          size='small'
-        />
+        <View onClick={handleNavigateToUserInfo}>
+          <AtAvatar
+            circle
+            image={authorAvatar}
+            className='post-detail__avatar'
+            size='small'
+          />
+        </View>
         <View className='at-col'>
-          <View className='post-detail__author at-row'>
+          <View
+            className='post-detail__author at-row'
+            onClick={handleNavigateToUserInfo}
+          >
             {authorName || '加载中...'}
           </View>
           <View className='post-detail__create-at at-row'>
@@ -681,7 +694,7 @@ export default function Detail() {
         </View>
         <View className='at-col post-detail__delete'>
           {user.role <= 1 && (
-            <Text onClick={handelBanUser} className='post-detail__delete__ban'>
+            <Text onClick={handleBanUser} className='post-detail__delete__ban'>
               封禁用户
             </Text>
           )}

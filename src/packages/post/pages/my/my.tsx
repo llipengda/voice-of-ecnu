@@ -7,7 +7,7 @@ import { WithUserInfo } from '@/types/withUserInfo'
 import { View } from '@tarojs/components'
 import ListView from 'taro-listview'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
-import CPost from '@/packages/post/components/Post/Post'
+import CPost from '@/components/Post/Post'
 import { getPostByUserId } from '@/api/Post'
 import { addUserInfo } from '@/utils/addUserInfo'
 import { getStarListPage } from '@/api/Star'
@@ -113,7 +113,7 @@ export default function My() {
     }
   }
 
-  const handelShowMenu = (
+  const handleShowMenu = (
     postId: number,
     postUserId: string,
     likedPost: boolean,
@@ -166,7 +166,7 @@ export default function My() {
               onShowModal={handleShowModal}
               post={p}
               key={p.id}
-              onShowMenu={handelShowMenu}
+              onShowMenu={handleShowMenu}
             />
           ))}
           {posts.length === 0 && <View className='tip'>没有更多内容</View>}

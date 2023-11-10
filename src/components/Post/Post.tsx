@@ -209,6 +209,12 @@ export default function Post({
     }
   }
 
+  const handleNavigateToUserInfo = async () => {
+    await Taro.navigateTo({
+      url: `/packages/user/pages/detail/detail?userId=${post.userId}`
+    })
+  }
+
   return (
     <View className='post skeleton-bg'>
       <View className='post__header at-row'>
@@ -217,9 +223,10 @@ export default function Post({
           lazyLoad
           className='post__header__avatar skeleton-redius'
           src={avatar}
+          onClick={handleNavigateToUserInfo}
         />
         <View className='at-col'>
-          <View className='at-row'>
+          <View className='at-row' onClick={handleNavigateToUserInfo}>
             <Text className='post__header__username'>
               {username || '加载中...'}
             </Text>

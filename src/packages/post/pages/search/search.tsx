@@ -4,7 +4,7 @@ import { View } from '@tarojs/components'
 import { useState, useRef } from 'react'
 import { ListView } from 'taro-listview'
 import { Post } from '@/types/post'
-import CPost from '@/packages/post/components/Post/Post'
+import CPost from '@/components/Post/Post'
 import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import PostMenu from '@/components/PostMenu/PostMenu'
 import './search.scss'
@@ -95,7 +95,7 @@ export default function Search() {
     setHasMore(data.length === 5)
   }
 
-  const handelShowMenu = (
+  const handleShowMenu = (
     postId: number,
     postUserId: string,
     likedPost: boolean,
@@ -148,7 +148,7 @@ export default function Search() {
               onShowModal={handleShowModal}
               post={p}
               key={p.id}
-              onShowMenu={handelShowMenu}
+              onShowMenu={handleShowMenu}
             />
           ))}
           {posts.length === 0 && <View className='tip'>没有更多内容</View>}

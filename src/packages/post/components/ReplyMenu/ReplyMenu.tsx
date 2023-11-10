@@ -42,7 +42,7 @@ export default function CommentMenu({
 }: IProps) {
   const user = useAppSelector(state => state.user)
 
-  const handelBanUser = async () => {
+  const handleBanUser = async () => {
     const BanUser = ({ onChange }: { onChange: (e: number) => void }) => {
       const [selected, setSelected] = useState(0)
       const days = [1, 3, 7, 30]
@@ -91,7 +91,10 @@ export default function CommentMenu({
     })
     if (res) {
       onClose()
-      await banUser(bannedDays, replyUserId)
+      const data = await banUser(bannedDays, replyUserId)
+      if (!data) {
+        return
+      }
       Taro.showToast({
         title: '封禁成功',
         icon: 'success',
@@ -231,7 +234,7 @@ export default function CommentMenu({
         </View>
       )}
       {user.role <= 1 && (
-        <View className='reply-menu__item' onClick={handelBanUser}>
+        <View className='reply-menu__item' onClick={handleBanUser}>
           <AtIcon value='blocked' size='35' color={disabledColor} />
           <View className='reply-menu__item__text'>封禁用户</View>
         </View>

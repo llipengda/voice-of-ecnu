@@ -1,7 +1,7 @@
 import { Fragment, PropsWithChildren, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import store from './redux/store'
-import Taro from '@tarojs/taro'
+import Taro, { useError } from '@tarojs/taro'
 import { login, getUserById, checkLogin } from './api/User'
 import { setLoginInfo, setToken, setUserId } from './redux/slice/loginSlice'
 import { setUser } from './redux/slice/userSlice'
@@ -101,6 +101,13 @@ function App({ children }: PropsWithChildren<any>) {
       }
     }
   }
+
+  useError(err => {
+    console.error(err)
+    Taro.redirectTo({
+      url: '/pages/error/error?errorCode=-1'
+    })
+  })
 
   return (
     <Provider store={store}>
