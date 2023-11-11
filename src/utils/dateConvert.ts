@@ -1,9 +1,20 @@
 export const convertDate = (dateString: string) => {
-  dateString = dateString.replace(/-/g, '/') // fix iOS bug (https://stackoverflow.com/questions/4310953/invalid-date-in-safari
+  console.log(1, dateString)
 
   const now = new Date()
-  const date = new Date(dateString)
+  let date = new Date(dateString)
+  console.log(1, date)
+  if (!date.getSeconds()) {
+    dateString = dateString.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').replace(/(-)/g, '/')
+    console.log(2, dateString)
+    date = new Date(dateString)
+    console.log(2, date)
+  }
+
+
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+  console.log(seconds)
 
   const year = date.getFullYear()
   const month = (date.getMonth() + 1).toFixed().padStart(2, '0')
