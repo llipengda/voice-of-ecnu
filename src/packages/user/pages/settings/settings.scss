@@ -1,19 +1,58 @@
-.settings-list {
-  margin: 20px;
-  margin-top: 30px;
-  border-radius: 25px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  padding-top: 10px;
-  padding-bottom: 10px;
+@import '@/common/constants.scss';
 
-  .item {
-    padding: 30px;
-    padding-left: 50px;
-    padding-right: 40px;
-    border-bottom: 1px solid #eee;
+.settings {
+  &__lable {
+    margin-left: 30px;
+    color: $disabled-color;
+    font-size: 30px;
+    margin-bottom: -10px;
+    margin-top: 50px;
+    font-weight: 700;
+  }
 
-    &:last-child {
-      border-bottom: none;
+  &__btn {
+    margin-top: 80px;
+  }
+
+  &__button {
+    margin-top: 20px;
+    min-width: 60%;
+    background-color: #f6f6f6 !important;
+  }
+
+  &__action {
+    position: relative;
+
+    &__switch {
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin-right: 20px;
+      margin-top: 30px;
+    }
+  }
+
+  .settings-list {
+    margin: 20px;
+    margin-top: 30px;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .item {
+      padding: 30px;
+      padding-left: 50px;
+      padding-right: 40px;
+      border-bottom: 1px solid #eee;
+
+      &--no-border {
+        border-bottom: none;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
   }
 }
