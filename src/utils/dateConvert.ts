@@ -1,20 +1,17 @@
+/**
+ * 将日期字符串转换为相对时间
+ * @param dateString 日期字符串
+ * @returns 返回相对时间字符串，如“刚刚”、“x分钟前”、“x小时前”、“MM-DD”、“YYYY-MM-DD”
+ */
 export const convertDate = (dateString: string) => {
-  console.log(1, dateString)
-
   const now = new Date()
   let date = new Date(dateString)
-  console.log(1, date)
   if (!date.getSeconds()) {
     dateString = dateString.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').replace(/(-)/g, '/')
-    console.log(2, dateString)
     date = new Date(dateString)
-    console.log(2, date)
   }
 
-
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-
-  console.log(seconds)
 
   const year = date.getFullYear()
   const month = (date.getMonth() + 1).toFixed().padStart(2, '0')
