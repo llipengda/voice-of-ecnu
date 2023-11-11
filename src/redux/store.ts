@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import logger from 'redux-logger'
 import userSlice from './slice/userSlice'
 import loginSlice from './slice/loginSlice'
 import postSlice from './slice/postSlice'
@@ -12,7 +13,8 @@ const store = configureStore({
     post: postSlice,
     notice: noticeSlice,
     review: reviewSlice
-  }
+  },
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger)
 })
 
 export type RootState = ReturnType<typeof store.getState>
