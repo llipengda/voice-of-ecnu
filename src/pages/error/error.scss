@@ -5,8 +5,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: calc(100vh - 200px);
   color: $primary-color;
+  padding-bottom: 200px;
 
   &__content {
     width: 80%;
@@ -15,8 +16,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin-top: -500px;
+    margin-top: 50px;
   }
 
   &__icon {
@@ -42,6 +42,8 @@
     font-size: 1.3rem;
     color: #666;
     text-align: center;
+    max-width: 100%;
+    word-break: break-all;
   }
 
   &__button {

@@ -103,7 +103,10 @@ function App({ children }: PropsWithChildren<any>) {
   }
 
   useError(err => {
-    console.error(err)
+    console.error('UNHANDLED ERROR', err)
+    if (Taro.getCurrentInstance().router?.path === '/pages/error/error') {
+      return
+    }
     Taro.redirectTo({
       url: '/pages/error/error?errorCode=-1'
     })

@@ -8,7 +8,7 @@ import './error.scss'
 export default function Error() {
   const params = Taro.getCurrentInstance().router?.params
   const [errorCode] = useState<ErrorCode>(
-    (Number(params?.errorCode) as ErrorCode) || ErrorCode.NOT_FOUND
+    (Number(params?.errorCode) as ErrorCode) || -1
   )
   const [errorMessage] = useState<string>(params?.errorMessage || '')
   const [showErrorCode] = useState<boolean>(
