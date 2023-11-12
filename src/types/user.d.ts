@@ -16,6 +16,8 @@ export type User = {
   gender?: 0 | 1 | 2 | 3
   grade?: string
   major?: string
+  isOpen: boolean
+  isVibrate: boolean
 }
 
 export type LoginInfo = {

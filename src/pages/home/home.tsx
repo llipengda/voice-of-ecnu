@@ -20,6 +20,7 @@ import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
 import './home.scss'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 type Post = WithUserInfo<OPost>
 
@@ -81,11 +82,11 @@ export default function Home() {
     })
   }
 
-  const handleSearchClick = () => {
+  const handleSearchClick = useVibrateCallback(() => {
     Taro.navigateTo({
       url: `/packages/post/pages/search/search?key=${searchText}`
     })
-  }
+  })
 
   const index = useRef(1)
 

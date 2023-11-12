@@ -1,8 +1,23 @@
+/**
+ * 将日期字符串转换为相对时间
+ * @param dateString 日期字符串
+ * @returns 返回相对时间字符串，如“刚刚”、“x分钟前”、“x小时前”、“MM-DD”、“YYYY-MM-DD”
+ */
 export const convertDate = (dateString: string) => {
-  dateString = dateString.replace(/-/g, '/') // fix iOS bug (https://stackoverflow.com/questions/4310953/invalid-date-in-safari
-
   const now = new Date()
-  const date = new Date(dateString)
+  const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
+  if (regex.test(dateString)) {
+    dateString = dateString.replace(/-/g, '/')
+  }
+  let date = new Date(dateString)
+  if (!date.getSeconds()) {
+    dateString = dateString
+      .replace(/T/g, ' ')
+      .replace(/\.[\d]{3}Z/, '')
+      .replace(/(-)/g, '/')
+    date = new Date(dateString)
+  }
+
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
 
   const year = date.getFullYear()

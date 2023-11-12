@@ -128,3 +128,19 @@ export const checkName = async (name: string) => {
   })
   return data.data.data
 }
+
+export const changeShowUserPost = async () => {
+  const data = await Taro.request<Result<boolean>>({
+    url: `${serverUrl}/user/open`,
+    method: 'POST'
+  })
+  return data.data.data
+}
+
+export const changeIsVibrate = async () => {
+  const data = await Taro.request<Result<boolean>>({
+    url: `${serverUrl}/user/vibrate`,
+    method: 'POST'
+  })
+  return data.data.data
+}

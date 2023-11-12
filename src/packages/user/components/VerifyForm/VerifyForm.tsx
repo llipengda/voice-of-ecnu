@@ -6,18 +6,16 @@ import { AtButton } from 'taro-ui'
 import { useState } from 'react'
 import * as USERAPI from '@/api/User'
 import { setUser } from '@/redux/slice/userSlice'
-import Taro, { useLoad } from '@tarojs/taro'
-import showPrivacyPolicy from '@/utils/privacy'
+import Taro from '@tarojs/taro'
 import { setLoginInfo } from '@/redux/slice/loginSlice'
 import '@/custom-theme.scss'
 import './VerifyForm.scss'
+import { useShowPrivacyPolicy } from '@/utils/hooks/useShowPrivacyPolicy'
 
 export default function VerifyForm() {
   const user = useAppSelector(state => state.user)
 
-  useLoad(() => {
-    showPrivacyPolicy(user)
-  })
+  useShowPrivacyPolicy()
 
   const dispatch = useAppDispatch()
 

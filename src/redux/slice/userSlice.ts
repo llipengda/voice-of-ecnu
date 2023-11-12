@@ -7,7 +7,9 @@ const initialState: User = {
   name: '未登录',
   avatar: '',
   createTime: '',
-  gender: 0
+  gender: 0,
+  isOpen: false,
+  isVibrate: false
 }
 
 const userSlice = createSlice({

@@ -1,18 +1,21 @@
 import { primaryColor } from '@/common/constants'
-import { View } from '@tarojs/components'
+import { Button, Switch, View } from '@tarojs/components'
 import { AtList, AtListItem } from 'taro-ui'
 import Taro from '@tarojs/taro'
-import { deleteUser, getUserById, login } from '@/api/User'
+import { changeIsVibrate, changeShowUserPost, deleteUser, getUserById, login } from '@/api/User'
 import { sendNotice } from '@/api/Notice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setUser } from '@/redux/slice/userSlice'
 import sleep from '@/utils/sleep'
-import './settings.scss'
 import { setReview } from '@/redux/slice/reviewSlice'
+import './settings.scss'
+import '@/custom-theme.scss'
+import { useState } from 'react'
 
 export default function Settings() {
   const dispatch = useAppDispatch()
   const user = useAppSelector(state => state.user)
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   const handleDeleteUser = async () => {
     const res = await Taro.showModal({
@@ -43,6 +46,13 @@ export default function Settings() {
   }
 
   const handleRestart = async () => {
+    const res = await Taro.showModal({
+      title: '警告',
+      content: '确定要清除缓存并重启小程序吗？'
+    })
+    if (!res.confirm) {
+      return
+    }
     await Taro.clearStorage()
     await Taro.reLaunch({
       url: '/pages/home/home'
@@ -60,10 +70,36 @@ export default function Settings() {
     await Taro.navigateBack()
   }
 
+  const handleShowPrivacy = () => {
+    // @ts-ignore
+    wx.openPrivacyContract({
+      success: () => {}
+    })
+  }
+
+  const [switchShowPostDisabled, setSwitchShowPostDisabled] = useState(false)
+
+  const handleShowPost = async () => {
+    setSwitchShowPostDisabled(true)
+    await changeShowUserPost()
+    dispatch(setUser({ ...user, isOpen: !user.isOpen }))
+    setSwitchShowPostDisabled(false)
+  }
+
+  const [switchVibrateDisabled, setSwitchVibrateDisabled] = useState(false)
+
+  const handleChangeVibrate = async () => {
+    setSwitchVibrateDisabled(true)
+    await changeIsVibrate()
+    dispatch(setUser({ ...user, isVibrate: !user.isVibrate }))
+    setSwitchVibrateDisabled(false)
+  }
+
   return (
     <View className='settings'>
+      <View className='settings__lable'>常规设置</View>
       <AtList className='settings-list' hasBorder={false}>
-        {user.role <= 1 && (
+        {!showComponent && user.role <= 1 && (
           <AtListItem
             className='item'
             title='一键解锁'
@@ -73,23 +109,91 @@ export default function Settings() {
             onClick={handleUnlock}
           />
         )}
+        <View className='settings__action'>
+          <AtListItem
+            className='item item--no-border'
+            title='开启震动反馈'
+            hasBorder={false}
+            iconInfo={{ value: 'iphone', color: primaryColor }}
+          />
+          <Switch
+            checked={user.isVibrate}
+            color='#b70031'
+            disabled={switchVibrateDisabled}
+            onChange={handleChangeVibrate}
+            className='settings__action__switch'
+          />
+        </View>
+      </AtList>
+      <View className='settings__lable'>隐私设置</View>
+      <AtList className='settings-list' hasBorder={false}>
         <AtListItem
           className='item'
-          title='注销账号'
+          title='隐私协议'
           arrow='right'
           hasBorder={false}
-          iconInfo={{ value: 'close-circle', color: primaryColor }}
-          onClick={handleDeleteUser}
+          iconInfo={{ value: 'bullet-list', color: primaryColor }}
+          onClick={handleShowPrivacy}
+        />
+        <View className='settings__action'>
+          <AtListItem
+            className='item item--no-border'
+            title='展示我的帖子'
+            hasBorder={false}
+            iconInfo={{ value: 'share-2', color: primaryColor }}
+          />
+          <Switch
+            checked={user.isOpen}
+            color='#b70031'
+            disabled={switchShowPostDisabled}
+            onChange={handleShowPost}
+            className='settings__action__switch'
+          />
+        </View>
+      </AtList>
+      <View className='settings__lable'>关于「花狮喵」</View>
+      <AtList className='settings-list' hasBorder={false}>
+        <AtListItem
+          className='item'
+          title='关于我们'
+          arrow='right'
+          hasBorder={false}
+          iconInfo={{ value: 'link', color: primaryColor }}
+          onClick={() => {}}
         />
         <AtListItem
           className='item'
-          title='清除缓存并重启小程序'
+          title='加入我们'
           arrow='right'
           hasBorder={false}
-          iconInfo={{ value: 'reload', color: primaryColor }}
-          onClick={handleRestart}
+          iconInfo={{ value: 'add-circle', color: primaryColor }}
+          onClick={() => {}}
+        />
+        <AtListItem
+          className='item item--no-border'
+          title='意见反馈'
+          arrow='right'
+          hasBorder={false}
+          iconInfo={{ value: 'help', color: primaryColor }}
+          onClick={() => {}}
         />
       </AtList>
+      <View className='settings__btn'>
+        <Button
+          className='settings__button'
+          onClick={handleDeleteUser}
+          type='warn'
+        >
+          注销账号
+        </Button>
+        <Button
+          className='settings__button'
+          onClick={handleRestart}
+          type='warn'
+        >
+          清除缓存并重启小程序
+        </Button>
+      </View>
     </View>
   )
 }

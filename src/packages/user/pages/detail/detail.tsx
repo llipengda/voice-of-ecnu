@@ -126,6 +126,9 @@ export default function Detail() {
       const data = await getUserById(userId)
       setUser(data)
       setBanned(checkBan(data.bannedBefore || null))
+      if (!data.isOpen) {
+        setIsLoaded(true)
+      }
       const userStatistics = await getUserStatisticsById(userId)
       setUserStatistics(userStatistics)
     })()
@@ -222,7 +225,7 @@ export default function Detail() {
 
   return (
     <View className='user-detail'>
-      {self.role <= 1 && (
+      {isLoaded && self.role <= 1 && (
         <View className='user-detail__ban' onClick={handleBanUser}>
           {banned ? '解除封禁' : '封禁用户'}
         </View>
@@ -236,7 +239,9 @@ export default function Detail() {
           />
         )}
       </View>
-      <AtDivider content={user?.id === self.id ? '我的帖子' : 'TA的帖子'} />
+      {isLoaded && (
+        <AtDivider content={user?.id === self.id ? '我的帖子' : 'TA的帖子'} />
+      )}
       <View className='user-detail__list'>
         <CustomModal {...modalProps} isOpen={showModal} />
         <FloatLayout
@@ -250,31 +255,35 @@ export default function Detail() {
             {...postMenuProps}
           />
         </FloatLayout>
-        <View className='skeleton'>
-          {!isLoaded && <View className='tip'>努力加载中...</View>}
-          {/* @ts-ignore */}
-          <ListView
-            isLoaded={isLoaded}
-            hasMore={hasMore}
-            style={{ width: '100%', overflowX: 'hidden' }}
-            autoHeight
-            onPullDownRefresh={handlePullDownRefresh}
-            onScrollToLower={handleScrollToLower}
-            needInit
-          >
-            {posts.map(p => (
-              <CPost
-                onShowModal={handleShowModal}
-                post={p}
-                key={p.id}
-                onShowMenu={handleShowMenu}
-              />
-            ))}
-            {(posts.length === 0 || !hasMore) && (
-              <View className='tip2'>没有更多内容</View>
-            )}
-          </ListView>
-        </View>
+        {user?.id === self.id || user?.isOpen ? (
+          <View className='skeleton'>
+            {!isLoaded && <View className='tip'>努力加载中...</View>}
+            {/* @ts-ignore */}
+            <ListView
+              isLoaded={isLoaded}
+              hasMore={hasMore}
+              style={{ width: '100%', overflowX: 'hidden' }}
+              autoHeight
+              onPullDownRefresh={handlePullDownRefresh}
+              onScrollToLower={handleScrollToLower}
+              needInit
+            >
+              {posts.map(p => (
+                <CPost
+                  onShowModal={handleShowModal}
+                  post={p}
+                  key={p.id}
+                  onShowMenu={handleShowMenu}
+                />
+              ))}
+              {(posts.length === 0 || !hasMore) && (
+                <View className='tip2'>没有更多内容</View>
+              )}
+            </ListView>
+          </View>
+        ) : (
+          <View className='tip2'>{isLoaded ? '用户选择不展示帖子' : ''}</View>
+        )}
       </View>
     </View>
   )
