@@ -14,6 +14,7 @@ import { setReview } from '@/redux/slice/reviewSlice'
 import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
+import { postPerPage } from '@/common/constants'
 
 export default function Search() {
   const params = Taro.getCurrentInstance().router?.params
@@ -76,23 +77,23 @@ export default function Search() {
   const handleScrollToLower = async () => {
     const data = await searchByPostOrCommentOrReplyWithUserInfo(
       ++index.current,
-      5,
+      postPerPage,
       params?.key || ''
     )
     setPosts([...posts, ...data])
-    setHasMore(data.length === 5)
+    setHasMore(data.length === postPerPage)
   }
 
   const handlePullDownRefresh = async () => {
     index.current = 1
     const data = await searchByPostOrCommentOrReplyWithUserInfo(
       1,
-      5,
+      postPerPage,
       params?.key || ''
     )
     setPosts(data)
     setIsLoaded(true)
-    setHasMore(data.length === 5)
+    setHasMore(data.length === postPerPage)
   }
 
   const handleShowMenu = (
