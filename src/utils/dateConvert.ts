@@ -5,9 +5,16 @@
  */
 export const convertDate = (dateString: string) => {
   const now = new Date()
+  const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
+  if (regex.test(dateString)) {
+    dateString = dateString.replace(/-/g, '/')
+  }
   let date = new Date(dateString)
   if (!date.getSeconds()) {
-    dateString = dateString.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').replace(/(-)/g, '/')
+    dateString = dateString
+      .replace(/T/g, ' ')
+      .replace(/\.[\d]{3}Z/, '')
+      .replace(/(-)/g, '/')
     date = new Date(dateString)
   }
 

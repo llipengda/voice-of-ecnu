@@ -11,7 +11,6 @@ export const useVibrate = (type: 'light' | 'medium' | 'heavy' = 'medium') => {
   const isVibrate = useAppSelector(state => state.user.isVibrate)
   const vibrate = useCallback(async () => {
     if (isVibrate) {
-      console.warn('vibrate')
       await Taro.vibrateShort({ type })
     }
   }, [isVibrate, type])
