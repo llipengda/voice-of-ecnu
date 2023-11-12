@@ -1,4 +1,4 @@
-import { backgroundColor } from '@/common/constants'
+import { backgroundColor, postPerPage } from '@/common/constants'
 import { View } from '@tarojs/components'
 import { useRef, useState } from 'react'
 import { AtFab, AtSearchBar } from 'taro-ui'
@@ -93,20 +93,24 @@ export default function Home() {
   const handleScrollToLower = async () => {
     const data = await getPostListWithUserInfo(
       ++index.current,
-      5,
+      postPerPage,
       selected === 1
     )
     setPosts([...posts, ...data])
-    setHasMore(data.length === 5)
+    setHasMore(data.length === postPerPage)
     setIsEmpty(data.length === 0)
   }
 
   const getData = async () => {
     index.current = 1
-    const data = await getPostListWithUserInfo(index.current, 5, selected === 1)
+    const data = await getPostListWithUserInfo(
+      index.current,
+      postPerPage,
+      selected === 1
+    )
     setPosts(data || [])
     setIsLoaded(true)
-    setHasMore(data.length === 5)
+    setHasMore(data.length === postPerPage)
     setIsEmpty(data.length === 0)
   }
 
@@ -119,10 +123,14 @@ export default function Home() {
     setPosts([])
     setIsEmpty(false)
     index.current = 1
-    const data = await getPostListWithUserInfo(index.current, 5, i === 1)
+    const data = await getPostListWithUserInfo(
+      index.current,
+      postPerPage,
+      i === 1
+    )
     setPosts(data)
     setIsLoaded(true)
-    setHasMore(data.length === 5)
+    setHasMore(data.length === postPerPage)
   }
 
   const handleShowMenu = (

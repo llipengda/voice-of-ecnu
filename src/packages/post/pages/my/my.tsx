@@ -15,6 +15,7 @@ import './my.scss'
 import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
+import { postPerPage } from '@/common/constants'
 
 export default function My() {
   const params = Taro.getCurrentInstance().router?.params
@@ -86,30 +87,31 @@ export default function My() {
 
   const handleScrollToLower = async () => {
     if (type === 'post') {
-      const data = (await getPostByUserId(++index.current, 5, user.id)) || []
+      const data =
+        (await getPostByUserId(++index.current, postPerPage, user.id)) || []
       const newData = data.map(post => addUserInfo(post))
       setPosts([...posts, ...newData])
-      setHasMore(data.length === 5)
+      setHasMore(data.length === postPerPage)
     } else {
-      const data = (await getStarListPage(++index.current, 5)) || []
+      const data = (await getStarListPage(++index.current, postPerPage)) || []
       setPosts([...posts, ...data])
-      setHasMore(data.length === 5)
+      setHasMore(data.length === postPerPage)
     }
   }
 
   const handlePullDownRefresh = async () => {
     index.current = 1
     if (type === 'post') {
-      const data = (await getPostByUserId(1, 5, user.id)) || []
+      const data = (await getPostByUserId(1, postPerPage, user.id)) || []
       const newData = data.map(post => addUserInfo(post))
       setPosts(newData)
       setIsLoaded(true)
-      setHasMore(data.length === 5)
+      setHasMore(data.length === postPerPage)
     } else {
-      const data = (await getStarListPage(1, 5)) || []
+      const data = (await getStarListPage(1, postPerPage)) || []
       setPosts(data)
       setIsLoaded(true)
-      setHasMore(data.length === 5)
+      setHasMore(data.length === postPerPage)
     }
   }
 
