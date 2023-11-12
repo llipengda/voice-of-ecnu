@@ -1,5 +1,5 @@
 import { primaryColor } from '@/common/constants'
-import { Button, Switch, View } from '@tarojs/components'
+import { Switch, View } from '@tarojs/components'
 import { AtList, AtListItem } from 'taro-ui'
 import Taro from '@tarojs/taro'
 import { changeIsVibrate, changeShowUserPost, deleteUser, getUserById, login } from '@/api/User'
@@ -179,20 +179,18 @@ export default function Settings() {
         />
       </AtList>
       <View className='settings__btn'>
-        <Button
+        <View
           className='settings__button'
           onClick={handleDeleteUser}
-          type='warn'
         >
           注销账号
-        </Button>
-        <Button
+        </View>
+        <View
           className='settings__button'
           onClick={handleRestart}
-          type='warn'
         >
           清除缓存并重启小程序
-        </Button>
+        </View>
       </View>
     </View>
   )
