@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Image, Input, Textarea, Picker } from '@tarojs/components'
 import { AtButton, AtIcon } from 'taro-ui'
-import Taro, { useLoad } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import { uploadImage } from '@/api/Image'
 import { useAppSelector } from '@/redux/hooks'
 import { checkName, updateUser } from '@/api/User'
@@ -13,18 +13,16 @@ import {
   primaryColor
 } from '@/common/constants'
 import { setUser } from '@/redux/slice/userSlice'
-import showPrivacyPolicy from '@/utils/privacy'
 import sleep from '@/utils/sleep'
 import { User } from '@/types/user'
 import '@/custom-theme.scss'
 import './UpdateUserForm.scss'
+import { useShowPrivacyPolicy } from '@/utils/hooks/useShowPrivacyPolicy'
 
 export default function UpdateUserForm() {
   const user = useAppSelector(state => state.user)
 
-  useLoad(() => {
-    showPrivacyPolicy(user)
-  })
+  useShowPrivacyPolicy()
 
   const dispatch = useDispatch()
 
