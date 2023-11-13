@@ -2,7 +2,13 @@ import { primaryColor } from '@/common/constants'
 import { Switch, View } from '@tarojs/components'
 import { AtList, AtListItem } from 'taro-ui'
 import Taro from '@tarojs/taro'
-import { changeIsVibrate, changeShowUserPost, deleteUser, getUserById, login } from '@/api/User'
+import {
+  changeIsVibrate,
+  changeShowUserPost,
+  deleteUser,
+  getUserById,
+  login
+} from '@/api/User'
 import { sendNotice } from '@/api/Notice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setUser } from '@/redux/slice/userSlice'
@@ -134,21 +140,23 @@ export default function Settings() {
           iconInfo={{ value: 'bullet-list', color: primaryColor }}
           onClick={handleShowPrivacy}
         />
-        <View className='settings__action'>
-          <AtListItem
-            className='item item--no-border'
-            title='展示我的帖子'
-            hasBorder={false}
-            iconInfo={{ value: 'share-2', color: primaryColor }}
-          />
-          <Switch
-            checked={user.isOpen}
-            color='#b70031'
-            disabled={switchShowPostDisabled}
-            onChange={handleShowPost}
-            className='settings__action__switch'
-          />
-        </View>
+        {showComponent && (
+          <View className='settings__action'>
+            <AtListItem
+              className='item item--no-border'
+              title='展示我的帖子'
+              hasBorder={false}
+              iconInfo={{ value: 'share-2', color: primaryColor }}
+            />
+            <Switch
+              checked={user.isOpen}
+              color='#b70031'
+              disabled={switchShowPostDisabled}
+              onChange={handleShowPost}
+              className='settings__action__switch'
+            />
+          </View>
+        )}
       </AtList>
       <View className='settings__lable'>关于「花狮喵」</View>
       <AtList className='settings-list' hasBorder={false}>
@@ -178,16 +186,10 @@ export default function Settings() {
         />
       </AtList>
       <View className='settings__btn'>
-        <View
-          className='settings__button'
-          onClick={handleDeleteUser}
-        >
+        <View className='settings__button' onClick={handleDeleteUser}>
           注销账号
         </View>
-        <View
-          className='settings__button'
-          onClick={handleRestart}
-        >
+        <View className='settings__button' onClick={handleRestart}>
           清除缓存并重启小程序
         </View>
       </View>
