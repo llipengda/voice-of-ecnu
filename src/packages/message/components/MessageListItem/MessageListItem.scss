@@ -3,16 +3,16 @@
 .message-list-item {
   margin-left: 30px;
   margin-right: 30px;
-  padding-bottom: 15px;
-  margin-bottom: 15px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
   border-bottom: 1px solid #eee;
 
   &__icon {
-    width: 70px;
-    height: 70px;
-    font-size: 70px;
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
     padding: 20px;
     border-radius: 50%;
     background-color: #eee;
@@ -26,14 +26,13 @@
     justify-content: center;
 
     &__title {
-      font-size: 36px;
-      font-weight: bold;
-      color: $primary-color;
-      margin-bottom: 5px;
+      font-size: 30px;
+      margin-bottom: 2px;
+      color: #353535;
     }
 
     &__desc {
-      font-size: 26px;
+      font-size: 24px;
       color: $disabled-color;
     }
   }
@@ -62,7 +61,7 @@
   }
 
   .at-icon-heart-2 {
-    padding-top: 25px;
-    padding-bottom: 15px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }

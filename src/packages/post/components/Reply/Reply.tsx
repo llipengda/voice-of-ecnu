@@ -10,6 +10,7 @@ import './Reply.scss'
 import Taro from '@tarojs/taro'
 import { useAppSelector } from '@/redux/hooks'
 import { ErrorCode } from '@/types/commonErrorCode'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 type TReply = WithUserInfo<OTReply>
 
@@ -35,7 +36,7 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
   const [likes, setLikes] = useState(reply.likes)
   const [likeDisabled, setLikeDisabled] = useState(false)
 
-  const handleLikeReply = async () => {
+  const handleLikeReply = useVibrateCallback(async () => {
     if (likeDisabled) {
       return
     }
@@ -49,11 +50,11 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
       await like(reply.id, 2)
     }
     setLikeDisabled(false)
-  }
+  }, [liked, likeDisabled, likes, reply.id])
 
   const showComponent = useAppSelector(state => state.review.showComponent)
 
-  const handleNavigateToUserInfo = async () => {
+  const handleNavigateToUserInfo = useVibrateCallback(async () => {
     if (!showComponent) {
       Taro.navigateTo({
         url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
@@ -63,7 +64,7 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${reply.userId}`
     })
-  }
+  }, [showComponent, reply.userId])
 
   return (
     <View className='reply skeleton-bg'>

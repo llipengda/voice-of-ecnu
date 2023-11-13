@@ -18,6 +18,7 @@ import { User } from '@/types/user'
 import '@/custom-theme.scss'
 import './UpdateUserForm.scss'
 import { useShowPrivacyPolicy } from '@/utils/hooks/useShowPrivacyPolicy'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function UpdateUserForm() {
   const user = useAppSelector(state => state.user)
@@ -30,7 +31,7 @@ export default function UpdateUserForm() {
 
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
 
-  const handleChangeAvatar = () => {
+  const handleChangeAvatar = useVibrateCallback(() => {
     Taro.chooseImage({
       count: 1,
       sizeType: ['compressed'],
@@ -47,7 +48,7 @@ export default function UpdateUserForm() {
         })
       }
     })
-  }
+  }, [userState])
 
   const [detailMajorRange, setDetailMajorRange] = useState<String[]>([])
   const [selectedMajor, setSelectedMajor] = useState<number[]>([0, 0])
@@ -67,7 +68,7 @@ export default function UpdateUserForm() {
     initMajor()
   }, [])
 
-  const handleSubmit = async () => {
+  const handleSubmit = useVibrateCallback(async () => {
     setSubmitButtonLoading(true)
     const isNameSame = user.name === userState.name?.trim()
     if (!isNameSame && !(await checkName(userState.name!))) {
@@ -91,24 +92,24 @@ export default function UpdateUserForm() {
       duration: 1000
     })
     await sleep(1000)
-    Taro.navigateBack()
-  }
+    await Taro.navigateBack()
+  }, [userState])
 
-  const handleReset = () => {
+  const handleReset = useVibrateCallback(() => {
     setUserState(user)
     initMajor()
-  }
+  }, [user])
 
-  const navigateToVerify = () => {
+  const navigateToVerify = useVibrateCallback(() => {
     Taro.navigateTo({ url: '/packages/user/pages/verify/verify' })
-  }
+  })
 
-  const handleShowAvatar = () => {
+  const handleShowAvatar = useVibrateCallback(() => {
     Taro.previewImage({
       urls: [userState.avatar!],
       current: userState.avatar
     })
-  }
+  }, [userState])
 
   return (
     <View className='update-user-form'>

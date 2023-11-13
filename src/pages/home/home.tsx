@@ -1,4 +1,4 @@
-import { backgroundColor } from '@/common/constants'
+import { backgroundColor, postPerPage } from '@/common/constants'
 import { View } from '@tarojs/components'
 import { useRef, useState } from 'react'
 import { AtFab, AtSearchBar } from 'taro-ui'
@@ -21,6 +21,7 @@ import CustomModal, {
 } from '@/components/CustomModal/CustomModal'
 import './home.scss'
 import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
+import { useCheckMessage } from '@/utils/hooks/useCheckMessage'
 
 type Post = WithUserInfo<OPost>
 
@@ -62,97 +63,117 @@ export default function Home() {
     children: <View />
   })
 
-  const handleShowModal = (
-    props: Partial<ICustomModalProps>
-  ): Promise<boolean> => {
-    return new Promise(resolve => {
-      setShowModal(true)
-      setModalProps({
-        ...modalProps,
-        ...props,
-        onConfirm: () => {
-          setShowModal(false)
-          resolve(true)
-        },
-        onCancle: () => {
-          setShowModal(false)
-          resolve(false)
-        }
+  const handleShowModal = useVibrateCallback(
+    (props: Partial<ICustomModalProps>): Promise<boolean> => {
+      return new Promise(resolve => {
+        setShowModal(true)
+        setModalProps({
+          ...modalProps,
+          ...props,
+          onConfirm: () => {
+            setShowModal(false)
+            resolve(true)
+          },
+          onCancle: () => {
+            setShowModal(false)
+            resolve(false)
+          }
+        })
       })
-    })
-  }
+    }
+  )
 
   const handleSearchClick = useVibrateCallback(() => {
     Taro.navigateTo({
       url: `/packages/post/pages/search/search?key=${searchText}`
     })
-  })
+  }, [searchText])
 
   const index = useRef(1)
 
   const handleScrollToLower = async () => {
     const data = await getPostListWithUserInfo(
       ++index.current,
-      5,
+      postPerPage,
       selected === 1
     )
     setPosts([...posts, ...data])
-    setHasMore(data.length === 5)
+    setHasMore(data.length === postPerPage)
     setIsEmpty(data.length === 0)
   }
 
   const getData = async () => {
     index.current = 1
-    const data = await getPostListWithUserInfo(index.current, 5, selected === 1)
+    const data = await getPostListWithUserInfo(
+      index.current,
+      postPerPage,
+      selected === 1
+    )
     setPosts(data || [])
     setIsLoaded(true)
-    setHasMore(data.length === 5)
+    setHasMore(data.length === postPerPage)
     setIsEmpty(data.length === 0)
   }
 
-  const handlePullDownRefresh = async () => {
+  const handlePullDownRefresh = useVibrateCallback(async () => {
     await getData()
-  }
+  })
 
-  const handleSwitchTab = async (i: number) => {
+  const handleSwitchTab = useVibrateCallback(async (i: number) => {
     setSelected(i)
     setPosts([])
     setIsEmpty(false)
     index.current = 1
-    const data = await getPostListWithUserInfo(index.current, 5, i === 1)
+    const data = await getPostListWithUserInfo(
+      index.current,
+      postPerPage,
+      i === 1
+    )
     setPosts(data)
     setIsLoaded(true)
-    setHasMore(data.length === 5)
-  }
+    setHasMore(data.length === postPerPage)
+  })
 
-  const handleShowMenu = (
-    postId: number,
-    postUserId: string,
-    likedPost: boolean,
-    staredPost: boolean,
-    onLikePost: () => void,
-    onStarPost: () => void,
-    onRemovePost: () => void,
-    onNavigateToPost: (focus: boolean) => void
-  ) => {
-    setShowMenu(true)
-    setPostMenuPorps({
-      postId,
-      postUserId,
-      likedPost,
-      staredPost,
-      onLikePost,
-      onStarPost,
-      onRemovePost,
-      onNavigateToPost
-    })
-  }
+  const handleShowMenu = useVibrateCallback(
+    (
+      postId: number,
+      postUserId: string,
+      likedPost: boolean,
+      staredPost: boolean,
+      onLikePost: () => void,
+      onStarPost: () => void,
+      onRemovePost: () => void,
+      onNavigateToPost: (focus: boolean) => void
+    ) => {
+      setShowMenu(true)
+      setPostMenuPorps({
+        postId,
+        postUserId,
+        likedPost,
+        staredPost,
+        onLikePost,
+        onStarPost,
+        onRemovePost,
+        onNavigateToPost
+      })
+    }
+  )
 
   useDidShow(async () => {
     if (isLoaded) {
       await handlePullDownRefresh()
     }
   })
+
+  useCheckMessage()
+
+  const handleClickAdd = useVibrateCallback(() => {
+    Taro.navigateTo({
+      url: '/packages/post/pages/add/add'
+    })
+  })
+
+  const handleCloseMenu = useVibrateCallback(() => setShowMenu(false))
 
   return (
     <>
@@ -164,13 +185,9 @@ export default function Home() {
           tabIndex={selected}
           onSwitchTab={i => handleSwitchTab(i)}
         />
-        <FloatLayout
-          title='操作'
-          isOpened={showMenu}
-          onClose={() => setShowMenu(false)}
-        >
+        <FloatLayout title='操作' isOpened={showMenu} onClose={handleCloseMenu}>
           <PostMenu
-            onClose={() => setShowMenu(false)}
+            onClose={handleCloseMenu}
             {...postMenuProps}
             onShowModal={handleShowModal}
           />
@@ -213,13 +230,7 @@ export default function Home() {
         )}
         {showCompent && (
           <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
-            <AtFab
-              onClick={() => {
-                Taro.navigateTo({
-                  url: '/packages/post/pages/add/add'
-                })
-              }}
-            >
+            <AtFab onClick={handleClickAdd}>
               <View className='at-fab__icon at-icon at-icon-add' />
             </AtFab>
           </View>

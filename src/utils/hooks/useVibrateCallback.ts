@@ -21,6 +21,6 @@ export const useVibrateCallback = <T extends Function>(
       await vibrate()
       return await callback(...args)
     },
-    [...deps, ...args]
+    [...deps, ...args, vibrate]
   )
 }

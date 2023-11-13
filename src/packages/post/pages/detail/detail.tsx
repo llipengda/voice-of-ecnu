@@ -32,6 +32,7 @@ import CustomModal, {
 } from '@/components/CustomModal/CustomModal'
 import { sendNotice } from '@/api/Notice'
 import { ErrorCode } from '@/types/commonErrorCode'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 type Reply = WithUserInfo<OReply>
 
@@ -134,25 +135,25 @@ export default function Detail() {
     children: <View />
   })
 
-  const handleShowModal = (
-    props: Partial<ICustomModalProps>
-  ): Promise<boolean> => {
-    return new Promise(resolve => {
-      setShowModal(true)
-      setModalProps({
-        ...modalProps,
-        ...props,
-        onConfirm: () => {
-          setShowModal(false)
-          resolve(true)
-        },
-        onCancle: () => {
-          setShowModal(false)
-          resolve(false)
-        }
+  const handleShowModal = useVibrateCallback(
+    (props: Partial<ICustomModalProps>): Promise<boolean> => {
+      return new Promise(resolve => {
+        setShowModal(true)
+        setModalProps({
+          ...modalProps,
+          ...props,
+          onConfirm: () => {
+            setShowModal(false)
+            resolve(true)
+          },
+          onCancle: () => {
+            setShowModal(false)
+            resolve(false)
+          }
+        })
       })
-    })
-  }
+    }
+  )
 
   useEffect(() => {
     ;(async () => {
@@ -172,7 +173,7 @@ export default function Detail() {
     })()
   }, [scrollTo, isLoaded])
 
-  const handleSendComment = async () => {
+  const handleSendComment = useVibrateCallback(async () => {
     if (sendCommentDisabled) {
       return
     }
@@ -215,9 +216,16 @@ export default function Detail() {
     } else if (!hasMore) {
       setComments([...comments, dataWithUserInfo])
     }
-  }
+  }, [
+    sendCommentDisabled,
+    commentContent,
+    selectedImages,
+    commentsCnt,
+    tabIndex,
+    hasMore
+  ])
 
-  const handleDeletePost = async () => {
+  const handleDeletePost = useVibrateCallback(async () => {
     const DelPost = ({ onChange }: { onChange: (e: string) => void }) => {
       const [selected, setSelected] = useState(0)
       const reasons = [
@@ -306,7 +314,7 @@ export default function Detail() {
         })
       }
     }
-  }
+  }, [postId, authorId, title, createAt, user, handleShowModal, dispatch])
 
   useLoad(async () => {
     const data = await getPostByIdWithUserInfo(postId)
@@ -326,7 +334,7 @@ export default function Detail() {
     setAuthorAvatar(data.userAvatar)
   })
 
-  const handleLikePost = async () => {
+  const handleLikePost = useVibrateCallback(async () => {
     if (likeDisabled) {
       return
     }
@@ -340,9 +348,9 @@ export default function Detail() {
       await like(postId)
     }
     setLikeDisabled(false)
-  }
+  }, [likeDisabled, liked, likes])
 
-  const handleStarPost = async () => {
+  const handleStarPost = useVibrateCallback(async () => {
     if (starDisabled) {
       return
     }
@@ -356,14 +364,14 @@ export default function Detail() {
       await starPost(postId)
     }
     setStarDisabled(false)
-  }
+  }, [starDisabled, stared, stars])
 
-  const showImages = (image: string) => {
+  const showImages = useVibrateCallback((image: string) => {
     Taro.previewImage({
       urls: images,
       current: image
     })
-  }
+  })
 
   const handleRemoveComment = (commentId: number) => {
     setComments(comments.filter(c => c.id !== commentId))
@@ -398,27 +406,30 @@ export default function Detail() {
     setIsEmpty(data.length === 0)
   }
 
-  const handlePullDownRefresh = async () => {
+  const handlePullDownRefresh = useVibrateCallback(async () => {
     await getData()
-  }
+  })
 
-  const handleClickTab = async (i: 0 | 1 | 2) => {
-    setTabIndex(i)
-    setComments([])
-    setIsEmpty(false)
-    index.current = 1
-    const data = await getCommentListWithUserInfoWithDeleted(
-      postId,
-      index.current,
-      commentPerPage,
-      i
-    )
-    setComments(data || [])
-    setHasMore(data.length === commentPerPage)
-    setIsEmpty(data.length === 0)
-  }
+  const handleClickTab = useVibrateCallback(
+    async (i: 0 | 1 | 2) => {
+      setTabIndex(i)
+      setComments([])
+      setIsEmpty(false)
+      index.current = 1
+      const data = await getCommentListWithUserInfoWithDeleted(
+        postId,
+        index.current,
+        commentPerPage,
+        i
+      )
+      setComments(data || [])
+      setHasMore(data.length === commentPerPage)
+      setIsEmpty(data.length === 0)
+    },
+    [postId, commentPerPage]
+  )
 
-  const handleSelectImage = async () => {
+  const handleSelectImage = useVibrateCallback(async () => {
     const res = await Taro.chooseImage({
       count: 9,
       sizeType: ['original', 'compressed'],
@@ -427,7 +438,7 @@ export default function Detail() {
     if (res.errMsg === 'chooseImage:ok') {
       setSelectedImages(res.tempFilePaths)
     }
-  }
+  })
 
   useReachBottom(async () => {
     if (!hasMore || reachBottomLoadingDisabled) {
@@ -438,46 +449,48 @@ export default function Detail() {
     setReachBottomLoadingDisabled(false)
   })
 
-  const handleShowCommentMenu = (
-    comment: WithUserInfo<Comment>,
-    likedComment: boolean,
-    onLikeComment: () => void
-  ) => {
-    setShowCommentMenu(true)
-    setShowDetailComment(comment)
-    setCommentMenuProps({
-      commentId: comment.id,
-      commentUserId: comment.userId,
-      likedComment,
-      onLikeComment
-    })
-  }
+  const handleShowCommentMenu = useVibrateCallback(
+    (
+      comment: WithUserInfo<Comment>,
+      likedComment: boolean,
+      onLikeComment: () => void
+    ) => {
+      setShowCommentMenu(true)
+      setShowDetailComment(comment)
+      setCommentMenuProps({
+        commentId: comment.id,
+        commentUserId: comment.userId,
+        likedComment,
+        onLikeComment
+      })
+    }
+  )
 
-  const handleShowReplyDetail = (comment: WithUserInfo<Comment>) => {
-    setShowDetailComment(comment)
-    setReplyCommentId(comment.id)
-    setSendReplyMode(true)
-    setShowReplyDetail(true)
-  }
+  const handleShowReplyDetail = useVibrateCallback(
+    (comment: WithUserInfo<Comment>) => {
+      setShowDetailComment(comment)
+      setReplyCommentId(comment.id)
+      setSendReplyMode(true)
+      setShowReplyDetail(true)
+    }
+  )
 
-  const handleCloseReplyDetail = () => {
+  const handleCloseReplyDetail = useVibrateCallback(() => {
     setShowReplyDetail(false)
     setSendReplyMode(false)
     setReplyReplyId(-1)
     setReplyCommentId(-1)
     setReplyUserName('')
-  }
+  })
 
-  const handleClickReply = (
-    replyId: number,
-    _replyUserName: string,
-    _replyContent: string
-  ) => {
-    setReplyReplyId(replyId)
-    setReplyUserName(_replyUserName)
-    setReplyContent(_replyContent)
-    setSendReplyFocus(true)
-  }
+  const handleClickReply = useVibrateCallback(
+    (replyId: number, _replyUserName: string, _replyContent: string) => {
+      setReplyReplyId(replyId)
+      setReplyUserName(_replyUserName)
+      setReplyContent(_replyContent)
+      setSendReplyFocus(true)
+    }
+  )
 
   const handleAddReply = (reply: Reply) => {
     const newComments = comments.map(c => {
@@ -490,7 +503,7 @@ export default function Detail() {
     setNewReply(reply)
   }
 
-  const handleSendReply = async () => {
+  const handleSendReply = useVibrateCallback(async () => {
     if (sendReplyDisabled) {
       return
     }
@@ -527,7 +540,13 @@ export default function Detail() {
     }
     setReplyReplyId(-1)
     setReplyUserName('')
-  }
+  }, [
+    sendReplyDisabled,
+    sendReplyContent,
+    replyReplyId,
+    replyCommentId,
+    replyUserName
+  ])
 
   const handleDecreaseReplies = (removeReplyCommentId: number) => {
     const newComments = comments.map(c => {
@@ -539,28 +558,30 @@ export default function Detail() {
     setComments(newComments)
   }
 
-  const handleShowReplyMenu = (
-    replyId: number,
-    replyUserId: string,
-    _replyContent: string,
-    _replyUserName: string,
-    likedReply: boolean,
-    onLikeReply: () => void,
-    onRemoveReply: (replyId: number) => void
-  ) => {
-    setShowReplyMenu(true)
-    setReplyMenuProps({
-      replyId,
-      replyUserId,
-      likedReply,
-      replyContent: _replyContent,
-      replyUserName: _replyUserName,
-      onLikeReply,
-      onRemoveReply
-    })
-  }
+  const handleShowReplyMenu = useVibrateCallback(
+    (
+      replyId: number,
+      replyUserId: string,
+      _replyContent: string,
+      _replyUserName: string,
+      likedReply: boolean,
+      onLikeReply: () => void,
+      onRemoveReply: (replyId: number) => void
+    ) => {
+      setShowReplyMenu(true)
+      setReplyMenuProps({
+        replyId,
+        replyUserId,
+        likedReply,
+        replyContent: _replyContent,
+        replyUserName: _replyUserName,
+        onLikeReply,
+        onRemoveReply
+      })
+    }
+  )
 
-  const handleBanUser = async () => {
+  const handleBanUser = useVibrateCallback(async () => {
     const BanUser = ({ onChange }: { onChange: (e: number) => void }) => {
       const [selected, setSelected] = useState(0)
       const days = [1, 3, 7, 30]
@@ -618,14 +639,14 @@ export default function Detail() {
         duration: 1000
       })
     }
-  }
+  }, [user, handleShowModal])
 
   const handleClickCommentReply = () => {
     handleShowReplyDetail(showDetailComment)
     handleClickReply(-1, '', '')
   }
 
-  const handleNavigateToUserInfo = async () => {
+  const handleNavigateToUserInfo = useVibrateCallback(async () => {
     if (!showComponent) {
       Taro.navigateTo({
         url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
@@ -635,7 +656,17 @@ export default function Detail() {
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${authorId}`
     })
-  }
+  }, [authorId, showComponent])
+
+  const handleCloseCommentMenu = useVibrateCallback(() =>
+    setShowCommentMenu(false)
+  )
+
+  const handleCloseReplyMenu = useVibrateCallback(() => setShowReplyMenu(false))
+
+  const handleFocusSendComment = useVibrateCallback(() =>
+    setSendCommentFocus(true)
+  )
 
   if (!showComponent) {
     return <></>
@@ -646,14 +677,14 @@ export default function Detail() {
       <CustomModal {...modalProps} isOpen={showModal} />
       <FloatLayout
         isOpened={showCommentMenu}
-        onClose={() => setShowCommentMenu(false)}
+        onClose={handleCloseCommentMenu}
         title='操作'
       >
         <CommentMenu
           onShowModal={handleShowModal}
           onRemoveComment={handleRemoveComment}
           onClickReply={handleClickCommentReply}
-          onClose={() => setShowCommentMenu(false)}
+          onClose={handleCloseCommentMenu}
           {...commentMenuProps}
         />
       </FloatLayout>
@@ -673,13 +704,13 @@ export default function Detail() {
       </FloatLayout>
       <FloatLayout
         isOpened={showReplyMenu}
-        onClose={() => setShowReplyMenu(false)}
+        onClose={handleCloseReplyMenu}
         title='操作'
         zIndex={9000}
       >
         <ReplyMenu
           onShowModal={handleShowModal}
-          onClose={() => setShowReplyMenu(false)}
+          onClose={handleCloseReplyMenu}
           onClickReply={handleClickReply}
           {...replyMenuProps}
         />
@@ -741,7 +772,7 @@ export default function Detail() {
         </View>
         <View
           className='post-detail__actions__action'
-          onClick={() => setSendCommentFocus(true)}
+          onClick={handleFocusSendComment}
         >
           <AtIcon value='message' size='20' color={disabledColor} />
           <Text className='post-detail__actions__action__number'>{`评论 ${commentsCnt}`}</Text>

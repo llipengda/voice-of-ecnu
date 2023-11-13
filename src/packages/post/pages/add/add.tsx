@@ -10,6 +10,7 @@ import sleep from '@/utils/sleep'
 import { addUserInfo } from '@/utils/addUserInfo'
 import '@/custom-theme.scss'
 import './add.scss'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 interface FileItem {
   path: string
@@ -32,11 +33,11 @@ export default function Add() {
 
   const showComponent = useAppSelector(state => state.review.showComponent)
 
-  const handleCancel = () => {
+  const handleCancel = useVibrateCallback(() => {
     Taro.navigateBack()
-  }
+  })
 
-  const handleSubmit = async () => {
+  const handleSubmit = useVibrateCallback(async () => {
     setSubmitButtonLoading(true)
     if (!title) {
       Taro.showToast({
@@ -65,14 +66,14 @@ export default function Add() {
       }
     }
     setSubmitButtonLoading(false)
-  }
+  }, [title, content, images])
 
-  const showImage = (url: string) => {
+  const showImage = useVibrateCallback((url: string) => {
     Taro.previewImage({
       current: url,
       urls: images.map(image => image.url)
     })
-  }
+  })
 
   return (
     <View>

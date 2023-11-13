@@ -4,6 +4,9 @@ import { CreatePostParams, Post } from '@/types/post'
 import { Result } from '@/types/result'
 import { WithUserInfo } from '@/types/withUserInfo'
 
+/**
+ * @deprecated
+ */
 export const getPostList = async (
   page: number,
   pageSize: number,
@@ -30,6 +33,9 @@ export const createPost = async (post: CreatePostParams) => {
   return data.data.data
 }
 
+/**
+ * @deprecated
+ */
 export const searchByPostOrCommentOrReply = async (
   page: number,
   pageSize: number,
@@ -57,6 +63,9 @@ export const deletePost = async (postId: number) => {
   return data.data.data
 }
 
+/**
+ * @deprecated
+ */
 export const getPostById = async (postId: number) => {
   const data = await Taro.request<Result<Post>>({
     url: `${serverUrl}/post/getPostById`,

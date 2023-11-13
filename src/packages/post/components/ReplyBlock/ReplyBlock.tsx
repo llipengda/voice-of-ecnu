@@ -20,6 +20,10 @@ export default function ReplyBlock({
       .then(() => setIsLoaded(true))
   }, [replyCount])
 
+  if (replies.length === 0) {
+    return null
+  }
+
   return (
     <View className='reply-block'>
       {!isLoaded && <View className='reply-block__item'>加载中...</View>}

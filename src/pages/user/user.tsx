@@ -4,6 +4,7 @@ import UserList from '@/packages/user/components/UserList/UserList'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setUser } from '@/redux/slice/userSlice'
 import { UserStatistics } from '@/types/user'
+import { useCheckMessage } from '@/utils/hooks/useCheckMessage'
 import { View } from '@tarojs/components'
 import { useDidShow } from '@tarojs/taro'
 import { useState } from 'react'
@@ -27,6 +28,8 @@ export default function User() {
     const data = await getUserById(user.id)
     dispatch(setUser(data))
   })
+
+  useCheckMessage()
 
   return (
     <View>

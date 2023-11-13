@@ -9,6 +9,7 @@ import { getReplyList } from '@/api/Reply'
 import { AtDivider } from 'taro-ui'
 import { WithUserInfo } from '@/types/withUserInfo'
 import './ReplyDetail.scss'
+import { replyPerPage } from '@/common/constants'
 
 type Reply = WithUserInfo<OReply>
 
@@ -48,16 +49,16 @@ export default function ReplyDetail({
   const index = useRef(1)
 
   const handleScrollToLower = async () => {
-    const data = await getReplyList(comment.id, ++index.current, 10)
+    const data = await getReplyList(comment.id, ++index.current, replyPerPage)
     setReplies([...replies, ...data])
-    setHasMore(data.length === 10)
+    setHasMore(data.length === replyPerPage)
   }
 
   const getData = async () => {
     index.current = 1
-    const data = await getReplyList(comment.id, index.current, 10)
+    const data = await getReplyList(comment.id, index.current, replyPerPage)
     setReplies(data || [])
-    setHasMore(data.length === 10)
+    setHasMore(data.length === replyPerPage)
     setIsEmpty(data.length === 0)
   }
 

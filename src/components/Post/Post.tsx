@@ -16,6 +16,7 @@ import { convertDate } from '@/utils/dateConvert'
 import './Post.scss'
 import { ICustomModalProps } from '@/components/CustomModal/CustomModal'
 import { sendNotice } from '@/api/Notice'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 type TPost = WithUserInfo<OTPost>
 
@@ -70,7 +71,7 @@ export default function Post({
     }
   }, [post])
 
-  const handleLikePost = async () => {
+  const handleLikePost = useVibrateCallback(async () => {
     if (likeDisabled) {
       return
     }
@@ -84,9 +85,9 @@ export default function Post({
       await like(post.id)
     }
     setLikeDisabled(false)
-  }
+  }, [likeDisabled, liked, likes])
 
-  const handleStarPost = async () => {
+  const handleStarPost = useVibrateCallback(async () => {
     if (starDisabled) {
       return
     }
@@ -100,9 +101,9 @@ export default function Post({
       await starPost(post.id)
     }
     setStarDisabled(false)
-  }
+  }, [starDisabled, stared, stars])
 
-  const handleDeletePost = async () => {
+  const handleDeletePost = useVibrateCallback(async () => {
     const DelPost = ({ onChange }: { onChange: (e: string) => void }) => {
       const [selected, setSelected] = useState(0)
       const reasons = [
@@ -189,9 +190,9 @@ export default function Post({
         })
       }
     }
-  }
+  })
 
-  const navigateToDetail = (focus: boolean = false) => {
+  const navigateToDetail = useVibrateCallback((focus: boolean = false) => {
     if (!showComponent) {
       Taro.navigateTo({
         url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
@@ -207,9 +208,9 @@ export default function Post({
         url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_FOUND}&showErrorCode=false`
       })
     }
-  }
+  })
 
-  const handleNavigateToUserInfo = async () => {
+  const handleNavigateToUserInfo = useVibrateCallback(async () => {
     if (!showComponent) {
       Taro.navigateTo({
         url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
@@ -219,7 +220,7 @@ export default function Post({
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${post.userId}`
     })
-  }
+  })
 
   return (
     <View className='post skeleton-bg'>

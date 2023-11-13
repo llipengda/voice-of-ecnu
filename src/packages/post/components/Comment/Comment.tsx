@@ -11,6 +11,7 @@ import { convertDate } from '@/utils/dateConvert'
 import './Comment.scss'
 import { ErrorCode } from '@/types/commonErrorCode'
 import { useAppSelector } from '@/redux/hooks'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 interface IProps {
   comment: WithUserInfo<TComment>
@@ -50,7 +51,7 @@ export default function Comment({
 
   const [likeDisabled, setLikeDisabled] = useState(false)
 
-  const handleLikeComment = async () => {
+  const handleLikeComment = useVibrateCallback(async () => {
     if (likeDisabled) {
       return
     }
@@ -64,18 +65,21 @@ export default function Comment({
       await like(comment.id, 1)
     }
     setLikeDisabled(false)
-  }
+  }, [liked, likeDisabled])
 
-  const showImages = (url: string) => {
-    Taro.previewImage({
-      current: url,
-      urls: comment.images
-    })
-  }
+  const showImages = useVibrateCallback(
+    (url: string) => {
+      Taro.previewImage({
+        current: url,
+        urls: comment.images
+      })
+    },
+    [comment.images]
+  )
 
   const showComponent = useAppSelector(state => state.review.showComponent)
 
-  const handleNavigateToUserInfo = async () => {
+  const handleNavigateToUserInfo = useVibrateCallback(async () => {
     if (!showComponent) {
       Taro.navigateTo({
         url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
@@ -85,7 +89,17 @@ export default function Comment({
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${comment.userId}`
     })
-  }
+  }, [showComponent])
+
+  const handleShowMenu = useVibrateCallback(
+    () => onShowMenu(comment, liked, handleLikeComment),
+    [comment, liked, handleLikeComment]
+  )
+
+  const handleOpenDetail = useVibrateCallback(
+    () => onshowReplyDetail(comment),
+    [comment]
+  )
 
   return (
     <View
@@ -136,7 +150,7 @@ export default function Comment({
                   value='menu'
                   size={15}
                   color={disabledColor}
-                  onClick={() => onShowMenu(comment, liked, handleLikeComment)}
+                  onClick={handleShowMenu}
                 />
               </View>
             )}
@@ -150,7 +164,7 @@ export default function Comment({
           onCustomClickBody
             ? onCustomClickBody
             : showDetail
-            ? () => onshowReplyDetail(comment)
+            ? handleOpenDetail
             : () => {}
         }
       >
@@ -170,10 +184,7 @@ export default function Comment({
             ))}
         </View>
         {comment.replies > 0 && showReply && (
-          <View
-            className='comment__body__reply'
-            onClick={() => onshowReplyDetail(comment)}
-          >
+          <View className='comment__body__reply' onClick={handleOpenDetail}>
             <ReplyBlock commentId={comment.id} replyCount={comment.replies} />
           </View>
         )}
