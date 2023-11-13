@@ -11,6 +11,8 @@ import { setLoginInfo } from '@/redux/slice/loginSlice'
 import '@/custom-theme.scss'
 import './VerifyForm.scss'
 import { useShowPrivacyPolicy } from '@/utils/hooks/useShowPrivacyPolicy'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
+import sleep from '@/utils/sleep'
 
 export default function VerifyForm() {
   const user = useAppSelector(state => state.user)
@@ -73,7 +75,7 @@ export default function VerifyForm() {
     }
   }
 
-  const sendCode = async () => {
+  const sendCode = useVibrateCallback(async () => {
     setSendCodeLoading(true)
     await USERAPI.sendCode(email)
     setSendCodeDisabled(true)
@@ -88,18 +90,18 @@ export default function VerifyForm() {
       clearInterval(timer)
       setSendCodeText('发送验证码')
     }, 60 * 1000)
-  }
+  }, [email])
 
-  const handleReset = () => {
+  const handleReset = useVibrateCallback(() => {
     setEmail('')
     setEmailFirst('')
     setEmailLast('')
     setCode('')
     setEmailErr('')
     setCodeErr('')
-  }
+  })
 
-  const handleSubmit = async () => {
+  const handleSubmit = useVibrateCallback(async () => {
     if (((await checkCode(code)) && checkEmail(email)) === false) {
       return
     }
@@ -116,10 +118,9 @@ export default function VerifyForm() {
       icon: 'success',
       duration: 1000
     })
-    setTimeout(() => {
-      Taro.navigateBack()
-    }, 1000)
-  }
+    await sleep(1000)
+    await Taro.navigateBack()
+  }, [code, email, user.id, dispatch])
 
   return (
     <View className='verify-form'>

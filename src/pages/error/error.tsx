@@ -4,6 +4,8 @@ import { Button, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useState } from 'react'
 import './error.scss'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
+import { useCheckMessage } from '@/utils/hooks/useCheckMessage'
 
 export default function Error() {
   const params = Taro.getCurrentInstance().router?.params
@@ -15,12 +17,20 @@ export default function Error() {
     (params?.showErrorCode || 'true') === 'true'
   )
 
-  const handleRestart = async () => {
+  const handleRestart = useVibrateCallback(async () => {
     await Taro.clearStorage()
     await Taro.reLaunch({
       url: '/pages/home/home'
     })
-  }
+  })
+
+  const handleBack = useVibrateCallback(() => Taro.navigateBack())
+
+  const handleBackHome = useVibrateCallback(
+    async () => await Taro.reLaunch({ url: '/pages/home/home' })
+  )
+
+  useCheckMessage()
 
   return (
     <View className='error'>
@@ -36,14 +46,11 @@ export default function Error() {
         </View>
         <Button
           className='error__button error__button__first'
-          onClick={() => Taro.navigateBack()}
+          onClick={handleBack}
         >
           返回上一页面
         </Button>
-        <Button
-          className='error__button'
-          onClick={async () => await Taro.reLaunch({ url: '/pages/home/home' })}
-        >
+        <Button className='error__button' onClick={handleBackHome}>
           返回首页
         </Button>
         <Button className='error__button' onClick={handleRestart}>

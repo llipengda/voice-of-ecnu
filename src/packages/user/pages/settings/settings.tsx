@@ -11,13 +11,14 @@ import { setReview } from '@/redux/slice/reviewSlice'
 import './settings.scss'
 import '@/custom-theme.scss'
 import { useState } from 'react'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function Settings() {
   const dispatch = useAppDispatch()
   const user = useAppSelector(state => state.user)
   const showComponent = useAppSelector(state => state.review.showComponent)
 
-  const handleDeleteUser = async () => {
+  const handleDeleteUser = useVibrateCallback(async () => {
     const res = await Taro.showModal({
       title: '警告',
       content: '确定要注销账号吗？如果您点击确定，我们将彻底删除您的账号信息。'
@@ -43,9 +44,9 @@ export default function Settings() {
       await sleep(1000)
       await Taro.navigateBack()
     }
-  }
+  }, [user])
 
-  const handleRestart = async () => {
+  const handleRestart = useVibrateCallback(async () => {
     const res = await Taro.showModal({
       title: '警告',
       content: '确定要清除缓存并重启小程序吗？'
@@ -57,43 +58,41 @@ export default function Settings() {
     await Taro.reLaunch({
       url: '/pages/home/home'
     })
-  }
+  })
 
-  const handleUnlock = async () => {
+  const handleUnlock = useVibrateCallback(async () => {
     dispatch(setReview(true))
     await Taro.showToast({
       title: '解锁成功',
       icon: 'success',
       duration: 1000
     })
-    await sleep(1000)
-    await Taro.navigateBack()
-  }
+  })
 
-  const handleShowPrivacy = () => {
+  const handleShowPrivacy = useVibrateCallback(() => {
     // @ts-ignore
     wx.openPrivacyContract({
       success: () => {}
     })
-  }
+  })
 
   const [switchShowPostDisabled, setSwitchShowPostDisabled] = useState(false)
 
-  const handleShowPost = async () => {
+  const handleShowPost = useVibrateCallback(async () => {
     setSwitchShowPostDisabled(true)
     await changeShowUserPost()
     dispatch(setUser({ ...user, isOpen: !user.isOpen }))
     setSwitchShowPostDisabled(false)
-  }
+  }, [user])
 
   const [switchVibrateDisabled, setSwitchVibrateDisabled] = useState(false)
 
-  const handleChangeVibrate = async () => {
+  const handleChangeVibrate = useVibrateCallback(async () => {
     setSwitchVibrateDisabled(true)
     await changeIsVibrate()
     dispatch(setUser({ ...user, isVibrate: !user.isVibrate }))
     setSwitchVibrateDisabled(false)
-  }
+  }, [user])
 
   return (
     <View className='settings'>

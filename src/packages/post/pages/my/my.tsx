@@ -16,6 +16,7 @@ import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
 import { postPerPage } from '@/common/constants'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function My() {
   const params = Taro.getCurrentInstance().router?.params
@@ -65,25 +66,25 @@ export default function My() {
     children: <View />
   })
 
-  const handleShowModal = (
-    props: Partial<ICustomModalProps>
-  ): Promise<boolean> => {
-    return new Promise(resolve => {
-      setShowModal(true)
-      setModalProps({
-        ...modalProps,
-        ...props,
-        onConfirm: () => {
-          setShowModal(false)
-          resolve(true)
-        },
-        onCancle: () => {
-          setShowModal(false)
-          resolve(false)
-        }
+  const handleShowModal = useVibrateCallback(
+    (props: Partial<ICustomModalProps>): Promise<boolean> => {
+      return new Promise(resolve => {
+        setShowModal(true)
+        setModalProps({
+          ...modalProps,
+          ...props,
+          onConfirm: () => {
+            setShowModal(false)
+            resolve(true)
+          },
+          onCancle: () => {
+            setShowModal(false)
+            resolve(false)
+          }
+        })
       })
-    })
-  }
+    }
+  )
 
   const handleScrollToLower = async () => {
     if (type === 'post') {
@@ -99,7 +100,7 @@ export default function My() {
     }
   }
 
-  const handlePullDownRefresh = async () => {
+  const handlePullDownRefresh = useVibrateCallback(async () => {
     index.current = 1
     if (type === 'post') {
       const data = (await getPostByUserId(1, postPerPage, user.id)) || []
@@ -113,30 +114,32 @@ export default function My() {
       setIsLoaded(true)
       setHasMore(data.length === postPerPage)
     }
-  }
+  }, [type, user.id])
 
-  const handleShowMenu = (
-    postId: number,
-    postUserId: string,
-    likedPost: boolean,
-    staredPost: boolean,
-    onLikePost: () => void,
-    onStarPost: () => void,
-    onRemovePost: () => void,
-    onNavigateToPost: (focus: boolean) => void
-  ) => {
-    setShowMenu(true)
-    setPostMenuPorps({
-      postId,
-      postUserId,
-      likedPost,
-      staredPost,
-      onLikePost,
-      onStarPost,
-      onRemovePost,
-      onNavigateToPost
-    })
-  }
+  const handleShowMenu = useVibrateCallback(
+    (
+      postId: number,
+      postUserId: string,
+      likedPost: boolean,
+      staredPost: boolean,
+      onLikePost: () => void,
+      onStarPost: () => void,
+      onRemovePost: () => void,
+      onNavigateToPost: (focus: boolean) => void
+    ) => {
+      setShowMenu(true)
+      setPostMenuPorps({
+        postId,
+        postUserId,
+        likedPost,
+        staredPost,
+        onLikePost,
+        onStarPost,
+        onRemovePost,
+        onNavigateToPost
+      })
+    }
+  )
 
   return (
     <View className='me'>

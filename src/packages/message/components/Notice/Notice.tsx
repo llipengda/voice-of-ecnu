@@ -17,6 +17,7 @@ import './Notice.scss'
 import Taro from '@tarojs/taro'
 import { ErrorCode } from '@/types/commonErrorCode'
 import { useAppSelector } from '@/redux/hooks'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 type Notice = WithUserInfo<ONotice>
 type Post = WithUserInfo<OPost>
@@ -140,7 +141,7 @@ export default function Notice({ notice }: IProps) {
 
   const showComponent = useAppSelector(state => state.review.showComponent)
 
-  const handleNavigateToUserInfo = async () => {
+  const handleNavigateToUserInfo = useVibrateCallback(async () => {
     if (!showComponent) {
       Taro.navigateTo({
         url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
@@ -150,9 +151,9 @@ export default function Notice({ notice }: IProps) {
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${notice.senderId}`
     })
-  }
+  }, [showComponent])
 
-  const handleNavigateToContent = async () => {
+  const handleNavigateToContent = useVibrateCallback(async () => {
     switch (notice.type) {
       case 0:
         break
@@ -201,7 +202,7 @@ export default function Notice({ notice }: IProps) {
       default:
         break
     }
-  }
+  }, [comment, post, notice.type])
 
   return (
     <View className={`notice ${notice.type === 0 ? 'notice__system' : ''}`}>

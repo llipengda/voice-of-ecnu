@@ -19,6 +19,7 @@ import { AtDivider } from 'taro-ui'
 import './detail.scss'
 import { checkBan } from '@/utils/dateConvert'
 import { postPerPage, primaryColor } from '@/common/constants'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function Detail() {
   const params = Taro.getCurrentInstance().router?.params
@@ -64,7 +65,7 @@ export default function Detail() {
   const [reachBottomLoadingDisabled, setReachBottomLoadingDisabled] =
     useState(false)
 
-  const handleShowModal = (
+  const handleShowModal = useVibrateCallback((
     props: Partial<ICustomModalProps>
   ): Promise<boolean> => {
     return new Promise(resolve => {
@@ -82,7 +83,7 @@ export default function Detail() {
         }
       })
     })
-  }
+  })
 
   const handleScrollToLower = async () => {
     const data =
@@ -91,15 +92,15 @@ export default function Detail() {
     setHasMore(data.length === postPerPage)
   }
 
-  const handlePullDownRefresh = async () => {
+  const handlePullDownRefresh = useVibrateCallback(async () => {
     index.current = 1
     const data = (await getPostByUserId(1, postPerPage, userId)) || []
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length === postPerPage)
-  }
+  }, [userId])
 
-  const handleShowMenu = (
+  const handleShowMenu = useVibrateCallback((
     postId: number,
     postUserId: string,
     likedPost: boolean,
@@ -120,7 +121,7 @@ export default function Detail() {
       onRemovePost,
       onNavigateToPost
     })
-  }
+  })
 
   useEffect(() => {
     ;(async () => {
@@ -144,7 +145,7 @@ export default function Detail() {
     setReachBottomLoadingDisabled(false)
   })
 
-  const handleBanUser = async () => {
+  const handleBanUser = useVibrateCallback(async () => {
     if (banned) {
       const res = await handleShowModal({
         title: '提示',
@@ -222,7 +223,7 @@ export default function Detail() {
         setBanned(true)
       }
     }
-  }
+  }, [banned])
 
   return (
     <View className='user-detail'>

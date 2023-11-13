@@ -9,6 +9,7 @@ import '@/custom-theme.scss'
 import './UserCard.scss'
 import { AtIcon } from 'taro-ui'
 import { checkBan } from '@/utils/dateConvert'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function UserCard({
   userStatistics,
@@ -38,7 +39,7 @@ export default function UserCard({
     }
   }
 
-  const handleClickAvatar = async () => {
+  const handleClickAvatar = useVibrateCallback(async () => {
     if (isSelf) {
       return
     }
@@ -46,7 +47,17 @@ export default function UserCard({
       current: user.avatar || defaultAvatar,
       urls: [user.avatar || defaultAvatar]
     })
-  }
+  }, [user.avatar, isSelf])
+
+  const handleNavigateTo = useVibrateCallback(
+    (url: string) => {
+      if (!isSelf) {
+        return
+      }
+      Taro.navigateTo({ url })
+    },
+    [isSelf]
+  )
 
   const path = Taro.getCurrentInstance().router?.path || ''
 
@@ -80,12 +91,7 @@ export default function UserCard({
       )}
       <View
         className='at-row'
-        onClick={() => {
-          if (!isSelf) {
-            return
-          }
-          Taro.navigateTo({ url: '/packages/user/pages/update/update' })
-        }}
+        onClick={() => handleNavigateTo('/packages/user/pages/update/update')}
       >
         <View className='at-col at-col-5'>
           <Image
@@ -117,6 +123,7 @@ export default function UserCard({
           </View>
           <View className='at-row'>
             <Text className='user-major' style={{ whiteSpace: 'pre-wrap' }}>
+              {user.grade ? (user.grade == '不显示' ? '' : user.grade) : ''}{' '}
               {user.major ? (user.major == '不显示' ? '' : user.major) : ''}
             </Text>
           </View>
@@ -131,28 +138,20 @@ export default function UserCard({
       <View className='at-row grid'>
         <View
           className='at-col grid-text'
-          onClick={() => {
-            if (!isSelf) {
-              return
-            }
-            Taro.navigateTo({
-              url: '/packages/message/pages/noticeList/noticeList?type=1'
-            })
-          }}
+          onClick={() =>
+            handleNavigateTo(
+              '/packages/message/pages/noticeList/noticeList?type=1'
+            )
+          }
         >
           <View className='count'>{userStatistics.likes}</View>
           <View>获赞</View>
         </View>
         <View
           className='at-col grid-text'
-          onClick={() => {
-            if (!isSelf) {
-              return
-            }
-            Taro.navigateTo({
-              url: '/packages/post/pages/my/my?type=post'
-            })
-          }}
+          onClick={() =>
+            handleNavigateTo('/packages/post/pages/my/my?type=post')
+          }
         >
           <View className='count'>{userStatistics.posts}</View>
           <View>
@@ -163,11 +162,9 @@ export default function UserCard({
         {isSelf && (
           <View
             className='at-col grid-text'
-            onClick={() => {
-              Taro.navigateTo({
-                url: '/packages/post/pages/my/my?type=star'
-              })
-            }}
+            onClick={() =>
+              handleNavigateTo('/packages/post/pages/my/my?type=star')
+            }
           >
             <View className='count'>{userStatistics.stars}</View>
             <View>我的收藏</View>

@@ -15,6 +15,7 @@ import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
 import { postPerPage } from '@/common/constants'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function Search() {
   const params = Taro.getCurrentInstance().router?.params
@@ -54,7 +55,7 @@ export default function Search() {
     children: <View />
   })
 
-  const handleShowModal = (
+  const handleShowModal = useVibrateCallback((
     props: Partial<ICustomModalProps>
   ): Promise<boolean> => {
     return new Promise(resolve => {
@@ -72,7 +73,7 @@ export default function Search() {
         }
       })
     })
-  }
+  })
 
   const handleScrollToLower = async () => {
     const data = await searchByPostOrCommentOrReplyWithUserInfo(
@@ -84,7 +85,7 @@ export default function Search() {
     setHasMore(data.length === postPerPage)
   }
 
-  const handlePullDownRefresh = async () => {
+  const handlePullDownRefresh = useVibrateCallback(async () => {
     index.current = 1
     const data = await searchByPostOrCommentOrReplyWithUserInfo(
       1,
@@ -94,9 +95,9 @@ export default function Search() {
     setPosts(data)
     setIsLoaded(true)
     setHasMore(data.length === postPerPage)
-  }
+  }, [params?.key])
 
-  const handleShowMenu = (
+  const handleShowMenu = useVibrateCallback((
     postId: number,
     postUserId: string,
     likedPost: boolean,
@@ -117,7 +118,7 @@ export default function Search() {
       onRemovePost,
       onNavigateToPost
     })
-  }
+  })
 
   return (
     <View>

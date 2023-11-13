@@ -3,16 +3,17 @@ import MessageListItem from '../MessageListItem/MessageListItem'
 import { useAppSelector } from '@/redux/hooks'
 import Taro from '@tarojs/taro'
 import './MessageList.scss'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function MessageList() {
   const noticeCnt = useAppSelector(state => state.notice)
   const showComponent = useAppSelector(state => state.review.showComponent)
 
-  const navigateTo = (type: 0 | 1 | 2) => {
+  const navigateTo = useVibrateCallback((type: 0 | 1 | 2) => {
     Taro.navigateTo({
       url: `/packages/message/pages/noticeList/noticeList?type=${type}`
     })
-  }
+  })
 
   return (
     <View className='message-list'>

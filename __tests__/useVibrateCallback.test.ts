@@ -66,12 +66,14 @@ describe('useVibrateCallback', () => {
     await result.current()
     expect(callback).toHaveBeenCalled()
     expect(React.useCallback).toHaveBeenCalledWith(expect.any(Function), [
-      ...deps
+      ...deps,
+      expect.any(Function)
     ])
     rerender({ deps: ['foo', 'baz'] })
     expect(React.useCallback).toHaveBeenCalledWith(expect.any(Function), [
       'foo',
-      'baz'
+      'baz',
+      expect.any(Function)
     ])
   })
 })

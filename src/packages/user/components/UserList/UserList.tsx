@@ -3,11 +3,12 @@ import { primaryColor } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import '@/custom-theme.scss'
 import './UserList.scss'
+import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 
 export default function UserList() {
-  const navigateTo = (name: string) => {
+  const navigateTo = useVibrateCallback((name: string) => {
     Taro.navigateTo({ url: `/packages/user/pages/${name}/${name}` })
-  }
+  })
 
   return (
     <AtList className='user-list' hasBorder={false}>
