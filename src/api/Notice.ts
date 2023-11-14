@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { serverUrl } from '@/common/constants'
-import { Notice, NoticeMap } from '@/types/notice'
+import { Notice, NoticeMap, Board } from '@/types/notice'
 import { Result } from '@/types/result'
 import { mapToNoticeCnt } from '@/utils/mapToNoticeCnt'
 import { WithUserInfo } from '@/types/withUserInfo'
@@ -53,6 +53,26 @@ export const sendNotice = async (msg: string, userId: string) => {
   const data = await Taro.request<Result<boolean>>({
     url: `${serverUrl}/notice/send?msg=${msg}&userId=${userId}`,
     method: 'POST'
+  })
+  return data.data.data
+}
+
+export const getBoardList = async (page: number, pageSize: number) => {
+  const data = await Taro.request<Result<Board[]>>({
+    url: `${serverUrl}/board/get`,
+    method: 'GET',
+    data: {
+      page,
+      pageSize
+    }
+  })
+  return data.data.data
+}
+
+export const addBoard = async (content: string, title: string) => {
+  const data = await Taro.request<Result<string>>({
+    url: `${serverUrl}/board/add?content=${content}&title=${title}`,
+    method: 'POST',
   })
   return data.data.data
 }
