@@ -5,6 +5,7 @@ import loginSlice from './slice/loginSlice'
 import postSlice from './slice/postSlice'
 import noticeSlice from './slice/noticeSlice'
 import reviewSlice from './slice/reviewSlice'
+import commonSlice from './slice/commonSlice'
 
 const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
     login: loginSlice,
     post: postSlice,
     notice: noticeSlice,
-    review: reviewSlice
+    review: reviewSlice,
+    common: commonSlice
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger)
 })

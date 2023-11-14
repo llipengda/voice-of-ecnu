@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Comment as TComment } from '@/types/comment'
 import { like, unlike } from '@/api/Like'
 import { AtIcon } from 'taro-ui'
@@ -51,7 +51,7 @@ export default function Comment({
 
   const [likeDisabled, setLikeDisabled] = useState(false)
 
-  const handleLikeComment = useVibrateCallback(async () => {
+  const handleLikeComment = useCallback(async () => {
     if (likeDisabled) {
       return
     }
@@ -66,6 +66,10 @@ export default function Comment({
     }
     setLikeDisabled(false)
   }, [liked, likeDisabled])
+
+  const _handleLikeComment = useVibrateCallback(handleLikeComment, [
+    handleLikeComment
+  ])
 
   const showImages = useVibrateCallback(
     (url: string) => {
@@ -91,7 +95,7 @@ export default function Comment({
     })
   }, [showComponent])
 
-  const handleShowMenu = useVibrateCallback(
+  const handleShowMenu = useCallback(
     () => onShowMenu(comment, liked, handleLikeComment),
     [comment, liked, handleLikeComment]
   )
@@ -135,7 +139,7 @@ export default function Comment({
             </View>
             <View
               className='at-col at-col-1 comment__header__like'
-              onClick={handleLikeComment}
+              onClick={_handleLikeComment}
             >
               <AtIcon
                 value={liked ? 'heart-2' : 'heart'}
@@ -188,7 +192,7 @@ export default function Comment({
             ))}
         </View>
         {comment.replies > 0 && showReply && (
-          <View className='comment__body__reply' onClick={handleOpenDetail}>
+          <View className='comment__body__reply'>
             <ReplyBlock commentId={comment.id} replyCount={comment.replies} />
           </View>
         )}
