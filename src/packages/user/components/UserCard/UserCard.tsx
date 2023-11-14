@@ -121,12 +121,14 @@ export default function UserCard({
                 <Text className='verify-fault'>未认证</Text>
               ))}
           </View>
-          <View className='at-row'>
-            <Text className='user-major' style={{ whiteSpace: 'pre-wrap' }}>
-              {user.grade ? (user.grade == '不显示' ? '' : user.grade) : ''}{' '}
-              {user.major ? (user.major == '不显示' ? '' : user.major) : ''}
-            </Text>
-          </View>
+          {(!!user.grade || !!user.gender) && (
+            <View className='at-row'>
+              <Text className='user-major' style={{ whiteSpace: 'pre-wrap' }}>
+                {user.grade ? (user.grade == '不显示' ? '' : user.grade) : ''}{' '}
+                {user.major ? (user.major == '不显示' ? '' : user.major) : ''}
+              </Text>
+            </View>
+          )}
           <View className='at-row'>
             <View style={{ whiteSpace: 'pre-wrap' }}>
               {user.status?.substring(0, 30) || '这个人很懒，什么也没有留下。'}

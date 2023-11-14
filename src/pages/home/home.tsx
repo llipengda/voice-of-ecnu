@@ -165,7 +165,7 @@ export default function Home() {
     }
   })
 
-  useCheckMessage()
+  useCheckMessage(false)
 
   const handleClickAdd = useVibrateCallback(() => {
     Taro.navigateTo({

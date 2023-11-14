@@ -4,27 +4,27 @@ import Taro, { useDidShow } from '@tarojs/taro'
 import { useVibrateCallback } from './useVibrateCallback'
 import { useAppDispatch } from '@/redux/hooks'
 
-export const useCheckMessage = () => {
+export const useCheckMessage = (vibrate: boolean = true) => {
   const dispatch = useAppDispatch()
 
-  useDidShow(
-    useVibrateCallback(async () => {
-      const data = await checkNotice()
-      dispatch(setNoticeCnt(data))
-      if (data.total === 0) {
-        try {
-          await Taro.hideTabBarRedDot({
-            index: 1
-          })
-        } catch (err) {
-          console.log('CAN NOT HIDE TABBAR REDDOT', err)
-        }
-        return
+  const check = async () => {
+    const data = await checkNotice()
+    dispatch(setNoticeCnt(data))
+    if (data.total === 0) {
+      try {
+        await Taro.hideTabBarRedDot({
+          index: 1
+        })
+      } catch (err) {
+        console.log('CAN NOT HIDE TABBAR REDDOT', err)
       }
-      await Taro.setTabBarBadge({
-        index: 1,
-        text: data.total > 99 ? '99+' : data.total.toString()
-      })
+      return
+    }
+    await Taro.setTabBarBadge({
+      index: 1,
+      text: data.total > 99 ? '99+' : data.total.toString()
     })
-  )
+  }
+
+  useDidShow(vibrate ? useVibrateCallback(check) : check)
 }
