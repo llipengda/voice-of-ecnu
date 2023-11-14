@@ -1,3 +1,4 @@
+import Board from '@/packages/message/components/Board/Board'
 import MessageList from '@/packages/message/components/MessageList/MessageList'
 import { useCheckMessage } from '@/utils/hooks/useCheckMessage'
 import { View } from '@tarojs/components'
@@ -8,6 +9,7 @@ export default function Message() {
   return (
     <View>
       <MessageList />
+      <Board />
     </View>
   )
 }

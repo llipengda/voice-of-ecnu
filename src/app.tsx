@@ -54,14 +54,18 @@ function MyApp({ children }: PropsWithChildren<any>) {
           index: 1
         })
       } catch (err) {
-        console.error(err)
+        console.log(err)
       }
       return
     }
-    Taro.setTabBarBadge({
-      index: 1,
-      text: data.total > 99 ? '99+' : data.total.toString()
-    })
+    try {
+      Taro.setTabBarBadge({
+        index: 1,
+        text: data.total > 99 ? '99+' : data.total.toString()
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
