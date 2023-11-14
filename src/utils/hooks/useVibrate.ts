@@ -19,7 +19,6 @@ export const useVibrate = (type: 'light' | 'medium' | 'heavy' = 'medium') => {
         dispatch(decreaseShoudNotVibrate())
         return
       }
-      console.error('vibrate')
       await Taro.vibrateShort({ type })
     }
   }, [isVibrate, cnt, type])
