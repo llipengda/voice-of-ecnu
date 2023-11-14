@@ -1,0 +1,71 @@
+@import '@/common/constants.scss';
+
+.notice-board {
+  margin-top: 20px;
+  background: #fff;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 50vh;
+  padding-bottom: 50px;
+
+  &__header {
+    margin-left: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 10vh;
+
+    &__avatar {
+      width: 100px;
+      height: 100px;
+      font-size: 100px;
+      padding: 20px;
+      border-radius: 50%;
+    }
+
+    &__title {
+      font-size: 36px;
+      margin-left: -20px;
+      font-weight: 700;
+      color: #353535;
+    }
+  }
+
+  &__content {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    min-height: 100px;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.loading {
+  color: $disabled-color;
+  margin-top: 5px;
+  text-align: center;
+  margin-bottom: 5px;
+  padding-bottom: 10px;
+  overflow-x: hidden;
+}
+
+.tip {
+  color: $disabled-color;
+  padding-top: 120px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.tip2 {
+  color: $disabled-color;
+  padding-top: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}

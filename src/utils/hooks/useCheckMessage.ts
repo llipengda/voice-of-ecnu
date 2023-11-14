@@ -20,10 +20,14 @@ export const useCheckMessage = (vibrate: boolean = true) => {
       }
       return
     }
-    await Taro.setTabBarBadge({
-      index: 1,
-      text: data.total > 99 ? '99+' : data.total.toString()
-    })
+    try {
+      await Taro.setTabBarBadge({
+        index: 1,
+        text: data.total > 99 ? '99+' : data.total.toString()
+      })
+    } catch (error) {
+      console.log('CAN NOT SET TABBAR BADGE', error)
+    }
   }
 
   useDidShow(vibrate ? useVibrateCallback(check) : check)
