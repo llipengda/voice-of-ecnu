@@ -68,6 +68,13 @@ export default function UpdateUserForm() {
     initMajor()
   }, [])
 
+  useEffect(() => {
+    setUserState({
+      ...userState,
+      email: user.email
+    })
+  }, [user.email])
+
   const handleSubmit = useVibrateCallback(async () => {
     setSubmitButtonLoading(true)
     const isNameSame = user.name === userState.name?.trim()
