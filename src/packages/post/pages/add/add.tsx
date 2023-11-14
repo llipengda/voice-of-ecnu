@@ -11,6 +11,7 @@ import { addUserInfo } from '@/utils/addUserInfo'
 import '@/custom-theme.scss'
 import './add.scss'
 import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
+import { addBoard } from '@/api/Notice'
 
 interface FileItem {
   path: string
@@ -29,13 +30,19 @@ export default function Add() {
 
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false)
 
+  const params = Taro.getCurrentInstance().router?.params
+
+  const [type] = useState<'post' | 'board'>(
+    (params?.type as 'post' | 'board') || 'post'
+  )
+
   const dispatch = useAppDispatch()
 
   const showComponent = useAppSelector(state => state.review.showComponent)
 
   useEffect(() => {
     Taro.setNavigationBarTitle({
-      title: showComponent ? '发帖' : '添加'
+      title: showComponent ? (type === 'post' ? '发帖' : '发布公告') : '添加'
     })
   }, [showComponent])
 
@@ -52,18 +59,29 @@ export default function Add() {
         duration: 1000
       })
     } else {
-      const imgs = await uploadImages(images.map(image => image.url))
-      const data = await createPost({
-        title,
-        content,
-        images: imgs || []
-      })
-      if (data) {
-        const newData = addUserInfo(data)
-        dispatch(addPost(newData))
-        setSubmitButtonLoading(false)
+      if (type === 'post') {
+        const imgs = await uploadImages(images.map(image => image.url))
+        const data = await createPost({
+          title,
+          content,
+          images: imgs || []
+        })
+        if (data) {
+          const newData = addUserInfo(data)
+          dispatch(addPost(newData))
+          setSubmitButtonLoading(false)
+          await Taro.showToast({
+            title: '发帖成功',
+            icon: 'success',
+            duration: 1000
+          })
+          await sleep(1000)
+          Taro.navigateBack()
+        }
+      } else {
+        await addBoard({ content, title })
         await Taro.showToast({
-          title: '发帖成功',
+          title: '发布公告成功',
           icon: 'success',
           duration: 1000
         })
@@ -88,7 +106,7 @@ export default function Add() {
           <Input
             name='title'
             type='text'
-            placeholder='起个标题吧...'
+            placeholder={type === 'board' ? '公告标题' : '起个标题吧...'}
             value={title}
             onInput={e => setTitle(e.detail.value)}
             className='title'
@@ -97,17 +115,19 @@ export default function Add() {
             value={content}
             onChange={e => setContent(e)}
             maxLength={500}
-            placeholder='畅所欲言吧...'
+            placeholder={type === 'board' ? '公告内容' : '畅所欲言吧...'}
             className='content'
             height={400}
           />
-          <AtImagePicker
-            files={images}
-            onChange={e => setImages(e)}
-            onImageClick={(_, f: File) => showImage(f.url)}
-            multiple
-            count={9}
-          />
+          {type === 'post' && (
+            <AtImagePicker
+              files={images}
+              onChange={e => setImages(e)}
+              onImageClick={(_, f: File) => showImage(f.url)}
+              multiple
+              count={9}
+            />
+          )}
           <View className='action-container'>
             <AtButton
               type='secondary'

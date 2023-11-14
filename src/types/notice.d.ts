@@ -45,3 +45,9 @@ export type Board = {
   content: string
   title: string
 }
+
+export type OneSentence = {
+  author: string
+  sentence: string
+  source: string
+}

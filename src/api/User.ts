@@ -3,6 +3,8 @@ import Taro from '@tarojs/taro'
 import { Result } from '@/types/result'
 import { LoginInfo, UpdateUserParams, User, UserStatistics } from '@/types/user'
 import { sendNotice } from './Notice'
+import store from '@/redux/store'
+import { setShowComponent } from '@/redux/slice/reviewSlice'
 
 export const login = async (code: string) => {
   const data = await Taro.request<Result<LoginInfo>>({
@@ -27,6 +29,9 @@ export const getUserById = async (id: string) => {
     url: `${serverUrl}/user/getUserById?userId=${id}`,
     method: 'GET'
   })
+  if (data.data.data.role <= 0) {
+    store.dispatch(setShowComponent(true))
+  }
   return data.data.data
 }
 

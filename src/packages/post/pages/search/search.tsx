@@ -10,7 +10,7 @@ import PostMenu from '@/components/PostMenu/PostMenu'
 import './search.scss'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { useAppDispatch } from '@/redux/hooks'
-import { setReview } from '@/redux/slice/reviewSlice'
+import { setShowComponent } from '@/redux/slice/reviewSlice'
 import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
@@ -23,7 +23,7 @@ export default function Search() {
   const dispatch = useAppDispatch()
 
   if (params?.key === '114514__unlock__##!') {
-    dispatch(setReview(true))
+    dispatch(setShowComponent(true))
   }
 
   const [isLoaded, setIsLoaded] = useState(false)
@@ -55,25 +55,25 @@ export default function Search() {
     children: <View />
   })
 
-  const handleShowModal = useVibrateCallback((
-    props: Partial<ICustomModalProps>
-  ): Promise<boolean> => {
-    return new Promise(resolve => {
-      setShowModal(true)
-      setModalProps({
-        ...modalProps,
-        ...props,
-        onConfirm: () => {
-          setShowModal(false)
-          resolve(true)
-        },
-        onCancle: () => {
-          setShowModal(false)
-          resolve(false)
-        }
+  const handleShowModal = useVibrateCallback(
+    (props: Partial<ICustomModalProps>): Promise<boolean> => {
+      return new Promise(resolve => {
+        setShowModal(true)
+        setModalProps({
+          ...modalProps,
+          ...props,
+          onConfirm: () => {
+            setShowModal(false)
+            resolve(true)
+          },
+          onCancle: () => {
+            setShowModal(false)
+            resolve(false)
+          }
+        })
       })
-    })
-  })
+    }
+  )
 
   const handleScrollToLower = async () => {
     const data = await searchByPostOrCommentOrReplyWithUserInfo(
@@ -97,28 +97,30 @@ export default function Search() {
     setHasMore(data.length === postPerPage)
   }, [params?.key])
 
-  const handleShowMenu = useVibrateCallback((
-    postId: number,
-    postUserId: string,
-    likedPost: boolean,
-    staredPost: boolean,
-    onLikePost: () => void,
-    onStarPost: () => void,
-    onRemovePost: () => void,
-    onNavigateToPost: (focus: boolean) => void
-  ) => {
-    setShowMenu(true)
-    setPostMenuPorps({
-      postId,
-      postUserId,
-      likedPost,
-      staredPost,
-      onLikePost,
-      onStarPost,
-      onRemovePost,
-      onNavigateToPost
-    })
-  })
+  const handleShowMenu = useVibrateCallback(
+    (
+      postId: number,
+      postUserId: string,
+      likedPost: boolean,
+      staredPost: boolean,
+      onLikePost: () => void,
+      onStarPost: () => void,
+      onRemovePost: () => void,
+      onNavigateToPost: (focus: boolean) => void
+    ) => {
+      setShowMenu(true)
+      setPostMenuPorps({
+        postId,
+        postUserId,
+        likedPost,
+        staredPost,
+        onLikePost,
+        onStarPost,
+        onRemovePost,
+        onNavigateToPost
+      })
+    }
+  )
 
   return (
     <View>

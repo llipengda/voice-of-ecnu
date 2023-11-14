@@ -7,6 +7,7 @@ import { Board as TBoard } from '@/types/notice'
 import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
 import BoardCard from '../BoardCard/BoardCard'
 import './Board.scss'
+import { useDidShow } from '@tarojs/taro'
 
 export default function Board() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -37,6 +38,10 @@ export default function Board() {
     setIsEmpty(data.length === 0)
   }
 
+  useDidShow(async () => {
+    await getData()
+  })
+
   return (
     <View className='notice-board'>
       <View className='notice-board__header'>
@@ -55,7 +60,7 @@ export default function Board() {
           <ListView
             isLoaded={isLoaded}
             hasMore={hasMore}
-            style={{ height: '40vh', width: '100%', overflowX: 'hidden' }}
+            style={{ height: '40vh', minWidth: '85vw', overflowX: 'hidden' }}
             onPullDownRefresh={handlePullDownRefresh}
             onScrollToLower={handleScrollToLower}
             needInit
