@@ -30,7 +30,7 @@ export default function UserList() {
       />
       <AtListItem
         className='item'
-        title='更多选项'
+        title='设置'
         arrow='right'
         hasBorder={false}
         iconInfo={{ value: 'settings', color: primaryColor }}

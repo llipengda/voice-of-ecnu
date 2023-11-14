@@ -469,14 +469,12 @@ export default function Detail() {
     }
   )
 
-  const handleShowReplyDetail = useVibrateCallback(
-    (comment: WithUserInfo<Comment>) => {
-      setShowDetailComment(comment)
-      setReplyCommentId(comment.id)
-      setSendReplyMode(true)
-      setShowReplyDetail(true)
-    }
-  )
+  const handleShowReplyDetail = (comment: WithUserInfo<Comment>) => {
+    setShowDetailComment(comment)
+    setReplyCommentId(comment.id)
+    setSendReplyMode(true)
+    setShowReplyDetail(true)
+  }
 
   const handleCloseReplyDetail = useVibrateCallback(() => {
     setShowReplyDetail(false)
@@ -486,14 +484,16 @@ export default function Detail() {
     setReplyUserName('')
   })
 
-  const handleClickReply = useVibrateCallback(
-    (replyId: number, _replyUserName: string, _replyContent: string) => {
-      setReplyReplyId(replyId)
-      setReplyUserName(_replyUserName)
-      setReplyContent(_replyContent)
-      setSendReplyFocus(true)
-    }
-  )
+  const handleClickReply = (
+    replyId: number,
+    _replyUserName: string,
+    _replyContent: string
+  ) => {
+    setReplyReplyId(replyId)
+    setReplyUserName(_replyUserName)
+    setReplyContent(_replyContent)
+    setSendReplyFocus(true)
+  }
 
   const handleAddReply = (reply: Reply) => {
     const newComments = comments.map(c => {

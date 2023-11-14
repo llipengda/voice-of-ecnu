@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { View, Image, Text, Picker } from '@tarojs/components'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Post as OTPost } from '@/types/post'
 import { AtIcon } from 'taro-ui'
 import { starPost, unstarPost } from '@/api/Star'
@@ -17,6 +17,7 @@ import './Post.scss'
 import { ICustomModalProps } from '@/components/CustomModal/CustomModal'
 import { sendNotice } from '@/api/Notice'
 import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
+import { increaseShoudNotVibrate } from '@/redux/slice/commonSlice'
 
 type TPost = WithUserInfo<OTPost>
 
@@ -71,7 +72,7 @@ export default function Post({
     }
   }, [post])
 
-  const handleLikePost = useVibrateCallback(async () => {
+  const handleLikePost = async () => {
     if (likeDisabled) {
       return
     }
@@ -85,9 +86,11 @@ export default function Post({
       await like(post.id)
     }
     setLikeDisabled(false)
-  }, [likeDisabled, liked, likes])
+  }
 
-  const handleStarPost = useVibrateCallback(async () => {
+  const _handleLikePost = useVibrateCallback(handleLikePost, [handleLikePost])
+
+  const handleStarPost = async () => {
     if (starDisabled) {
       return
     }
@@ -101,7 +104,9 @@ export default function Post({
       await starPost(post.id)
     }
     setStarDisabled(false)
-  }, [starDisabled, stared, stars])
+  }
+
+  const _handleStarPost = useVibrateCallback(handleStarPost, [handleStarPost])
 
   const handleDeletePost = useVibrateCallback(async () => {
     const DelPost = ({ onChange }: { onChange: (e: string) => void }) => {
@@ -192,8 +197,11 @@ export default function Post({
     }
   }, [user, post])
 
-  const navigateToDetail = useVibrateCallback(
+  const navigateToDetail = useCallback(
     (focus: boolean = false) => {
+      if (focus) {
+        dispatch(increaseShoudNotVibrate())
+      }
       if (!showComponent) {
         Taro.navigateTo({
           url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
@@ -307,7 +315,7 @@ export default function Post({
             <Text className='post__footer__number'>{post.comments}</Text>
           </View>
         )}
-        <View className='at-col-3' onClick={handleLikePost}>
+        <View className='at-col-3' onClick={_handleLikePost}>
           <AtIcon
             value={liked ? 'heart-2' : 'heart'}
             size='20'
@@ -315,7 +323,7 @@ export default function Post({
           />
           <Text className='post__footer__number'>{likes}</Text>
         </View>
-        <View className='at-col-3' onClick={handleStarPost}>
+        <View className='at-col-3' onClick={_handleStarPost}>
           <AtIcon
             value={stared ? 'star-2' : 'star'}
             size='20'
