@@ -1,8 +1,9 @@
-import { serverUrl } from '@/common/constants'
+import { peiranAvatar, serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { CreatePostParams, Post } from '@/types/post'
 import { Result } from '@/types/result'
 import { WithUserInfo } from '@/types/withUserInfo'
+import store from '@/redux/store'
 
 /**
  * @deprecated
@@ -89,6 +90,12 @@ export const getPostListWithUserInfo = async (
       orderByPopularity
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.forEach(post => {
+      post.userName = '沛然女皇'
+      post.userAvatar = peiranAvatar
+    })
+  }
   return data.data.data
 }
 
@@ -108,6 +115,12 @@ export const searchByPostOrCommentOrReplyWithUserInfo = async (
       orderByPopularity
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.forEach(post => {
+      post.userName = '沛然女皇'
+      post.userAvatar = peiranAvatar
+    })
+  }
   return data.data.data
 }
 
@@ -117,6 +130,10 @@ export const getPostByIdWithUserInfo = async (postId: number) => {
     method: 'GET',
     data: { postId }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.userName = '沛然女皇'
+    data.data.data.userAvatar = peiranAvatar
+  }
   return data.data.data
 }
 
@@ -130,5 +147,11 @@ export const getPostByUserId = async (
     method: 'GET',
     data: { page, pageSize, userId }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.forEach(post => {
+      post.userName = '沛然女皇'
+      post.userAvatar = peiranAvatar
+    })
+  }
   return data.data.data
 }

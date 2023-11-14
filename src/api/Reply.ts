@@ -1,8 +1,9 @@
-import { serverUrl } from '@/common/constants'
+import { peiranAvatar, serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { CreateReplyParams, Reply } from '@/types/reply'
 import { Result } from '@/types/result'
 import { WithUserInfo } from '@/types/withUserInfo'
+import store from '@/redux/store'
 
 export const getReplyList = async (
   commentId: number,
@@ -20,6 +21,12 @@ export const getReplyList = async (
       orderByDesc
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.forEach(item => {
+      item.userName = '沛然女皇'
+      item.userAvatar = peiranAvatar
+    })
+  }
   return data.data.data
 }
 
@@ -48,5 +55,8 @@ export const getReplyById = async (replyId: number) => {
       replyId
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.userName = '沛然女皇'
+  }
   return data.data.data
 }

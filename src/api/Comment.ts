@@ -1,8 +1,9 @@
-import { serverUrl } from '@/common/constants'
+import { peiranAvatar, serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { Result } from '@/types/result'
 import { Comment, CreateCommentParams } from '@/types/comment'
 import { WithUserInfo } from '@/types/withUserInfo'
+import store from '@/redux/store'
 
 /**
  * @deprecated
@@ -84,6 +85,12 @@ export const getCommentListWithUserInfoWithDeleted = async (
       order
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.forEach(item => {
+      item.userName = '沛然女皇'
+      item.userAvatar = peiranAvatar
+    })
+  }
   return data.data.data.filter(
     p => p.deleteAt === null || p.deleteAt === undefined
   )
@@ -97,5 +104,9 @@ export const getCommentById = async (commentId: number) => {
       commentId
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.userName = '沛然女皇'
+    data.data.data.userAvatar = peiranAvatar
+  }
   return data.data.data
 }

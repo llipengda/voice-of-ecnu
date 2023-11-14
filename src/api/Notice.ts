@@ -1,9 +1,10 @@
 import Taro from '@tarojs/taro'
-import { serverUrl } from '@/common/constants'
+import { peiranAvatar, serverUrl } from '@/common/constants'
 import { Notice, NoticeMap, Board, OneSentence } from '@/types/notice'
 import { Result } from '@/types/result'
 import { mapToNoticeCnt } from '@/utils/mapToNoticeCnt'
 import { WithUserInfo } from '@/types/withUserInfo'
+import store from '@/redux/store'
 
 export const checkNotice = async () => {
   const data = await Taro.request<Result<NoticeMap>>({
@@ -13,6 +14,9 @@ export const checkNotice = async () => {
   return mapToNoticeCnt(data.data.data)
 }
 
+/**
+ * @deprecated
+ */
 export const getNoticeList = async (
   page: number,
   pageSize: number,
@@ -46,6 +50,12 @@ export const getNoticeListWithUserInfo = async (
       type
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.forEach(item => {
+      item.userName = '沛然女皇'
+      item.userAvatar = peiranAvatar
+    })
+  }
   return data.data.data
 }
 

@@ -9,21 +9,26 @@ import FloatLayout from '@/components/FloatLayout/FloatLayout'
 import PostMenu from '@/components/PostMenu/PostMenu'
 import './search.scss'
 import { WithUserInfo } from '@/types/withUserInfo'
-import { useAppDispatch } from '@/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setShowComponent } from '@/redux/slice/reviewSlice'
 import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
 import { postPerPage } from '@/common/constants'
 import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
+import { setYuntianMode } from '@/redux/slice/commonSlice'
 
 export default function Search() {
   const params = Taro.getCurrentInstance().router?.params
+  const user = useAppSelector(state => state.user)
 
   const dispatch = useAppDispatch()
 
   if (params?.key === '114514__unlock__##!') {
     dispatch(setShowComponent(true))
+  }
+  if (params?.key === '1919810__yuntian__unlock__##!' && user.role <= 1) {
+    dispatch(setYuntianMode(true))
   }
 
   const [isLoaded, setIsLoaded] = useState(false)
