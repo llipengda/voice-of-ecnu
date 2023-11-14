@@ -84,6 +84,9 @@ export default function Home() {
   )
 
   const handleSearchClick = useVibrateCallback(() => {
+    if (!searchText) {
+      return
+    }
     Taro.navigateTo({
       url: `/packages/post/pages/search/search?key=${searchText}`
     })
