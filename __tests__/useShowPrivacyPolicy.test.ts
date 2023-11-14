@@ -6,6 +6,9 @@ import { renderHook } from '@testing-library/react'
 
 jest.mock('../src/api/user')
 jest.mock('@tarojs/taro', () => ({
+  getAccountInfoSync: jest
+    .fn()
+    .mockImplementation(() => ({ miniProgram: { envVersion: 'release' } })),
   showModal: jest.fn(),
   useLoad: jest.fn().mockImplementation(fn => fn()),
   navigateBack: jest.fn()
