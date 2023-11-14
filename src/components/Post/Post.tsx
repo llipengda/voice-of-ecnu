@@ -190,7 +190,7 @@ export default function Post({
         })
       }
     }
-  })
+  }, [user, post])
 
   const navigateToDetail = useVibrateCallback((focus: boolean = false) => {
     if (!showComponent) {
@@ -208,7 +208,7 @@ export default function Post({
         url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_FOUND}&showErrorCode=false`
       })
     }
-  })
+  }, [showComponent, post])
 
   const handleNavigateToUserInfo = useVibrateCallback(async () => {
     if (!showComponent) {
@@ -220,7 +220,7 @@ export default function Post({
     await Taro.navigateTo({
       url: `/packages/user/pages/detail/detail?userId=${post.userId}`
     })
-  })
+  }, [showComponent])
 
   return (
     <View className='post skeleton-bg'>

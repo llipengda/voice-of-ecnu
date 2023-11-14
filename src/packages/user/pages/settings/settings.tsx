@@ -123,7 +123,7 @@ export default function Settings() {
           />
           <Switch
             checked={user.isVibrate}
-            color='#b70031'
+            color={primaryColor}
             disabled={switchVibrateDisabled}
             onChange={handleChangeVibrate}
             className='settings__action__switch'
@@ -150,7 +150,7 @@ export default function Settings() {
             />
             <Switch
               checked={user.isOpen}
-              color='#b70031'
+              color={primaryColor}
               disabled={switchShowPostDisabled}
               onChange={handleShowPost}
               className='settings__action__switch'
