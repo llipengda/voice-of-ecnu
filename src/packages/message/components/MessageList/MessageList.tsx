@@ -20,14 +20,12 @@ export default function MessageList() {
       <MessageListItem
         icon='settings'
         title='系统消息'
-        describe='你有新的系统消息'
         number={noticeCnt.system}
         onClick={() => navigateTo(0)}
       />
       <MessageListItem
         icon='heart-2'
         title='点赞'
-        describe='你收到了新的点赞'
         number={noticeCnt.like.total}
         onClick={() => navigateTo(1)}
       />
@@ -35,7 +33,6 @@ export default function MessageList() {
         <MessageListItem
           icon='message'
           title='回复'
-          describe='你收到了新的回复'
           number={noticeCnt.reply.total}
           onClick={() => navigateTo(2)}
         />
