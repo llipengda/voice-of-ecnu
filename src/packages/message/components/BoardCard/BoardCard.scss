@@ -1,0 +1,18 @@
+.board-card {
+  background: #f5f5f5;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  padding: 5%;
+
+  &__title {
+    color: #b70031;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+
+  &__content {
+    font-size: 28px;
+    word-break: break-all;
+    min-width: 100%;
+  }
+}

@@ -1,6 +1,6 @@
 import { backgroundColor, postPerPage } from '@/common/constants'
 import { View } from '@tarojs/components'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { AtFab, AtSearchBar } from 'taro-ui'
 import CPost from '@/components/Post/Post'
 import { ListView } from 'taro-listview'
@@ -52,7 +52,7 @@ export default function Home() {
     onNavigateToPost: (_: boolean) => {}
   })
 
-  const showCompent = useAppSelector(state => state.review.showComponent)
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   const [showModal, setShowModal] = useState(false)
   const [modalProps, setModalProps] = useState<ICustomModalProps>({
@@ -83,7 +83,10 @@ export default function Home() {
     }
   )
 
-  const handleSearchClick = useVibrateCallback(() => {
+  const handleSearchClick = useCallback(() => {
+    if (!searchText) {
+      return
+    }
     Taro.navigateTo({
       url: `/packages/post/pages/search/search?key=${searchText}`
     })
@@ -228,7 +231,7 @@ export default function Home() {
             </ListView>
           </View>
         )}
-        {showCompent && (
+        {showComponent && (
           <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
             <AtFab onClick={handleClickAdd}>
               <View className='at-fab__icon at-icon at-icon-add' />

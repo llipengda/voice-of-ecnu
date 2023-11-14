@@ -49,15 +49,12 @@ export default function UserCard({
     })
   }, [user.avatar, isSelf])
 
-  const handleNavigateTo = useVibrateCallback(
-    (url: string) => {
-      if (!isSelf) {
-        return
-      }
-      Taro.navigateTo({ url })
-    },
-    [isSelf]
-  )
+  const handleNavigateTo = (url: string) => {
+    if (!isSelf) {
+      return
+    }
+    Taro.navigateTo({ url })
+  }
 
   const path = Taro.getCurrentInstance().router?.path || ''
 

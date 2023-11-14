@@ -1,5 +1,5 @@
 import { View, Image, Text } from '@tarojs/components'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Reply as OTReply } from '@/types/reply'
 import { like, unlike } from '@/api/Like'
 import { AtIcon } from 'taro-ui'
@@ -36,7 +36,7 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
   const [likes, setLikes] = useState(reply.likes)
   const [likeDisabled, setLikeDisabled] = useState(false)
 
-  const handleLikeReply = useVibrateCallback(async () => {
+  const handleLikeReply = useCallback(async () => {
     if (likeDisabled) {
       return
     }
@@ -51,6 +51,10 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
     }
     setLikeDisabled(false)
   }, [liked, likeDisabled, likes, reply.id])
+
+  const _handleLikeReply = useVibrateCallback(handleLikeReply, [
+    handleLikeReply
+  ])
 
   const showComponent = useAppSelector(state => state.review.showComponent)
 
@@ -95,7 +99,7 @@ export default function Reply({ reply, onShowMenu, onClickReply }: IProps) {
             </View>
             <View
               className='at-col at-col-1 reply__header__like'
-              onClick={handleLikeReply}
+              onClick={_handleLikeReply}
             >
               <AtIcon
                 value={liked ? 'heart-2' : 'heart'}

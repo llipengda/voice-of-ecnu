@@ -1,8 +1,9 @@
 import Taro from '@tarojs/taro'
-import { serverUrl } from '@/common/constants'
+import { peiranAvatar, serverUrl } from '@/common/constants'
 import { Result } from '@/types/result'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { Post } from '@/types/post'
+import store from '@/redux/store'
 
 /**
  * @deprecated
@@ -34,6 +35,9 @@ export const unstarPost = async (postId: number) => {
   return data.data.data
 }
 
+/**
+ * @deprecated
+ */
 export const getStarList = async () => {
   const data = await Taro.request<Result<WithUserInfo<Post>[]>>({
     url: `${serverUrl}/star/getStarListByUserId`,
@@ -51,5 +55,11 @@ export const getStarListPage = async (page: number, pageSize: number) => {
       pageSize
     }
   })
+  if (store.getState().common.yuntianMode) {
+    data.data.data.forEach(post => {
+      post.userName = '沛然女皇'
+      post.userAvatar = peiranAvatar
+    })
+  }
   return data.data.data
 }

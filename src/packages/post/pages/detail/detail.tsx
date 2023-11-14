@@ -366,12 +366,15 @@ export default function Detail() {
     setStarDisabled(false)
   }, [starDisabled, stared, stars])
 
-  const showImages = useVibrateCallback((image: string) => {
-    Taro.previewImage({
-      urls: images,
-      current: image
-    })
-  }, [images])
+  const showImages = useVibrateCallback(
+    (image: string) => {
+      Taro.previewImage({
+        urls: images,
+        current: image
+      })
+    },
+    [images]
+  )
 
   const handleRemoveComment = (commentId: number) => {
     setComments(comments.filter(c => c.id !== commentId))
@@ -466,14 +469,12 @@ export default function Detail() {
     }
   )
 
-  const handleShowReplyDetail = useVibrateCallback(
-    (comment: WithUserInfo<Comment>) => {
-      setShowDetailComment(comment)
-      setReplyCommentId(comment.id)
-      setSendReplyMode(true)
-      setShowReplyDetail(true)
-    }
-  )
+  const handleShowReplyDetail = (comment: WithUserInfo<Comment>) => {
+    setShowDetailComment(comment)
+    setReplyCommentId(comment.id)
+    setSendReplyMode(true)
+    setShowReplyDetail(true)
+  }
 
   const handleCloseReplyDetail = useVibrateCallback(() => {
     setShowReplyDetail(false)
@@ -483,14 +484,16 @@ export default function Detail() {
     setReplyUserName('')
   })
 
-  const handleClickReply = useVibrateCallback(
-    (replyId: number, _replyUserName: string, _replyContent: string) => {
-      setReplyReplyId(replyId)
-      setReplyUserName(_replyUserName)
-      setReplyContent(_replyContent)
-      setSendReplyFocus(true)
-    }
-  )
+  const handleClickReply = (
+    replyId: number,
+    _replyUserName: string,
+    _replyContent: string
+  ) => {
+    setReplyReplyId(replyId)
+    setReplyUserName(_replyUserName)
+    setReplyContent(_replyContent)
+    setSendReplyFocus(true)
+  }
 
   const handleAddReply = (reply: Reply) => {
     const newComments = comments.map(c => {
@@ -750,7 +753,9 @@ export default function Detail() {
         </View>
       </View>
       <View className='post-detail__content'>
-        {content === null ? '努力加载中...' : content}
+        {content === null
+          ? '努力加载中...'
+          : content.split('\n').map(c => <View>{c}</View>)}
       </View>
       <View className='post-detail__images'>
         {images.map(image => (

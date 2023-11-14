@@ -86,6 +86,9 @@ const showError = async (
       })
       break
     default:
+      if (Taro.getCurrentInstance().router?.path === '/pages/error/error') {
+        break
+      }
       await Taro.navigateTo({
         url: `/pages/error/error?errorCode=${
           res.data.commonErrorCode?.errorCode
@@ -116,6 +119,9 @@ const interceptor: Taro.interceptor = chain => {
           chain.requestParams.data,
           res
         )
+        if (Taro.getCurrentInstance().router?.path === '/pages/error/error') {
+          return res
+        }
         await Taro.navigateTo({
           url: `/pages/error/error?errorCode=${res.statusCode}`
         })

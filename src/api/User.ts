@@ -1,8 +1,10 @@
-import { serverUrl } from '@/common/constants'
+import { peiranAvatar, serverUrl, yuntianAvatar } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { Result } from '@/types/result'
 import { LoginInfo, UpdateUserParams, User, UserStatistics } from '@/types/user'
 import { sendNotice } from './Notice'
+import store from '@/redux/store'
+import { setShowComponent } from '@/redux/slice/reviewSlice'
 
 export const login = async (code: string) => {
   const data = await Taro.request<Result<LoginInfo>>({
@@ -27,6 +29,18 @@ export const getUserById = async (id: string) => {
     url: `${serverUrl}/user/getUserById?userId=${id}`,
     method: 'GET'
   })
+  if (data.data.data.role <= 0) {
+    store.dispatch(setShowComponent(true))
+  }
+  if (store.getState().common.yuntianMode) {
+    if (store.getState().user.id === id) {
+      data.data.data.name = '云天大帝'
+      data.data.data.avatar = yuntianAvatar
+    } else {
+      data.data.data.name = '沛然女皇'
+      data.data.data.avatar = peiranAvatar
+    }
+  }
   return data.data.data
 }
 

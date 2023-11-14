@@ -95,4 +95,9 @@ export const postPerPage = 10
 export const commentPerPage = 15
 export const replyPerPage = 15
 
+export const peiranAvatar =
+  'https://www.xiaowu.fun/static/f0161088b08b4b3a9f19feb1b3a6133e-tmp_b407e0be674a78277d707e3553a81d1638c56dbb2ce5f825.jpg'
+export const yuntianAvatar =
+  'https://www.xiaowu.fun/static/88da4aa53f1d4f469f8ac2d8b85d0d4e-tmp_4dab1733a9b44eacabfe0e8941ac394e9b0cbd84395b3168.jpg'
+
 export const expectedReviewDate = new Date('2023-11-17T22:00:00+08:00')
