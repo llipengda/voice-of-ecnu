@@ -366,12 +366,15 @@ export default function Detail() {
     setStarDisabled(false)
   }, [starDisabled, stared, stars])
 
-  const showImages = useVibrateCallback((image: string) => {
-    Taro.previewImage({
-      urls: images,
-      current: image
-    })
-  }, [images])
+  const showImages = useVibrateCallback(
+    (image: string) => {
+      Taro.previewImage({
+        urls: images,
+        current: image
+      })
+    },
+    [images]
+  )
 
   const handleRemoveComment = (commentId: number) => {
     setComments(comments.filter(c => c.id !== commentId))
@@ -750,7 +753,9 @@ export default function Detail() {
         </View>
       </View>
       <View className='post-detail__content'>
-        {content === null ? '努力加载中...' : content}
+        {content === null
+          ? '努力加载中...'
+          : content.split('\n').map(c => <View>{c}</View>)}
       </View>
       <View className='post-detail__images'>
         {images.map(image => (

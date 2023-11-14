@@ -168,7 +168,11 @@ export default function Comment({
             : () => {}
         }
       >
-        <View className='comment__body__content'>{comment.content}</View>
+        <View className='comment__body__content'>
+          {comment.content.split('\n').map(c => (
+            <View>{c}</View>
+          ))}
+        </View>
         <View className='comment__body__images'>
           {comment.images &&
             comment.images.map(image => (
