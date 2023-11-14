@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Input, View } from '@tarojs/components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AtButton, AtImagePicker, AtTextarea } from 'taro-ui'
 import { uploadImages } from '@/api/Image'
 import { createPost } from '@/api/Post'
@@ -32,6 +32,12 @@ export default function Add() {
   const dispatch = useAppDispatch()
 
   const showComponent = useAppSelector(state => state.review.showComponent)
+
+  useEffect(() => {
+    Taro.setNavigationBarTitle({
+      title: showComponent ? '发帖' : '添加'
+    })
+  }, [showComponent])
 
   const handleCancel = useVibrateCallback(() => {
     Taro.navigateBack()

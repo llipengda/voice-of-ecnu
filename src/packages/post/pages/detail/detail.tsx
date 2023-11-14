@@ -371,7 +371,7 @@ export default function Detail() {
       urls: images,
       current: image
     })
-  })
+  }, [images])
 
   const handleRemoveComment = (commentId: number) => {
     setComments(comments.filter(c => c.id !== commentId))
