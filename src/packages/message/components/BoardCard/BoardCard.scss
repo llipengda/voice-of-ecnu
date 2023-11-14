@@ -12,5 +12,7 @@
 
   &__content {
     font-size: 28px;
+    word-break: break-all;
+    min-width: 100%;
   }
 }

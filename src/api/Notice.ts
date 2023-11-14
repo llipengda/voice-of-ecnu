@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { serverUrl } from '@/common/constants'
-import { Notice, NoticeMap, Board } from '@/types/notice'
+import { Notice, NoticeMap, Board, OneSentence } from '@/types/notice'
 import { Result } from '@/types/result'
 import { mapToNoticeCnt } from '@/utils/mapToNoticeCnt'
 import { WithUserInfo } from '@/types/withUserInfo'
@@ -69,10 +69,20 @@ export const getBoardList = async (page: number, pageSize: number) => {
   return data.data.data
 }
 
-export const addBoard = async (content: string, title: string) => {
+export const addBoard = async (params: { content: string; title: string }) => {
   const data = await Taro.request<Result<string>>({
-    url: `${serverUrl}/board/add?content=${content}&title=${title}`,
+    url: `${serverUrl}/board/add`,
     method: 'POST',
+    data: params
+  })
+  return data.data.data
+}
+
+export const getOneSentence = async (type: string = 'i') => {
+  const data = await Taro.request<Result<OneSentence>>({
+    url: `${serverUrl}/oneSentence`,
+    method: 'GET',
+    data: { type }
   })
   return data.data.data
 }

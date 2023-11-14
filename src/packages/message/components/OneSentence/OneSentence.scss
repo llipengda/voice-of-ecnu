@@ -1,0 +1,66 @@
+.one-sentence {
+  margin-top: 20px;
+  background: #fff;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 30vh;
+  padding-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  &__header {
+    margin-left: 10px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    &__title {
+      font-size: 40px;
+      margin-left: 20px;
+      font-weight: 700;
+      color: #b70031;
+    }
+
+    &__refresh {
+      margin-right: 0;
+      margin-left: auto;
+      width: 50px;
+      height: 50px;
+      font-size: 50px;
+      color: #b70031;
+    }
+  }
+
+  &__content {
+    margin-top: 30px;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    min-height: 100px;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    &__from {
+      margin-top: 30px;
+      width: 100%;
+      text-align: right;
+      font-size: 26px;
+      font-style: italic;
+    }
+
+    &__text {
+      font-size: 32px;
+    }
+  }
+}

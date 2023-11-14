@@ -52,7 +52,7 @@ export default function Home() {
     onNavigateToPost: (_: boolean) => {}
   })
 
-  const showCompent = useAppSelector(state => state.review.showComponent)
+  const showComponent = useAppSelector(state => state.review.showComponent)
 
   const [showModal, setShowModal] = useState(false)
   const [modalProps, setModalProps] = useState<ICustomModalProps>({
@@ -231,7 +231,7 @@ export default function Home() {
             </ListView>
           </View>
         )}
-        {showCompent && (
+        {showComponent && (
           <View style={{ position: 'fixed', bottom: '16px', right: '16px' }}>
             <AtFab onClick={handleClickAdd}>
               <View className='at-fab__icon at-icon at-icon-add' />

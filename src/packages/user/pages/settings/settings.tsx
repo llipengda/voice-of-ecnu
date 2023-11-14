@@ -13,7 +13,7 @@ import { sendNotice } from '@/api/Notice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { setUser } from '@/redux/slice/userSlice'
 import sleep from '@/utils/sleep'
-import { setReview } from '@/redux/slice/reviewSlice'
+import { setShowComponent } from '@/redux/slice/reviewSlice'
 import './settings.scss'
 import '@/custom-theme.scss'
 import { useState } from 'react'
@@ -67,7 +67,7 @@ export default function Settings() {
   })
 
   const handleUnlock = useVibrateCallback(async () => {
-    dispatch(setReview(true))
+    dispatch(setShowComponent(true))
     await Taro.showToast({
       title: '解锁成功',
       icon: 'success',

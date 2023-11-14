@@ -7,11 +7,11 @@ const reviewSlice = createSlice({
     showComponent: checkReview()
   },
   reducers: {
-    setReview(state, action: PayloadAction<boolean>) {
+    setShowComponent(state, action: PayloadAction<boolean>) {
       state.showComponent = action.payload
     }
   }
 })
 
-export const { setReview } = reviewSlice.actions
+export const { setShowComponent } = reviewSlice.actions
 export default reviewSlice.reducer
