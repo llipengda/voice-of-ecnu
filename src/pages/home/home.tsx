@@ -1,6 +1,6 @@
 import { backgroundColor, postPerPage } from '@/common/constants'
 import { View } from '@tarojs/components'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { AtFab, AtSearchBar } from 'taro-ui'
 import CPost from '@/components/Post/Post'
 import { ListView } from 'taro-listview'
@@ -83,7 +83,7 @@ export default function Home() {
     }
   )
 
-  const handleSearchClick = useVibrateCallback(() => {
+  const handleSearchClick = useCallback(() => {
     if (!searchText) {
       return
     }

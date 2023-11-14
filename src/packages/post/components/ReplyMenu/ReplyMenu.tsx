@@ -28,7 +28,7 @@ interface IProps {
   onShowModal: (props: Partial<ICustomModalProps>) => Promise<boolean>
 }
 
-export default function CommentMenu({
+export default function ReplyMenu({
   replyId,
   replyUserId,
   likedReply,
