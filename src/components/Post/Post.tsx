@@ -192,23 +192,26 @@ export default function Post({
     }
   }, [user, post])
 
-  const navigateToDetail = useVibrateCallback((focus: boolean = false) => {
-    if (!showComponent) {
-      Taro.navigateTo({
-        url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
-      })
-      return
-    }
-    if (!post.deleteAt) {
-      Taro.navigateTo({
-        url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`
-      })
-    } else {
-      Taro.navigateTo({
-        url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_FOUND}&showErrorCode=false`
-      })
-    }
-  }, [showComponent, post])
+  const navigateToDetail = useVibrateCallback(
+    (focus: boolean = false) => {
+      if (!showComponent) {
+        Taro.navigateTo({
+          url: `/pages/error/error?errorCode=${ErrorCode.NO_MORE_CONTENT}&showErrorCode=false`
+        })
+        return
+      }
+      if (!post.deleteAt) {
+        Taro.navigateTo({
+          url: `/packages/post/pages/detail/detail?postId=${post.id}&authorName=${username}&authorAvatar=${avatar}&sendCommentFocus=${focus}`
+        })
+      } else {
+        Taro.navigateTo({
+          url: `/pages/error/error?errorCode=${ErrorCode.POST_NOT_FOUND}&showErrorCode=false`
+        })
+      }
+    },
+    [showComponent, post]
+  )
 
   const handleNavigateToUserInfo = useVibrateCallback(async () => {
     if (!showComponent) {
@@ -284,9 +287,11 @@ export default function Post({
               key={image}
               fadeIn
               lazyLoad
-              className='post__body__image at-col at-col-4 at-col--auto'
+              className={`post__body__image at-col at-col-${
+                post.images.length === 1 ? '8' : '4'
+              } at-col--auto`}
               src={image}
-              mode='aspectFill'
+              mode={post.images.length === 1 ? 'widthFix' : 'aspectFill'}
             />
           ))}
         </View>
