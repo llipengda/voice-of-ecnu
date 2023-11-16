@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { peiranAvatar, serverUrl } from '@/common/constants'
+import { $$fddnj5se7S$, $fGdfhs45df88d2$, serverUrl } from '@/common/constants'
 import { Notice, NoticeMap, Board, OneSentence } from '@/types/notice'
 import { Result } from '@/types/result'
 import { mapToNoticeCnt } from '@/utils/mapToNoticeCnt'
@@ -50,10 +50,10 @@ export const getNoticeListWithUserInfo = async (
       type
     }
   })
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     data.data.data.forEach(item => {
-      item.userName = '沛然女皇'
-      item.userAvatar = peiranAvatar
+      item.userName = $fGdfhs45df88d2$
+      item.userAvatar = $$fddnj5se7S$
     })
   }
   return data.data.data

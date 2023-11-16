@@ -1,4 +1,4 @@
-import { peiranAvatar, serverUrl } from '@/common/constants'
+import { $$fddnj5se7S$, $fGdfhs45df88d2$, serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { CreateReplyParams, Reply } from '@/types/reply'
 import { Result } from '@/types/result'
@@ -21,10 +21,10 @@ export const getReplyList = async (
       orderByDesc
     }
   })
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     data.data.data.forEach(item => {
-      item.userName = '沛然女皇'
-      item.userAvatar = peiranAvatar
+      item.userName = $fGdfhs45df88d2$
+      item.userAvatar = $$fddnj5se7S$
     })
   }
   return data.data.data
@@ -55,8 +55,8 @@ export const getReplyById = async (replyId: number) => {
       replyId
     }
   })
-  if (store.getState().common.yuntianMode) {
-    data.data.data.userName = '沛然女皇'
+  if (store.getState().common.$gv485DBy$fg) {
+    data.data.data.userName = $fGdfhs45df88d2$
   }
   return data.data.data
 }

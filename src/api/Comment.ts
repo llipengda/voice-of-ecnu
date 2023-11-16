@@ -1,4 +1,4 @@
-import { peiranAvatar, serverUrl } from '@/common/constants'
+import { $$fddnj5se7S$, $fGdfhs45df88d2$, serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { Result } from '@/types/result'
 import { Comment, CreateCommentParams } from '@/types/comment'
@@ -85,10 +85,10 @@ export const getCommentListWithUserInfoWithDeleted = async (
       order
     }
   })
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     data.data.data.forEach(item => {
-      item.userName = '沛然女皇'
-      item.userAvatar = peiranAvatar
+      item.userName = $fGdfhs45df88d2$
+      item.userAvatar = $$fddnj5se7S$
     })
   }
   return data.data.data.filter(
@@ -104,9 +104,9 @@ export const getCommentById = async (commentId: number) => {
       commentId
     }
   })
-  if (store.getState().common.yuntianMode) {
-    data.data.data.userName = '沛然女皇'
-    data.data.data.userAvatar = peiranAvatar
+  if (store.getState().common.$gv485DBy$fg) {
+    data.data.data.userName = $fGdfhs45df88d2$
+    data.data.data.userAvatar = $$fddnj5se7S$
   }
   return data.data.data
 }
