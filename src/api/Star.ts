@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { peiranAvatar, serverUrl } from '@/common/constants'
+import { $$fddnj5se7S$, $fGdfhs45df88d2$, serverUrl } from '@/common/constants'
 import { Result } from '@/types/result'
 import { WithUserInfo } from '@/types/withUserInfo'
 import { Post } from '@/types/post'
@@ -55,10 +55,10 @@ export const getStarListPage = async (page: number, pageSize: number) => {
       pageSize
     }
   })
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     data.data.data.forEach(post => {
-      post.userName = '沛然女皇'
-      post.userAvatar = peiranAvatar
+      post.userName = $fGdfhs45df88d2$
+      post.userAvatar = $$fddnj5se7S$
     })
   }
   return data.data.data

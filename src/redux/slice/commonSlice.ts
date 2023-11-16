@@ -3,12 +3,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 const commonSlice = createSlice({
   name: 'common',
   initialState: {
-    yuntianMode: false,
+    $gv485DBy$fg: false,
     shoudNotVibrate: 0
   },
   reducers: {
-    setYuntianMode(state, action: PayloadAction<boolean>) {
-      state.yuntianMode = action.payload
+    $GHDFbs65f4se1(state, action: PayloadAction<boolean>) {
+      state.$gv485DBy$fg = action.payload
     },
     increaseShoudNotVibrate(state) {
       state.shoudNotVibrate += 1
@@ -21,7 +21,7 @@ const commonSlice = createSlice({
 
 export default commonSlice.reducer
 export const {
-  setYuntianMode,
+  $GHDFbs65f4se1,
   increaseShoudNotVibrate,
   decreaseShoudNotVibrate
 } = commonSlice.actions

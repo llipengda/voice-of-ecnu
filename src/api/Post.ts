@@ -1,4 +1,4 @@
-import { peiranAvatar, serverUrl } from '@/common/constants'
+import { $$fddnj5se7S$, $fGdfhs45df88d2$, serverUrl } from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { CreatePostParams, Post } from '@/types/post'
 import { Result } from '@/types/result'
@@ -90,10 +90,10 @@ export const getPostListWithUserInfo = async (
       orderByPopularity
     }
   })
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     data.data.data.forEach(post => {
-      post.userName = '沛然女皇'
-      post.userAvatar = peiranAvatar
+      post.userName = $fGdfhs45df88d2$
+      post.userAvatar = $$fddnj5se7S$
     })
   }
   return data.data.data
@@ -115,10 +115,10 @@ export const searchByPostOrCommentOrReplyWithUserInfo = async (
       orderByPopularity
     }
   })
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     data.data.data.forEach(post => {
-      post.userName = '沛然女皇'
-      post.userAvatar = peiranAvatar
+      post.userName = $fGdfhs45df88d2$
+      post.userAvatar = $$fddnj5se7S$
     })
   }
   return data.data.data
@@ -130,9 +130,9 @@ export const getPostByIdWithUserInfo = async (postId: number) => {
     method: 'GET',
     data: { postId }
   })
-  if (store.getState().common.yuntianMode) {
-    data.data.data.userName = '沛然女皇'
-    data.data.data.userAvatar = peiranAvatar
+  if (store.getState().common.$gv485DBy$fg) {
+    data.data.data.userName = $fGdfhs45df88d2$
+    data.data.data.userAvatar = $$fddnj5se7S$
   }
   return data.data.data
 }
@@ -147,10 +147,10 @@ export const getPostByUserId = async (
     method: 'GET',
     data: { page, pageSize, userId }
   })
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     data.data.data.forEach(post => {
-      post.userName = '沛然女皇'
-      post.userAvatar = peiranAvatar
+      post.userName = $fGdfhs45df88d2$
+      post.userAvatar = $$fddnj5se7S$
     })
   }
   return data.data.data

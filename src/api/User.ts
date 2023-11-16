@@ -1,4 +1,10 @@
-import { peiranAvatar, serverUrl, yuntianAvatar } from '@/common/constants'
+import {
+  $$fddnj5se7S$,
+  $fGdfhs45df88d2$,
+  serverUrl,
+  $$4srfsfsdc5$$,
+  $vfhudSs9f8se4E$
+} from '@/common/constants'
 import Taro from '@tarojs/taro'
 import { Result } from '@/types/result'
 import { LoginInfo, UpdateUserParams, User, UserStatistics } from '@/types/user'
@@ -32,13 +38,13 @@ export const getUserById = async (id: string) => {
   if (data.data.data.role <= 0) {
     store.dispatch(setShowComponent(true))
   }
-  if (store.getState().common.yuntianMode) {
+  if (store.getState().common.$gv485DBy$fg) {
     if (store.getState().user.id === id) {
-      data.data.data.name = '云天大帝'
-      data.data.data.avatar = yuntianAvatar
+      data.data.data.name = $vfhudSs9f8se4E$
+      data.data.data.avatar = $$4srfsfsdc5$$
     } else {
-      data.data.data.name = '沛然女皇'
-      data.data.data.avatar = peiranAvatar
+      data.data.data.name = $fGdfhs45df88d2$
+      data.data.data.avatar = $$fddnj5se7S$
     }
   }
   return data.data.data

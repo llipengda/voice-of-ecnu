@@ -14,9 +14,9 @@ import { setShowComponent } from '@/redux/slice/reviewSlice'
 import CustomModal, {
   ICustomModalProps
 } from '@/components/CustomModal/CustomModal'
-import { postPerPage } from '@/common/constants'
+import { $cdsfsufsuf$, $dfjhFDASF55$, postPerPage } from '@/common/constants'
 import { useVibrateCallback } from '@/utils/hooks/useVibrateCallback'
-import { setYuntianMode } from '@/redux/slice/commonSlice'
+import { $GHDFbs65f4se1 } from '@/redux/slice/commonSlice'
 
 export default function Search() {
   const params = Taro.getCurrentInstance().router?.params
@@ -24,11 +24,11 @@ export default function Search() {
 
   const dispatch = useAppDispatch()
 
-  if (params?.key === '114514__unlock__##!') {
+  if (params?.key === $cdsfsufsuf$) {
     dispatch(setShowComponent(true))
   }
-  if (params?.key === '1919810__yuntian__unlock__##!' && user.role <= 1) {
-    dispatch(setYuntianMode(true))
+  if (params?.key === $dfjhFDASF55$ && user.role <= 1) {
+    dispatch($GHDFbs65f4se1(true))
   }
 
   const [isLoaded, setIsLoaded] = useState(false)
