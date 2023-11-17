@@ -15,6 +15,9 @@ const switchErrorCode = async (
   switch (errorCode) {
     case ErrorCode.NEED_SESSION_ID:
     case ErrorCode.LOGIN_HAS_OVERDUE:
+      if (process.env.TARO_ENV !== 'weapp') {
+        return res
+      }
       console.error('errorCode is', errorCode)
       await Taro.showLoading({
         title: '登录中...'

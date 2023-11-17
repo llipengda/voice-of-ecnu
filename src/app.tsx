@@ -19,6 +19,18 @@ function MyApp({ children }: PropsWithChildren<any>) {
     userId: string,
     token: string
   ) => {
+    if (process.env.TARO_ENV !== 'weapp') {
+      dispatch(
+        setLoginInfo({
+          userId: 'ojr-_60HXuBMPyzOuFUPvgSyTEkE',
+          token: '500a22dd-db6b-4fcf-a147-e0b43fa81c30',
+          role: 4
+        })
+      )
+      Taro.setStorageSync('userId', 'ojr-_60HXuBMPyzOuFUPvgSyTEkE')
+      Taro.setStorageSync('token', '500a22dd-db6b-4fcf-a147-e0b43fa81c30')
+      return
+    }
     try {
       if (needLogin) {
         const { code } = await Taro.login()
@@ -90,18 +102,20 @@ function MyApp({ children }: PropsWithChildren<any>) {
 }
 
 function App({ children }: PropsWithChildren<any>) {
-  Taro.showShareMenu({
-    withShareTicket: true,
-    // @ts-ignore
-    menus: ['shareAppMessage', 'shareTimeline'],
-    showShareItems: ['shareAppMessage', 'shareTimeline']
-  })
+  if (process.env.TARO_ENV === 'weapp') {
+    Taro.showShareMenu({
+      withShareTicket: true,
+      // @ts-ignore
+      menus: ['shareAppMessage', 'shareTimeline'],
+      showShareItems: ['shareAppMessage', 'shareTimeline']
+    })
 
-  const page = Taro.getCurrentInstance().page
-  if (page && !page.onShareAppMessage) {
-    page.onShareAppMessage = () => {
-      return {
-        title: '花狮喵'
+    const page = Taro.getCurrentInstance().page
+    if (page && !page.onShareAppMessage) {
+      page.onShareAppMessage = () => {
+        return {
+          title: '花狮喵'
+        }
       }
     }
   }
