@@ -1,4 +1,4 @@
-import type { UserConfigExport } from "@tarojs/cli";
+import type { UserConfigExport } from '@tarojs/cli'
 
 export default {
   logger: {
@@ -6,5 +6,6 @@ export default {
     stats: true
   },
   mini: {},
-  h5: {}
+  h5: {},
+  plugins: ['@tarojs/plugin-react-devtools']
 } satisfies UserConfigExport
