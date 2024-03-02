@@ -29,7 +29,7 @@ export const uploadImage = async (filePath: string) => {
     Taro.hideLoading()
     console.log('上传成功', newData)
     return newData.data
-  } catch (err) {
+  } catch (err: any) {
     console.error('上传失败', err)
     await Taro.showToast({
       title: err.message,
@@ -74,7 +74,7 @@ export const uploadImages = async (files: string[]) => {
     console.log('上传多张图片成功', res)
     Taro.hideLoading()
     return res
-  } catch (err) {
+  } catch (err: any) {
     console.error('上传多张图片失败', err)
     await Taro.showToast({
       title: err.message,

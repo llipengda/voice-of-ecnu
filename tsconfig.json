@@ -19,10 +19,14 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "typeRoots": ["node_modules/@types"],
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "strict": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./src", "./types", "./config", "./__tests__"],
+  "exclude": ["./node_modules"],
   "compileOnSave": false
 }

@@ -123,7 +123,7 @@ export default function Add() {
             <AtImagePicker
               files={images}
               onChange={e => setImages(e)}
-              onImageClick={(_, f: File) => showImage(f.url)}
+              onImageClick={(_, f: any) => showImage(f.url)}
               multiple
               count={9}
             />
