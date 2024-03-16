@@ -8081,8 +8081,8 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: false
 
-  /follow-redirects@1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
+  /follow-redirects@1.15.6:
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -8842,7 +8842,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.6
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -11283,8 +11283,8 @@ packages:
     resolution: {integrity: sha512-tE0zjq+3bFEgUROzCjXTdtLY+FmqiTX4kZWXc8bCC7M9wSHCriBz+ga1E2i1PcI+DQJoz2cyK8Cv2exJv6XEzA==}
     dev: true
 
-  /miniprogram-compiler@0.2.2:
-    resolution: {integrity: sha512-fiJXv/15jCcRAU8YKcO7S7fkPKLa5ZBgpLN+d6B3r3KMktM5tAkDEQ+zm6aTfNoHurYOHcRyPyGf26gqQXlFXg==}
+  /miniprogram-compiler@0.2.3:
+    resolution: {integrity: sha512-/MfFiXTBUwYxnrTbj1hgwk1+qGkMCTL1zi8IReOq/0SPVkUxpx19E89w+ohYCELFXkMfVbD+6ejrHh3Y1u5sVg==}
     dependencies:
       glob: 7.2.3
       unescape-js: 1.1.4
@@ -11300,7 +11300,7 @@ packages:
       csso: 3.5.1
       j-component: 1.4.9
       less: 3.13.1
-      miniprogram-compiler: 0.2.2
+      miniprogram-compiler: 0.2.3
       postcss: 7.0.39
     dev: true
 
